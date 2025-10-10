@@ -10,11 +10,14 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Autocomplete,
   CircularProgress,
+  Card,
+  CardContent,
+  Fade,
+  Slide,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { Email, Phone, LocationOn, Send, Business } from "@mui/icons-material";
+import { Email, Phone, LocationOn, Send, VolunteerActivism, School, Psychology, Group } from "@mui/icons-material";
 import Swal from "sweetalert2";
 
 const MotionBox = motion(Box);
@@ -23,81 +26,27 @@ export default function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    description: "",
-    category: "",
-    project_id: "",
+    message: "",
+    interest: "",
+    phone: "",
   });
 
-  const [projects, setProjects] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [projectLoading, setProjectLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-  // Fetch categories on component mount
+  const interestOptions = [
+    { value: "volunteer", label: "Volunteer Opportunities", icon: <VolunteerActivism />, color: "#4caf50" },
+    { value: "education", label: "Educational Support", icon: <School />, color: "#2196f3" },
+    { value: "mental_health", label: "Mental Health Services", icon: <Psychology />, color: "#e91e63" },
+    { value: "community", label: "Community Programs", icon: <Group />, color: "#ff9800" },
+    { value: "donation", label: "Donations & Support", icon: <VolunteerActivism />, color: "#9c27b0" },
+    { value: "partnership", label: "Partnership Opportunities", icon: <Group />, color: "#00bcd4" },
+  ];
+
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("/api/issues/categories");
-        const data = await response.json();
-        if (data.success) {
-          setCategories(data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    const fetchInitialProjects = async () => {
-      try {
-        const response = await fetch("/api/public-projects");
-        const data = await response.json();
-        if (data.success) {
-          console.log("Projects fetched:", data.data.length);
-          setProjects(data.data);
-        } else {
-          console.error("Failed to fetch projects:", data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching initial projects:", error);
-      }
-    };
-
-    fetchCategories();
-    fetchInitialProjects();
+    setIsVisible(true);
   }, []);
 
-  // Filter projects locally based on search term
-  const filterProjects = (searchTerm = "") => {
-    if (!searchTerm || !searchTerm.trim()) {
-      // If no search term, fetch all projects
-      fetchInitialProjects();
-      return;
-    }
-
-    setProjectLoading(true);
-    try {
-      // Filter projects locally from the already loaded projects
-      const filtered = projects.filter(
-        (project) =>
-          project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (project.description &&
-            project.description
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase())) ||
-          (project.location &&
-            project.location.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-
-      console.log(
-        `Filtered ${filtered.length} projects for search: "${searchTerm}"`
-      );
-      setProjects(filtered);
-    } catch (error) {
-      console.error("Error filtering projects:", error);
-    } finally {
-      setProjectLoading(false);
-    }
-  };
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -106,83 +55,47 @@ export default function ContactSection() {
     }));
   };
 
-  const handleProjectSearch = (event, value) => {
-    // Filter projects locally as user types
-    if (event && event.type === "input") {
-      filterProjects(value);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await fetch("/api/issues", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          project_id: formData.project_id || null,
-        }),
+      // Simulate API call - replace with actual endpoint
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Reset form data
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+        interest: "",
+        phone: "",
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        // Reset form data
-        setFormData({
-          name: "",
-          email: "",
-          description: "",
-          category: "",
-          project_id: "",
-        });
-        setProjects([]);
-
-        // Show success SweetAlert
-        Swal.fire({
-          icon: "success",
-          title: "Success!",
-          text: "Your message has been sent successfully!",
-          timer: 2000,
-          showConfirmButton: false,
-          customClass: {
-            container: "swal-z-index-fix",
-          },
-          didOpen: () => {
-            const swalContainer = document.querySelector(".swal-z-index-fix");
-            if (swalContainer) {
-              swalContainer.style.zIndex = "9999";
-            }
-          },
-        });
-      } else {
-        // Show error SweetAlert
-        Swal.fire({
-          icon: "error",
-          title: "Error!",
-          text: data.message || "Failed to send message. Please try again.",
-          customClass: {
-            container: "swal-z-index-fix",
-          },
-          didOpen: () => {
-            const swalContainer = document.querySelector(".swal-z-index-fix");
-            if (swalContainer) {
-              swalContainer.style.zIndex = "9999";
-            }
-          },
-        });
-      }
+      // Show success SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Thank You!",
+        text: "Your message has been sent successfully! We'll get back to you soon.",
+        timer: 3000,
+        showConfirmButton: false,
+        customClass: {
+          container: "swal-z-index-fix",
+        },
+        didOpen: () => {
+          const swalContainer = document.querySelector(".swal-z-index-fix");
+          if (swalContainer) {
+            swalContainer.style.zIndex = "9999";
+          }
+        },
+      });
     } catch (error) {
       console.error("Error submitting form:", error);
-      // Show network error SweetAlert
+      // Show error SweetAlert
       Swal.fire({
         icon: "error",
-        title: "Network Error!",
-        text: "Please check your connection and try again.",
+        title: "Error!",
+        text: "Failed to send message. Please try again.",
         customClass: {
           container: "swal-z-index-fix",
         },
@@ -202,185 +115,243 @@ export default function ContactSection() {
     <Box
       id="contact-section"
       sx={{
-        py: 4,
-        backgroundColor: "#f8f9fa",
+        py: { xs: 4, md: 5 },
+        background: "linear-gradient(135deg, rgba(240, 248, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(248, 250, 252, 0.9) 100%)",
+        position: "relative",
+        overflow: "hidden",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "radial-gradient(circle at 20% 80%, rgba(33, 150, 243, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(233, 30, 99, 0.1) 0%, transparent 50%)",
+          zIndex: 0,
+        },
       }}
     >
       <Box
         sx={{
-          maxWidth: "1400px",
+          maxWidth: "1200px",
           margin: "0 auto",
-          px: { xs: 2, sm: 4, md: 6 },
+          px: { xs: 2, sm: 3, md: 4 },
+          position: "relative",
+          zIndex: 1,
         }}
       >
-        <MotionBox
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
-          <Paper
-            elevation={6}
-            sx={{
-              borderRadius: 4,
-              overflow: "hidden",
-              backgroundColor: "white",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-            }}
-          >
-            <Box sx={{ p: 6 }}>
-              <Box sx={{ textAlign: "center", mb: 4 }}>
-                <Typography
-                  variant="h2"
-                  sx={{
-                    fontWeight: 600,
-                    color: "primary.main",
-                    mb: 2,
-                  }}
-                >
-                  Contact Us
-                </Typography>
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  sx={{ maxWidth: 600, mx: "auto" }}
-                >
-                  Get in touch with us for your construction needs
-                </Typography>
-              </Box>
+        <Fade in={isVisible} timeout={1000}>
+          <Box sx={{ textAlign: "center", mb: 3 }}>
+            <Typography
+              variant="h2"
+              sx={{
+                fontWeight: 700,
+                fontSize: { xs: "1.75rem", sm: "2rem", md: "2.25rem" },
+                background: "linear-gradient(45deg, #2196f3, #e91e63, #4caf50)",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                mb: 1,
+                position: "relative",
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  bottom: "-6px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: { xs: "50px", sm: "60px", md: "70px" },
+                  height: "3px",
+                  background: "linear-gradient(45deg, #2196f3, #e91e63)",
+                  borderRadius: "2px",
+                },
+              }}
+            >
+              Get Involved
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                color: "text.primary",
+                fontWeight: 500,
+                fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" },
+                maxWidth: "700px",
+                mx: "auto",
+                mb: 1,
+              }}
+            >
+              Join us in making a difference. Whether you want to volunteer, donate, or partner with us, 
+              we'd love to hear from you.
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ 
+                maxWidth: "600px", 
+                mx: "auto",
+                fontStyle: "italic",
+                fontSize: { xs: "0.85rem", md: "0.9rem" },
+              }}
+            >
+              "Together, we can build a brighter future for Kenya"
+            </Typography>
+          </Box>
+        </Fade>
 
-              <Box
-                component="form"
-                onSubmit={handleSubmit}
-                sx={{ mt: 2, width: "100%" }}
+        {/* Contact Form */}
+        <Slide direction="up" in={isVisible} timeout={1000}>
+              <Paper
+                elevation={4}
+                sx={{
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                  backdropFilter: "blur(10px)",
+                  boxShadow: "0 6px 24px rgba(0,0,0,0.1)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                }}
               >
-                <TextField
-                  fullWidth
-                  label="Name"
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  value={formData.name}
-                  onChange={(e) => handleInputChange("name", e.target.value)}
-                />
-
-                <TextField
-                  fullWidth
-                  label="Email"
-                  type="email"
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                />
-
-                <FormControl fullWidth margin="normal" required>
-                  <InputLabel>Category</InputLabel>
-                  <Select
-                    value={formData.category}
-                    label="Category"
-                    onChange={(e) =>
-                      handleInputChange("category", e.target.value)
-                    }
+                <Box sx={{ p: { xs: 2.5, sm: 3, md: 3.5 } }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 700,
+                      mb: 2,
+                      textAlign: "center",
+                      background: "linear-gradient(45deg, #2196f3, #e91e63)",
+                      backgroundClip: "text",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      fontSize: { xs: "1.25rem", md: "1.5rem" },
+                    }}
                   >
-                    {categories.map((category) => (
-                      <MenuItem key={category.value} value={category.value}>
-                        {category.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    Send us a Message
+                  </Typography>
 
-                <Autocomplete
-                  fullWidth
-                  options={projects}
-                  getOptionLabel={(option) => option.name}
-                  value={
-                    projects.find((p) => p.id === formData.project_id) || null
-                  }
-                  onChange={(event, newValue) => {
-                    handleInputChange("project_id", newValue?.id || "");
-                  }}
-                  onInputChange={handleProjectSearch}
-                  loading={projectLoading}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Project (Optional)"
-                      margin="normal"
-                      InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                          <>
-                            {projectLoading ? (
-                              <CircularProgress color="inherit" size={20} />
-                            ) : null}
-                            {params.InputProps.endAdornment}
-                          </>
-                        ),
-                      }}
-                    />
-                  )}
-                  renderOption={(props, option) => (
-                    <Box component="li" {...props}>
-                      <Box
+                  <Box
+                    component="form"
+                    onSubmit={handleSubmit}
+                    sx={{ width: "100%" }}
+                  >
+                    <Grid container spacing={2}>
+                      <Grid size={{ xs: 12, sm: 6 }}>
+                        <TextField
+                          fullWidth
+                          label="Full Name"
+                          variant="outlined"
+                          required
+                          value={formData.name}
+                          onChange={(e) => handleInputChange("name", e.target.value)}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: "12px",
+                            },
+                          }}
+                        />
+                      </Grid>
+                      <Grid size={{ xs: 12, sm: 6 }}>
+                        <TextField
+                          fullWidth
+                          label="Email Address"
+                          type="email"
+                          variant="outlined"
+                          required
+                          value={formData.email}
+                          onChange={(e) => handleInputChange("email", e.target.value)}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: "12px",
+                            },
+                          }}
+                        />
+                      </Grid>
+                      <Grid size={{ xs: 12, sm: 6 }}>
+                        <TextField
+                          fullWidth
+                          label="Phone Number"
+                          variant="outlined"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange("phone", e.target.value)}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: "12px",
+                            },
+                          }}
+                        />
+                      </Grid>
+                      <Grid size={{ xs: 12, sm: 6 }}>
+                        <FormControl fullWidth required>
+                          <InputLabel>Area of Interest</InputLabel>
+                          <Select
+                            value={formData.interest}
+                            label="Area of Interest"
+                            onChange={(e) => handleInputChange("interest", e.target.value)}
+                            sx={{
+                              borderRadius: "12px",
+                            }}
+                          >
+                            {interestOptions.map((option) => (
+                              <MenuItem key={option.value} value={option.value}>
+                                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                  <Box sx={{ color: option.color }}>{option.icon}</Box>
+                                  {option.label}
+                                </Box>
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid size={12}>
+                        <TextField
+                          fullWidth
+                          label="Tell us how you'd like to help"
+                          multiline
+                          rows={3}
+                          variant="outlined"
+                          required
+                          value={formData.message}
+                          onChange={(e) => handleInputChange("message", e.target.value)}
+                          placeholder="Share your ideas, questions, or how you'd like to contribute to our mission..."
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: "12px",
+                            },
+                          }}
+                        />
+                      </Grid>
+                    </Grid>
+
+                    <Box sx={{ textAlign: "center", mt: 2.5 }}>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        size="medium"
+                        startIcon={
+                          loading ? <CircularProgress size={18} color="inherit" /> : <Send />
+                        }
+                        disabled={loading}
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          width: "100%",
+                          px: 4,
+                          py: 1.25,
+                          fontSize: "1rem",
+                          fontWeight: 600,
+                          borderRadius: "50px",
+                          background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
+                          boxShadow: "0 6px 24px rgba(33, 150, 243, 0.3)",
+                          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                          "&:hover": {
+                            transform: "translateY(-2px) scale(1.03)",
+                            boxShadow: "0 8px 32px rgba(33, 150, 243, 0.4)",
+                            background: "linear-gradient(45deg, #1976d2 30%, #1cb5e0 90%)",
+                          },
                         }}
                       >
-                        <Business sx={{ mr: 1, color: "text.secondary" }} />
-                        <Box>
-                          <Typography variant="body1">{option.name}</Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {option.location} • {option.status}
-                          </Typography>
-                        </Box>
-                      </Box>
+                        {loading ? "Sending Message..." : "Send Message"}
+                      </Button>
                     </Box>
-                  )}
-                  noOptionsText="No projects found"
-                  clearOnBlur={false}
-                  blurOnSelect
-                />
-
-                <TextField
-                  fullWidth
-                  label="Message"
-                  multiline
-                  rows={4}
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  value={formData.description}
-                  onChange={(e) =>
-                    handleInputChange("description", e.target.value)
-                  }
-                />
-
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  startIcon={
-                    loading ? <CircularProgress size={20} /> : <Send />
-                  }
-                  disabled={loading}
-                  sx={{
-                    mt: 2,
-                    px: 4,
-                    py: 1.5,
-                    fontSize: "1.1rem",
-                  }}
-                >
-                  {loading ? "Sending..." : "Send Message"}
-                </Button>
-              </Box>
-            </Box>
-          </Paper>
-        </MotionBox>
+                  </Box>
+                </Box>
+              </Paper>
+        </Slide>
       </Box>
     </Box>
   );

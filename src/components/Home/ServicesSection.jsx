@@ -1,137 +1,377 @@
-import React from "react";
-import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Typography, Grid, Card, CardContent, Fade, Slide, Chip } from "@mui/material";
 import {
-  Visibility,
-  QuestionAnswer,
-  ReportProblem,
-  AttachMoney,
-  Construction,
-  Info,
+  School,
+  Psychology,
+  VolunteerActivism,
+  LocalHospital,
+  Group,
+  EmojiPeople,
 } from "@mui/icons-material";
 
-const howitworks = [
+const foundationServices = [
   {
-    title: "View Projects",
+    title: "Educational Support",
     description:
-      "Browse our current and completed construction projects with detailed information and progress updates",
-    icon: <Visibility sx={{ fontSize: 40, color: "white" }} />,
+      "Providing scholarships, school supplies, and educational resources to underprivileged children across Kenya",
+    icon: <School sx={{ fontSize: 40, color: "white" }} />,
+    color: "#2196f3",
+    gradient: "linear-gradient(135deg, #2196f3, #21cbf3)",
+    stats: "500+ Students",
+    impact: "High Impact",
   },
   {
-    title: "Project Inquiries",
+    title: "Mental Health Awareness",
     description:
-      "Ask questions about specific projects, timelines, and construction details",
-    icon: <QuestionAnswer sx={{ fontSize: 40, color: "white" }} />,
+      "Raising awareness about mental health issues and providing counseling services to communities in need",
+    icon: <Psychology sx={{ fontSize: 40, color: "white" }} />,
+    color: "#e91e63",
+    gradient: "linear-gradient(135deg, #e91e63, #f06292)",
+    stats: "200+ Sessions",
+    impact: "Critical Need",
   },
   {
-    title: "Report Issues",
+    title: "Poverty Alleviation",
     description:
-      "Report any concerns or issues related to our construction projects in your area",
-    icon: <ReportProblem sx={{ fontSize: 40, color: "white" }} />,
+      "Implementing sustainable programs to help families break the cycle of poverty through skills training and micro-finance",
+    icon: <VolunteerActivism sx={{ fontSize: 40, color: "white" }} />,
+    color: "#4caf50",
+    gradient: "linear-gradient(135deg, #4caf50, #81c784)",
+    stats: "100+ Families",
+    impact: "Life Changing",
   },
   {
-    title: "Budget Information",
+    title: "Community Empowerment",
     description:
-      "Request budget details and cost breakdowns for projects that may affect your community",
-    icon: <AttachMoney sx={{ fontSize: 40, color: "white" }} />,
+      "Building stronger communities through leadership development, civic education, and social cohesion programs",
+    icon: <Group sx={{ fontSize: 40, color: "white" }} />,
+    color: "#ff9800",
+    gradient: "linear-gradient(135deg, #ff9800, #ffb74d)",
+    stats: "50+ Communities",
+    impact: "Transformative",
   },
   {
-    title: "Construction Updates",
+    title: "Healthcare Access",
     description:
-      "Stay informed about ongoing construction activities, road closures, and project milestones",
-    icon: <Construction sx={{ fontSize: 40, color: "white" }} />,
+      "Improving healthcare access in rural areas through mobile clinics and health education programs",
+    icon: <LocalHospital sx={{ fontSize: 40, color: "white" }} />,
+    color: "#9c27b0",
+    gradient: "linear-gradient(135deg, #9c27b0, #ba68c8)",
+    stats: "1000+ Patients",
+    impact: "Essential",
   },
   {
-    title: "Community Engagement",
+    title: "Youth Development",
     description:
-      "Participate in community meetings and provide feedback on construction projects",
-    icon: <Info sx={{ fontSize: 40, color: "white" }} />,
+      "Nurturing the next generation through mentorship programs, career guidance, and life skills training",
+    icon: <EmojiPeople sx={{ fontSize: 40, color: "white" }} />,
+    color: "#00bcd4",
+    gradient: "linear-gradient(135deg, #00bcd4, #4dd0e1)",
+    stats: "300+ Youth",
+    impact: "Future Focused",
   },
 ];
 
 export default function ServicesSection() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   return (
     <Box
-      id="services-section"
-      sx={{ py: 4, px: { xs: 2, sm: 4, md: 6 }, bgcolor: "background.paper" }}
+      id="mission-section"
+      sx={{ 
+        py: 6, 
+        px: { xs: 2, sm: 3, md: 4 }, 
+        bgcolor: "background.paper",
+        background: "linear-gradient(135deg, rgba(240, 248, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(248, 250, 252, 0.9) 100%)",
+        position: "relative",
+        overflow: "hidden",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "radial-gradient(circle at 20% 80%, rgba(33, 150, 243, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(233, 30, 99, 0.1) 0%, transparent 50%)",
+          zIndex: 0,
+        },
+      }}
     >
-      <Box sx={{ maxWidth: "1400px", margin: "0 auto" }}>
-        <Typography
-          variant="h2"
-          align="center"
-          sx={{
-            mb: 2,
-            fontWeight: 700,
-            fontSize: { xs: "2rem", md: "2.5rem" },
-          }}
-        >
-          How It Works
-        </Typography>
-        <Typography
-          variant="h6"
-          align="center"
-          color="text.secondary"
-          sx={{ mb: 6, maxWidth: "800px", mx: "auto" }}
-        >
-          Our public portal provides transparency and community engagement for
-          all construction projects. Stay informed, ask questions, and
-          participate in the development process.
-        </Typography>
+      <Box sx={{ maxWidth: "1300px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+        <Fade in={isVisible} timeout={1000}>
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <Typography
+              variant="h2"
+              sx={{
+                mb: 2,
+                fontWeight: 800,
+                fontSize: { xs: "1.8rem", sm: "2.2rem", md: "2.8rem" },
+                background: "linear-gradient(45deg, #2196f3, #e91e63, #4caf50)",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                textShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                position: "relative",
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  bottom: "-8px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: { xs: "60px", sm: "70px", md: "80px" },
+                  height: "4px",
+                  background: "linear-gradient(45deg, #2196f3, #e91e63)",
+                  borderRadius: "2px",
+                },
+              }}
+            >
+              Our Mission
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{ 
+                mb: 2, 
+                maxWidth: { xs: "100%", sm: "800px", md: "900px" }, 
+                mx: "auto",
+                px: { xs: 1, sm: 0 },
+                fontWeight: 500,
+                fontSize: { xs: "0.95rem", sm: "1.1rem", md: "1.2rem" },
+                lineHeight: 1.6,
+                color: "text.primary",
+              }}
+            >
+              Mwalimu Hope Foundation is a charitable foundation established to champion education, 
+              mental health awareness, poverty alleviation, and community empowerment initiatives in Kenya.
+            </Typography>
+            <Box sx={{ 
+              display: "flex", 
+              justifyContent: "center", 
+              gap: { xs: 1, sm: 1.5, md: 2 }, 
+              flexWrap: "wrap", 
+              mb: 3,
+              px: { xs: 1, sm: 0 }
+            }}>
+              <Chip
+                label="Empowering Minds"
+                sx={{
+                  background: "linear-gradient(45deg, #2196f3, #21cbf3)",
+                  color: "white",
+                  fontWeight: 600,
+                  px: { xs: 1.5, sm: 2 },
+                  py: 1,
+                  fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" },
+                }}
+              />
+              <Chip
+                label="Restoring Hope"
+                sx={{
+                  background: "linear-gradient(45deg, #e91e63, #f06292)",
+                  color: "white",
+                  fontWeight: 600,
+                  px: { xs: 1.5, sm: 2 },
+                  py: 1,
+                  fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" },
+                }}
+              />
+              <Chip
+                label="Building Kenya's Future"
+                sx={{
+                  background: "linear-gradient(45deg, #4caf50, #81c784)",
+                  color: "white",
+                  fontWeight: 600,
+                  px: { xs: 1.5, sm: 2 },
+                  py: 1,
+                  fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" },
+                }}
+              />
+            </Box>
+          </Box>
+        </Fade>
 
         <Box sx={{ position: "relative" }}>
-          <Grid container spacing={4}>
-            {howitworks.map((service, index) => (
+          <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
+            {foundationServices.map((service, index) => (
               <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    transition: "transform 0.2s",
-                    position: "relative",
-                    zIndex: 1,
-                    "&:hover": {
-                      transform: "translateY(-4px)",
-                      boxShadow: 6,
-                    },
-                  }}
-                >
-                  <CardContent sx={{ flexGrow: 1, textAlign: "center" }}>
-                    <Box
-                      sx={{
-                        mb: 2,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
+                <Slide direction="up" in={isVisible} timeout={800 + index * 200}>
+                  <Card
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                      position: "relative",
+                      zIndex: 1,
+                      borderRadius: "20px",
+                      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+                      border: "1px solid rgba(255, 255, 255, 0.3)",
+                      background: "rgba(255, 255, 255, 0.9)",
+                      backdropFilter: "blur(10px)",
+                      overflow: "hidden",
+                      "&::before": {
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: "4px",
+                        background: service.gradient,
+                        zIndex: 2,
+                      },
+                      "&:hover": {
+                        transform: "translateY(-12px) scale(1.03)",
+                        boxShadow: `0 20px 60px ${service.color}30`,
+                        "& .icon-container": {
+                          transform: "scale(1.15) rotate(10deg)",
+                          boxShadow: `0 12px 30px ${service.color}50`,
+                        },
+                        "& .stats-chip": {
+                          transform: "scale(1.1)",
+                        },
+                        "& .impact-chip": {
+                          transform: "scale(1.1)",
+                        },
+                      },
+                    }}
+                  >
+                    <CardContent sx={{ flexGrow: 1, textAlign: "center", p: 2, pt: 3 }}>
                       <Box
                         sx={{
-                          width: 60,
-                          height: 60,
-                          borderRadius: "50%",
-                          bgcolor: "primary.light",
-                          color: "white",
+                          mb: 1.5,
                           display: "flex",
-                          alignItems: "center",
                           justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
                         }}
                       >
-                        {service.icon}
+                        <Box
+                          className="icon-container"
+                          sx={{
+                            width: { xs: 60, sm: 65, md: 70 },
+                            height: { xs: 60, sm: 65, md: 70 },
+                            borderRadius: "50%",
+                            background: service.gradient,
+                            color: "white",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                            boxShadow: `0 6px 20px ${service.color}40`,
+                            "& svg": {
+                              fontSize: { xs: "28px", sm: "30px", md: "32px" },
+                            },
+                            "&::before": {
+                              content: '""',
+                              position: "absolute",
+                              top: "-2px",
+                              left: "-2px",
+                              right: "-2px",
+                              bottom: "-2px",
+                              background: service.gradient,
+                              borderRadius: "50%",
+                              zIndex: -1,
+                              opacity: 0,
+                              transition: "opacity 0.3s ease",
+                            },
+                          }}
+                        >
+                          {service.icon}
+                        </Box>
                       </Box>
-                    </Box>
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="h3"
-                      sx={{ fontWeight: 600 }}
-                    >
-                      {service.title}
-                    </Typography>
-                    <Typography color="text.secondary">
-                      {service.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
+                      
+                      <Typography
+                        gutterBottom
+                        variant="h6"
+                        component="h3"
+                        sx={{ 
+                          fontWeight: 800,
+                          mb: 1,
+                          color: "text.primary",
+                          fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem" },
+                          background: `linear-gradient(45deg, ${service.color}, ${service.color}aa)`,
+                          backgroundClip: "text",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                        }}
+                      >
+                        {service.title}
+                      </Typography>
+
+                      <Box sx={{ 
+                        display: "flex", 
+                        justifyContent: "center", 
+                        gap: { xs: 0.5, sm: 0.8 }, 
+                        mb: 1.5, 
+                        flexWrap: "wrap",
+                        px: { xs: 1, sm: 0 }
+                      }}>
+                        <Chip
+                          className="stats-chip"
+                          label={service.stats}
+                          size="small"
+                          sx={{
+                            background: service.gradient,
+                            color: "white",
+                            fontWeight: 600,
+                            fontSize: { xs: "0.65rem", sm: "0.7rem" },
+                            height: { xs: "22px", sm: "24px" },
+                            transition: "all 0.3s ease",
+                          }}
+                        />
+                        <Chip
+                          className="impact-chip"
+                          label={service.impact}
+                          size="small"
+                          variant="outlined"
+                          sx={{
+                            borderColor: service.color,
+                            color: service.color,
+                            fontWeight: 600,
+                            fontSize: { xs: "0.65rem", sm: "0.7rem" },
+                            height: { xs: "22px", sm: "24px" },
+                            transition: "all 0.3s ease",
+                          }}
+                        />
+                      </Box>
+
+                      <Typography 
+                        color="text.secondary"
+                        sx={{
+                          lineHeight: 1.5,
+                          fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" },
+                          mb: 1.5,
+                          px: { xs: 0.5, sm: 0 },
+                        }}
+                      >
+                        {service.description}
+                      </Typography>
+
+                      <Box
+                        sx={{
+                          mt: "auto",
+                          pt: 1.5,
+                          borderTop: `1px solid ${service.color}20`,
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: service.color,
+                            fontWeight: 600,
+                            fontSize: "0.75rem",
+                            textTransform: "uppercase",
+                            letterSpacing: "1px",
+                          }}
+                        >
+                          Learn More →
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Slide>
               </Grid>
             ))}
           </Grid>
