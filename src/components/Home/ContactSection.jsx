@@ -60,8 +60,26 @@ export default function ContactSection() {
     setLoading(true);
 
     try {
-      // Simulate API call - replace with actual endpoint
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Submit to backend API
+      const response = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          full_name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          category: formData.interest,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to submit inquiry");
+      }
       
       // Reset form data
       setFormData({
@@ -95,7 +113,7 @@ export default function ContactSection() {
       Swal.fire({
         icon: "error",
         title: "Error!",
-        text: "Failed to send message. Please try again.",
+        text: error.message || "Failed to send message. Please try again.",
         customClass: {
           container: "swal-z-index-fix",
         },
