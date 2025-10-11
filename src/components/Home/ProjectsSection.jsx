@@ -201,6 +201,7 @@ export default function ProjectsSection() {
                     sx={{
                       fontWeight: 600,
                       color: "primary.main",
+                      fontSize: "1.5rem",
                     }}
                   >
                     Our Projects
@@ -209,7 +210,7 @@ export default function ProjectsSection() {
                 <Typography
                   variant="h6"
                   color="text.secondary"
-                  sx={{ maxWidth: 600, mx: "auto" }}
+                  sx={{ maxWidth: 600, mx: "auto", fontSize: "0.875rem" }}
                 >
                   Discover our ongoing and completed community empowerment initiatives across Kenya
                 </Typography>

@@ -20,6 +20,7 @@ import Footer from "./components/Footer/Footer";
 // Lazy load components
 const Home = lazy(() => import("./pages/Home"));
 const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
+const TeamMemberDetail = lazy(() => import("./pages/TeamMemberDetail"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -40,38 +41,7 @@ function PrivateRoute({ user, children }) {
 
 function App() {
   const [user, setUser] = useState("");
-  const [loading, setLoading] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(true); // Drawer open by default
-
-  useEffect(() => {
-    fetch("/api/public-users/profile", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((data) => setUser(data))
-      .catch(() => setUser(""))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          backgroundColor: "white",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -110,6 +80,16 @@ function App() {
                 <>
                   <PublicHeader />
                   <ProjectDetails />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/team/:id"
+              element={
+                <>
+                  <PublicHeader />
+                  <TeamMemberDetail />
                   <Footer />
                 </>
               }
