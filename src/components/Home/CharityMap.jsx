@@ -53,7 +53,7 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 
-// Project categories matching interest dropdown in ContactSection
+// Project categories matching the API
 const PROJECT_CATEGORIES = {
   volunteer: { label: "Volunteer Opportunities", color: "#4caf50" },
   education: { label: "Educational Support", color: "#2196f3" },
@@ -61,6 +61,15 @@ const PROJECT_CATEGORIES = {
   community: { label: "Community Programs", color: "#ff9800" },
   donation: { label: "Donations & Support", color: "#9c27b0" },
   partnership: { label: "Partnership Opportunities", color: "#00bcd4" },
+};
+
+// Project status colors
+const STATUS_COLORS = {
+  pending: "#ff9800", // Orange
+  in_progress: "#4caf50", // Green
+  completed: "#2196f3", // Blue
+  on_hold: "#ff5722", // Deep Orange
+  cancelled: "#f44336", // Red
 };
 
 const CharityMap = () => {
@@ -179,14 +188,14 @@ const CharityMap = () => {
     const nearbyProjects = dataToSearch
       .filter(
         (project) =>
-          project.xCoordinate !== null && project.yCoordinate !== null
+          project.longitude !== null && project.latitude !== null
       )
       .map((project) => {
         const distance = calculateDistance(
           userLocation.latitude,
           userLocation.longitude,
-          parseFloat(project.yCoordinate),
-          parseFloat(project.xCoordinate)
+          parseFloat(project.latitude),
+          parseFloat(project.longitude)
         );
         return { ...project, distance };
       })
@@ -315,7 +324,7 @@ const CharityMap = () => {
 
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${API_BASE_URL}/projects?${params}`,
+        `${API_BASE_URL}/public-projects?${params}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -348,7 +357,7 @@ const CharityMap = () => {
       try {
         const token = localStorage.getItem("token");
         const projectsResponse = await fetch(
-          `${API_BASE_URL}/projects?limit=5000`,
+          `${API_BASE_URL}/public-projects?limit=5000`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -394,10 +403,10 @@ const CharityMap = () => {
 
       // Calculate bounds for all search results
       const coordinates = searchResults
-        .filter((station) => station.xCoordinate && station.yCoordinate)
-        .map((station) => [
-          parseFloat(station.xCoordinate),
-          parseFloat(station.yCoordinate),
+        .filter((project) => project.longitude && project.latitude)
+        .map((project) => [
+          parseFloat(project.longitude),
+          parseFloat(project.latitude),
         ]);
 
       if (coordinates.length > 0) {
@@ -540,18 +549,133 @@ const CharityMap = () => {
     };
   }, [mapInitialized, navigate]);
 
+  // Helper function to get status color
+  const getStatusColor = (status) => {
+    return STATUS_COLORS[status] || "#666";
+  };
+
+  // Helper function to get category marker
+  const getCategoryMarker = (
+    category,
+    status,
+    isSearchResult = false
+  ) => {
+    const statusColor = getStatusColor(status);
+    const scale = isSearchResult ? 1.5 : 1.2;
+    const strokeWidth = isSearchResult ? 3 : 2;
+    const outerRadius = isSearchResult ? 12 : 10;
+
+    let svgIcon = "";
+
+    switch (category) {
+      case "volunteer":
+        svgIcon = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="${outerRadius}" fill="${statusColor}" stroke="white" stroke-width="${strokeWidth}"/>
+            ${
+              isSearchResult
+                ? `<circle cx="12" cy="12" r="14" fill="none" stroke="#ff6b35" stroke-width="2" opacity="0.8"/>`
+                : ""
+            }
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="white"/>
+          </svg>
+        `;
+        break;
+      case "education":
+        svgIcon = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="${outerRadius}" fill="${statusColor}" stroke="white" stroke-width="${strokeWidth}"/>
+            ${
+              isSearchResult
+                ? `<circle cx="12" cy="12" r="14" fill="none" stroke="#ff6b35" stroke-width="2" opacity="0.8"/>`
+                : ""
+            }
+            <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z" fill="white"/>
+          </svg>
+        `;
+        break;
+      case "donation":
+        svgIcon = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="${outerRadius}" fill="${statusColor}" stroke="white" stroke-width="${strokeWidth}"/>
+            ${
+              isSearchResult
+                ? `<circle cx="12" cy="12" r="14" fill="none" stroke="#ff6b35" stroke-width="2" opacity="0.8"/>`
+                : ""
+            }
+            <path d="M20.5 4c-2.61 0.45-5.59 1.22-8 2.5-2.41-1.28-5.39-2.05-8-2.5v11.5c2.61 0.45 5.59 1.22 8 2.5 2.41-1.28 5.39-2.05 8-2.5V4zm-8 10.92c-1.87-0.73-3.96-1.18-6-1.36V5.64c2.04 0.18 4.13 0.63 6 1.36v7.92z" fill="white"/>
+          </svg>
+        `;
+        break;
+      case "mental_health":
+        svgIcon = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="${outerRadius}" fill="${statusColor}" stroke="white" stroke-width="${strokeWidth}"/>
+            ${
+              isSearchResult
+                ? `<circle cx="12" cy="12" r="14" fill="none" stroke="#ff6b35" stroke-width="2" opacity="0.8"/>`
+                : ""
+            }
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="white"/>
+          </svg>
+        `;
+        break;
+      case "community":
+        svgIcon = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="${outerRadius}" fill="${statusColor}" stroke="white" stroke-width="${strokeWidth}"/>
+            ${
+              isSearchResult
+                ? `<circle cx="12" cy="12" r="14" fill="none" stroke="#ff6b35" stroke-width="2" opacity="0.8"/>`
+                : ""
+            }
+            <path d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" fill="white"/>
+          </svg>
+        `;
+        break;
+      case "partnership":
+        svgIcon = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="${outerRadius}" fill="${statusColor}" stroke="white" stroke-width="${strokeWidth}"/>
+            ${
+              isSearchResult
+                ? `<circle cx="12" cy="12" r="14" fill="none" stroke="#ff6b35" stroke-width="2" opacity="0.8"/>`
+                : ""
+            }
+            <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z" fill="white"/>
+          </svg>
+        `;
+        break;
+      default:
+        svgIcon = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="${outerRadius}" fill="${statusColor}" stroke="white" stroke-width="${strokeWidth}"/>
+            ${
+              isSearchResult
+                ? `<circle cx="12" cy="12" r="14" fill="none" stroke="#ff6b35" stroke-width="2" opacity="0.8"/>`
+                : ""
+            }
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="white"/>
+          </svg>
+        `;
+        break;
+    }
+
+    return svgIcon;
+  };
+
   // Create project markers
   const createProjectMarkers = (projects, isSearchResult = false) => {
     return projects
       .filter(
         (project) =>
-          project.xCoordinate !== null &&
-          project.yCoordinate !== null &&
+          project.longitude !== null &&
+          project.latitude !== null &&
           visibleCategories[project.category]
       )
       .map((project) => {
-        const lon = parseFloat(project.xCoordinate); // longitude
-        const lat = parseFloat(project.yCoordinate); // latitude
+        const lon = parseFloat(project.longitude);
+        const lat = parseFloat(project.latitude);
 
         if (isNaN(lon) || isNaN(lat)) {
           return null;
@@ -566,29 +690,20 @@ const CharityMap = () => {
           },
         });
 
-        // Category-based color coding
-        const markerColor = getCategoryColor(project.category);
-
-        // Different styling for search results
-        const scale = isSearchResult ? 1.5 : 1.2;
-        const strokeWidth = isSearchResult ? 3 : 2;
-        const outerRadius = isSearchResult ? 12 : 10;
+        // Get category specific marker
+        const markerSvg = getCategoryMarker(
+          project.category,
+          project.status,
+          isSearchResult
+        );
 
         feature.setStyle(
           new Style({
             image: new Icon({
-              src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="${outerRadius}" fill="${markerColor}" stroke="white" stroke-width="${strokeWidth}"/>
-                  ${
-                    isSearchResult
-                      ? '<circle cx="12" cy="12" r="14" fill="none" stroke="#ff6b35" stroke-width="2" opacity="0.8"/>'
-                      : ""
-                  }
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
-                </svg>
-              `)}`,
-              scale: scale,
+              src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+                markerSvg
+              )}`,
+              scale: 1,
               anchor: [0.5, 0.5],
             }),
           })
@@ -702,11 +817,6 @@ const CharityMap = () => {
     setTabValue(newValue);
   };
 
-  // Helper function to get category color
-  const getCategoryColor = (category) => {
-    return PROJECT_CATEGORIES[category]?.color || "#666";
-  };
-
   // Handle category toggle
   const handleCategoryToggle = (category) => {
     setVisibleCategories((prev) => ({
@@ -786,8 +896,8 @@ const CharityMap = () => {
       counts[category] = dataToCount.filter(
         (project) =>
           project.category === category &&
-          project.xCoordinate !== null &&
-          project.yCoordinate !== null
+          project.longitude !== null &&
+          project.latitude !== null
       ).length;
     });
 
@@ -1441,10 +1551,10 @@ const CharityMap = () => {
                   sx={{
                     padding: 0.25,
                     "&.Mui-checked": {
-                      color: getCategoryColor(category),
+                      color: PROJECT_CATEGORIES[category]?.color,
                     },
                     "&:hover": {
-                      backgroundColor: `${getCategoryColor(category)}20`,
+                      backgroundColor: `${PROJECT_CATEGORIES[category]?.color}20`,
                     },
                   }}
                 />
@@ -1453,7 +1563,7 @@ const CharityMap = () => {
                     width: 12,
                     height: 12,
                     borderRadius: "50%",
-                    backgroundColor: getCategoryColor(category),
+                    backgroundColor: PROJECT_CATEGORIES[category]?.color,
                     mr: 0.5,
                     transition: "all 0.2s ease-in-out",
                     opacity: isVisible ? 1 : 0.5,
@@ -1477,7 +1587,7 @@ const CharityMap = () => {
                     fontSize: "9px",
                     color: "text.secondary",
                     backgroundColor: isVisible
-                      ? `${getCategoryColor(category)}20`
+                      ? `${PROJECT_CATEGORIES[category]?.color}20`
                       : "#f5f5f5",
                     px: 0.5,
                     py: 0.1,
@@ -1718,48 +1828,48 @@ const CharityMap = () => {
                       </Typography>
                     </Box>
 
-                    <Box
-                      sx={{
-                        p: 2,
-                        backgroundColor: "white",
-                        borderRadius: 2,
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                        border: "1px solid #e0e0e0",
-                      }}
-                    >
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          color: "text.secondary",
-                          mb: 1,
-                          fontSize: "0.8rem",
-                          textTransform: "uppercase",
-                          letterSpacing: 0.5,
-                        }}
-                      >
-                        Category
-                      </Typography>
                       <Box
                         sx={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          px: 2,
-                          py: 0.5,
-                          borderRadius: 3,
-                          backgroundColor: `${getCategoryColor(
-                            selectedProjectDetails.category
-                          )}20`,
-                          color: getCategoryColor(
-                            selectedProjectDetails.category
-                          ),
-                          fontWeight: 600,
-                          fontSize: "0.85rem",
+                          p: 2,
+                          backgroundColor: "white",
+                          borderRadius: 2,
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                          border: "1px solid #e0e0e0",
                         }}
                       >
-                        {PROJECT_CATEGORIES[selectedProjectDetails.category]
-                          ?.label || selectedProjectDetails.category}
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            color: "text.secondary",
+                            mb: 1,
+                            fontSize: "0.8rem",
+                            textTransform: "uppercase",
+                            letterSpacing: 0.5,
+                          }}
+                        >
+                          Category
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            px: 2,
+                            py: 0.5,
+                            borderRadius: 3,
+                            backgroundColor: `${PROJECT_CATEGORIES[
+                              selectedProjectDetails.category
+                            ]?.color}20`,
+                            color: PROJECT_CATEGORIES[
+                              selectedProjectDetails.category
+                            ]?.color,
+                            fontWeight: 600,
+                            fontSize: "0.85rem",
+                          }}
+                        >
+                          {PROJECT_CATEGORIES[selectedProjectDetails.category]
+                            ?.label || selectedProjectDetails.category}
+                        </Box>
                       </Box>
-                    </Box>
 
                     <Box
                       sx={{
@@ -1809,14 +1919,60 @@ const CharityMap = () => {
                           letterSpacing: 0.5,
                         }}
                       >
-                        Beneficiaries
+                        Status
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          px: 2,
+                          py: 0.5,
+                          borderRadius: 3,
+                          backgroundColor: `${getStatusColor(
+                            selectedProjectDetails.status
+                          )}20`,
+                          color: getStatusColor(
+                            selectedProjectDetails.status
+                          ),
+                          fontWeight: 600,
+                          fontSize: "0.85rem",
+                        }}
+                      >
+                        {selectedProjectDetails.status
+                          ?.charAt(0)
+                          .toUpperCase() +
+                          selectedProjectDetails.status
+                            ?.slice(1)
+                            .replace("_", " ") || "-"}
+                      </Box>
+                    </Box>
+
+                    <Box
+                      sx={{
+                        p: 2,
+                        backgroundColor: "white",
+                        borderRadius: 2,
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                        border: "1px solid #e0e0e0",
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          color: "text.secondary",
+                          mb: 1,
+                          fontSize: "0.8rem",
+                          textTransform: "uppercase",
+                          letterSpacing: 0.5,
+                        }}
+                      >
+                        Target Individual
                       </Typography>
                       <Typography
                         variant="body1"
                         sx={{ fontWeight: 500, color: "text.primary" }}
                       >
-                        {selectedProjectDetails.beneficiaries?.toLocaleString() ||
-                          "-"}
+                        {selectedProjectDetails.target_individual || "-"}
                       </Typography>
                     </Box>
 
@@ -1887,35 +2043,6 @@ const CharityMap = () => {
                           letterSpacing: 0.5,
                         }}
                       >
-                        Location
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        sx={{ fontWeight: 500, color: "text.primary" }}
-                      >
-                        {selectedProjectDetails.location || "-"}
-                      </Typography>
-                    </Box>
-
-                    <Box
-                      sx={{
-                        p: 2,
-                        backgroundColor: "white",
-                        borderRadius: 2,
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                        border: "1px solid #e0e0e0",
-                      }}
-                    >
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          color: "text.secondary",
-                          mb: 1,
-                          fontSize: "0.8rem",
-                          textTransform: "uppercase",
-                          letterSpacing: 0.5,
-                        }}
-                      >
                         County
                       </Typography>
                       <Typography
@@ -1945,13 +2072,42 @@ const CharityMap = () => {
                           letterSpacing: 0.5,
                         }}
                       >
-                        Region
+                        Subcounty
                       </Typography>
                       <Typography
                         variant="body1"
                         sx={{ fontWeight: 500, color: "text.primary" }}
                       >
-                        {selectedProjectDetails.region || "-"}
+                        {selectedProjectDetails.subcounty || "-"}
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      sx={{
+                        p: 2,
+                        backgroundColor: "white",
+                        borderRadius: 2,
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                        border: "1px solid #e0e0e0",
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          color: "text.secondary",
+                          mb: 1,
+                          fontSize: "0.8rem",
+                          textTransform: "uppercase",
+                          letterSpacing: 0.5,
+                        }}
+                      >
+                        Progress
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{ fontWeight: 500, color: "text.primary" }}
+                      >
+                        {selectedProjectDetails.progress || 0}%
                       </Typography>
                     </Box>
 
@@ -1992,7 +2148,7 @@ const CharityMap = () => {
                               fontFamily: "monospace",
                             }}
                           >
-                            {selectedProjectDetails.yCoordinate || "-"}
+                            {selectedProjectDetails.latitude || "-"}
                           </Typography>
                         </Box>
                         <Box>
@@ -2010,7 +2166,7 @@ const CharityMap = () => {
                               fontFamily: "monospace",
                             }}
                           >
-                            {selectedProjectDetails.xCoordinate || "-"}
+                            {selectedProjectDetails.longitude || "-"}
                           </Typography>
                         </Box>
                       </Box>
@@ -2072,7 +2228,7 @@ const CharityMap = () => {
                 variant="contained"
                 onClick={() => {
                   if (selectedProjectDetails?.id) {
-                    navigate(`/projects/${selectedProjectDetails.id}`);
+                    navigate(`/project/${selectedProjectDetails.id}`);
                   }
                 }}
                 sx={{

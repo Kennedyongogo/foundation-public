@@ -19,12 +19,13 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import {
-  Construction,
+  VolunteerActivism,
   LocationOn,
   Schedule,
-  AttachMoney,
+  People,
   ChevronLeft,
   ChevronRight,
+  Category,
 } from "@mui/icons-material";
 
 const MotionBox = motion(Box);
@@ -49,16 +50,16 @@ const getStatusLabel = (status) => {
   return labels[status] || status;
 };
 
-const formatCurrency = (amount, currency = "KES") => {
-  const numAmount = parseFloat(amount);
-  if (isNaN(numAmount)) return `${currency} 0`;
-
-  if (numAmount >= 1000000) {
-    return `${currency} ${(numAmount / 1000000).toFixed(1)}M`;
-  } else if (numAmount >= 1000) {
-    return `${currency} ${(numAmount / 1000).toFixed(1)}K`;
-  }
-  return `${currency} ${numAmount.toLocaleString()}`;
+const getCategoryLabel = (category) => {
+  const labels = {
+    volunteer: "Volunteer Program",
+    education: "Education",
+    health: "Healthcare",
+    empowerment: "Empowerment",
+    poverty: "Poverty Alleviation",
+    mental_health: "Mental Health",
+  };
+  return labels[category] || category;
 };
 
 export default function ProjectsSection() {
@@ -95,18 +96,20 @@ export default function ProjectsSection() {
           id: project.id,
           title: project.name,
           description: project.description,
-          image: "/betheltus-logo.png",
-          location: project.location_name,
+          // Use first update image or fallback to logo
+          image: project.update_images && project.update_images.length > 0
+            ? `/${project.update_images[0].path}`
+            : "/foundation-logo.png",
+          location: `${project.subcounty}, ${project.county}`,
+          category: project.category,
           status: project.status,
           startDate: project.start_date,
-          estimatedCompletion: project.end_date,
-          budget: formatCurrency(project.budget_estimate, project.currency),
-          progress: project.progress_percent || 0,
-          clientName: project.client_name,
-          contractorName: project.contractor_name,
-          engineerName: project.engineer?.name,
-          constructionType: project.construction_type,
-          floorSize: project.floor_size,
+          endDate: project.end_date,
+          progress: project.progress || 0,
+          targetIndividual: project.target_individual,
+          creatorName: project.creator?.full_name,
+          assigneeName: project.assignee?.full_name,
+          updateImages: project.update_images || [],
         }));
         setProjects(mappedProjects);
       } else {
@@ -190,7 +193,7 @@ export default function ProjectsSection() {
                     mb: 2,
                   }}
                 >
-                  <Construction
+                  <VolunteerActivism
                     sx={{ fontSize: "2.5rem", color: "primary.main" }}
                   />
                   <Typography
@@ -208,8 +211,7 @@ export default function ProjectsSection() {
                   color="text.secondary"
                   sx={{ maxWidth: 600, mx: "auto" }}
                 >
-                  Explore our ongoing and completed construction projects across
-                  Kenya
+                  Discover our ongoing and completed community empowerment initiatives across Kenya
                 </Typography>
               </Box>
 
@@ -330,12 +332,19 @@ export default function ProjectsSection() {
                               }}
                             >
                               <Box sx={{ mb: 2 }}>
-                                <Chip
-                                  label={getStatusLabel(project.status)}
-                                  color={getStatusColor(project.status)}
-                                  size="small"
-                                  sx={{ mb: 2 }}
-                                />
+                                <Box sx={{ display: "flex", gap: 0.5, mb: 2, flexWrap: "wrap" }}>
+                                  <Chip
+                                    label={getStatusLabel(project.status)}
+                                    color={getStatusColor(project.status)}
+                                    size="small"
+                                  />
+                                  <Chip
+                                    label={getCategoryLabel(project.category)}
+                                    size="small"
+                                    variant="outlined"
+                                    color="primary"
+                                  />
+                                </Box>
                                 <Typography
                                   variant="h6"
                                   component="h3"
@@ -374,6 +383,25 @@ export default function ProjectsSection() {
                                     mb: 0.5,
                                   }}
                                 >
+                                  <Category
+                                    sx={{ fontSize: 14, color: "primary.main" }}
+                                  />
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ fontSize: "0.8rem" }}
+                                  >
+                                    {getCategoryLabel(project.category)}
+                                  </Typography>
+                                </Box>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                    mb: 0.5,
+                                  }}
+                                >
                                   <LocationOn
                                     sx={{ fontSize: 14, color: "primary.main" }}
                                   />
@@ -393,7 +421,7 @@ export default function ProjectsSection() {
                                     mb: 0.5,
                                   }}
                                 >
-                                  <Schedule
+                                  <People
                                     sx={{ fontSize: 14, color: "primary.main" }}
                                   />
                                   <Typography
@@ -401,7 +429,7 @@ export default function ProjectsSection() {
                                     color="text.secondary"
                                     sx={{ fontSize: "0.8rem" }}
                                   >
-                                    Started: {formatDate(project.startDate)}
+                                    Target: {project.targetIndividual}
                                   </Typography>
                                 </Box>
                                 <Box
@@ -412,7 +440,7 @@ export default function ProjectsSection() {
                                     mb: 0.5,
                                   }}
                                 >
-                                  <AttachMoney
+                                  <Schedule
                                     sx={{ fontSize: 14, color: "primary.main" }}
                                   />
                                   <Typography
@@ -420,7 +448,7 @@ export default function ProjectsSection() {
                                     color="text.secondary"
                                     sx={{ fontSize: "0.8rem" }}
                                   >
-                                    Budget: {project.budget}
+                                    Started: {formatDate(project.startDate)}
                                   </Typography>
                                 </Box>
                               </Box>

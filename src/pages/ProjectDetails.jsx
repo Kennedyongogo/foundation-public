@@ -21,15 +21,13 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import {
-  Construction,
+  VolunteerActivism,
   LocationOn,
   Schedule,
-  AttachMoney,
   Person,
-  Business,
-  Engineering,
+  People,
+  Category,
   Description,
-  Home,
   CalendarToday,
   TrendingUp,
   ArrowBack,
@@ -59,19 +57,20 @@ const getStatusLabel = (status) => {
   return labels[status] || status;
 };
 
-const formatCurrency = (amount, currency = "KES") => {
-  const numAmount = parseFloat(amount);
-  if (isNaN(numAmount)) return `${currency} 0`;
-
-  if (numAmount >= 1000000) {
-    return `${currency} ${(numAmount / 1000000).toFixed(1)}M`;
-  } else if (numAmount >= 1000) {
-    return `${currency} ${(numAmount / 1000).toFixed(1)}K`;
-  }
-  return `${currency} ${numAmount.toLocaleString()}`;
+const getCategoryLabel = (category) => {
+  const labels = {
+    volunteer: "Volunteer Program",
+    education: "Education",
+    health: "Healthcare",
+    empowerment: "Empowerment",
+    poverty: "Poverty Alleviation",
+    mental_health: "Mental Health",
+  };
+  return labels[category] || category;
 };
 
 const formatDate = (dateString) => {
+  if (!dateString) return "N/A";
   return new Date(dateString).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -117,6 +116,13 @@ export default function ProjectDetails() {
 
   const handleBack = () => {
     navigate("/");
+    // Scroll to projects section after navigation
+    setTimeout(() => {
+      const projectsSection = document.getElementById("projects-section");
+      if (projectsSection) {
+        projectsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
   };
 
   if (loading) {
@@ -149,8 +155,57 @@ export default function ProjectDetails() {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+    <>
+      {/* Global background styles */}
+      <style>
+        {`
+          * {
+            box-sizing: border-box;
+          }
+          html {
+            height: 100%;
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+          }
+          html, body, #root {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background-attachment: fixed !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          body {
+            min-height: 100%;
+            overflow-x: hidden;
+          }
+          #root {
+            min-height: 100vh;
+          }
+          body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"/><circle cx="800" cy="300" r="150" fill="url(%23a)"/><circle cx="400" cy="700" r="120" fill="url(%23a)"/></svg>');
+            opacity: 0.3;
+            z-index: 0;
+            pointer-events: none;
+          }
+        `}
+      </style>
+      
+      <Box 
+        sx={{ 
+          minHeight: "100vh", 
+          position: "relative",
+          zIndex: 1,
+          background: "transparent",
+        }}
+      >
+      <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3 }, position: "relative", zIndex: 1 }}>
         <MotionBox
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -159,66 +214,159 @@ export default function ProjectDetails() {
           {/* Header Section */}
           <Box sx={{ mb: 4 }}>
             <Button
-              variant="outlined"
+              variant="contained"
               startIcon={<ArrowBack />}
               onClick={handleBack}
-              sx={{ mb: 3 }}
+              sx={{ 
+                mb: 3,
+                background: "linear-gradient(135deg, #667eea, #764ba2)",
+                color: "white",
+                fontWeight: 600,
+                px: 3,
+                py: 1.5,
+                "&:hover": {
+                  background: "linear-gradient(135deg, #5568d3, #653a8b)",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
+                },
+                transition: "all 0.3s ease",
+              }}
             >
               Back to Projects
             </Button>
 
-            <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
+            <Paper 
+              elevation={3} 
+              sx={{ 
+                p: { xs: 2, sm: 3, md: 5 }, 
+                borderRadius: { xs: 3, md: 4 },
+                background: "#ffffff",
+                border: "1px solid #e0e0e0",
+                overflow: "hidden",
+                position: "relative",
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: "4px",
+                  background: "linear-gradient(90deg, #667eea, #764ba2, #f093fb)",
+                }
+              }}
+            >
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "flex-start",
-                  gap: 3,
-                  mb: 3,
+                  gap: { xs: 2, sm: 3, md: 4 },
+                  mb: { xs: 2, md: 3 },
+                  flexDirection: { xs: "column", sm: "row" },
                 }}
               >
-                <Avatar
+                <Box
                   sx={{
-                    width: 80,
-                    height: 80,
-                    bgcolor: "primary.main",
-                    fontSize: "2rem",
+                    width: { xs: 70, sm: 80, md: 100 },
+                    height: { xs: 70, sm: 80, md: 100 },
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #667eea, #764ba2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 10px 30px rgba(102, 126, 234, 0.3)",
+                    position: "relative",
+                    flexShrink: 0,
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      inset: "-2px",
+                      borderRadius: "50%",
+                      background: "linear-gradient(135deg, #667eea, #764ba2)",
+                      zIndex: -1,
+                      opacity: 0.3,
+                      filter: "blur(10px)",
+                    }
                   }}
                 >
-                  <Construction />
-                </Avatar>
+                  <VolunteerActivism sx={{ fontSize: { xs: "1.8rem", sm: "2rem", md: "2.5rem" }, color: "white" }} />
+                </Box>
                 <Box sx={{ flex: 1 }}>
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "center",
                       gap: 2,
-                      mb: 1,
+                      mb: 2,
+                      flexWrap: "wrap",
                     }}
                   >
                     <Typography
-                      variant="h4"
+                      variant="h3"
                       component="h1"
-                      sx={{ fontWeight: 600 }}
+                      sx={{ 
+                        fontWeight: 700,
+                        background: "linear-gradient(135deg, #667eea, #764ba2)",
+                        backgroundClip: "text",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        fontSize: { xs: "1.8rem", sm: "2.2rem", md: "2.5rem" }
+                      }}
                     >
                       {project.name}
                     </Typography>
-                    <Chip
-                      label={getStatusLabel(project.status)}
-                      color={getStatusColor(project.status)}
-                      size="large"
-                    />
+                    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                      <Chip
+                        label={getStatusLabel(project.status)}
+                        color={getStatusColor(project.status)}
+                        size={isMobile ? "medium" : "large"}
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: { xs: "0.75rem", sm: "0.85rem", md: "0.9rem" },
+                          px: { xs: 1.5, md: 2 },
+                          py: { xs: 0.5, md: 1 },
+                        }}
+                      />
+                      <Chip
+                        label={getCategoryLabel(project.category)}
+                        variant="outlined"
+                        color="primary"
+                        size={isMobile ? "medium" : "large"}
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: { xs: "0.75rem", sm: "0.85rem", md: "0.9rem" },
+                          px: { xs: 1.5, md: 2 },
+                          py: { xs: 0.5, md: 1 },
+                          borderWidth: "2px",
+                        }}
+                      />
+                    </Box>
                   </Box>
                   <Typography
                     variant="h6"
                     color="text.secondary"
-                    sx={{ mb: 2 }}
+                    sx={{ 
+                      mb: 3,
+                      lineHeight: 1.6,
+                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem" }
+                    }}
                   >
                     {project.description}
                   </Typography>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <LocationOn color="primary" />
-                    <Typography variant="body1">
-                      {project.location_name}
+                  <Box 
+                    sx={{ 
+                      display: "flex", 
+                      alignItems: "center", 
+                      gap: 1,
+                      p: 2,
+                      borderRadius: 2,
+                      backgroundColor: "rgba(102, 126, 234, 0.1)",
+                      border: "1px solid rgba(102, 126, 234, 0.2)",
+                      width: "fit-content",
+                    }}
+                  >
+                    <LocationOn sx={{ color: "#667eea", fontSize: "1.5rem" }} />
+                    <Typography variant="body1" sx={{ fontWeight: 500, color: "#667eea" }}>
+                      {project.subcounty}, {project.county}
                     </Typography>
                   </Box>
                 </Box>
@@ -227,611 +375,551 @@ export default function ProjectDetails() {
           </Box>
 
           {/* Project Overview */}
-          <Paper elevation={3} sx={{ p: 4, borderRadius: 3, mb: 3 }}>
-            <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
-              Project Overview
-            </Typography>
+          <Paper 
+            elevation={3} 
+            sx={{ 
+              p: { xs: 2, sm: 3, md: 4 }, 
+              borderRadius: { xs: 3, md: 4 }, 
+              mb: 3,
+              background: "#ffffff",
+              border: "1px solid #e0e0e0",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 3, md: 4 } }}>
+              <Box
+                sx={{
+                  width: { xs: 40, md: 50 },
+                  height: { xs: 40, md: 50 },
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg, #667eea, #764ba2)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mr: 2,
+                  flexShrink: 0,
+                }}
+              >
+                <TrendingUp sx={{ color: "white", fontSize: { xs: "1.2rem", md: "1.5rem" } }} />
+              </Box>
+              <Typography 
+                variant="h4" 
+                sx={{ 
+                  fontWeight: 700,
+                  background: "linear-gradient(135deg, #667eea, #764ba2)",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.125rem" },
+                }}
+              >
+                Project Overview
+              </Typography>
+            </Box>
 
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6} md={3}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    mb: 2,
-                  }}
-                >
-                  <CalendarToday color="primary" />
-                  <Box>
-                    <Typography variant="body2" color="text.secondary">
-                      Start Date
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {formatDate(project.start_date)}
-                    </Typography>
-                  </Box>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, md: 3 } }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  p: { xs: 2, md: 3 },
+                  borderRadius: { xs: 2, md: 3 },
+                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
+                  border: "1px solid rgba(102, 126, 234, 0.2)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
+                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
+                  }
+                }}
+              >
+                <Category sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                    Category
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                    {getCategoryLabel(project.category)}
+                  </Typography>
                 </Box>
-              </Grid>
+              </Box>
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    mb: 2,
-                  }}
-                >
-                  <CalendarToday color="primary" />
-                  <Box>
-                    <Typography variant="body2" color="text.secondary">
-                      End Date
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {formatDate(project.end_date)}
-                    </Typography>
-                  </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  p: { xs: 2, md: 3 },
+                  borderRadius: { xs: 2, md: 3 },
+                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
+                  border: "1px solid rgba(102, 126, 234, 0.2)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
+                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
+                  }
+                }}
+              >
+                <LocationOn sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                    Location
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                    {project.subcounty}, {project.county}
+                  </Typography>
                 </Box>
-              </Grid>
+              </Box>
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    mb: 2,
-                  }}
-                >
-                  <AttachMoney color="primary" />
-                  <Box>
-                    <Typography variant="body2" color="text.secondary">
-                      Budget Estimate
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {formatCurrency(
-                        project.budget_estimate,
-                        project.currency
-                      )}
-                    </Typography>
-                  </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  p: { xs: 2, md: 3 },
+                  borderRadius: { xs: 2, md: 3 },
+                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
+                  border: "1px solid rgba(102, 126, 234, 0.2)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
+                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
+                  }
+                }}
+              >
+                <People sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                    Target Audience
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                    {project.target_individual}
+                  </Typography>
                 </Box>
-              </Grid>
+              </Box>
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    mb: 2,
-                  }}
-                >
-                  <TrendingUp color="primary" />
-                  <Box>
-                    <Typography variant="body2" color="text.secondary">
-                      Progress
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {project.progress_percent}%
-                    </Typography>
-                  </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  p: { xs: 2, md: 3 },
+                  borderRadius: { xs: 2, md: 3 },
+                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
+                  border: "1px solid rgba(102, 126, 234, 0.2)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
+                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
+                  }
+                }}
+              >
+                <Schedule sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                    Start Date
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                    {formatDate(project.start_date)}
+                  </Typography>
                 </Box>
-              </Grid>
+              </Box>
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    mb: 2,
-                  }}
-                >
-                  <Home color="primary" />
-                  <Box>
-                    <Typography variant="body2" color="text.secondary">
-                      Floor Size
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {project.floor_size} sq ft
-                    </Typography>
-                  </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  p: { xs: 2, md: 3 },
+                  borderRadius: { xs: 2, md: 3 },
+                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
+                  border: "1px solid rgba(102, 126, 234, 0.2)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
+                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
+                  }
+                }}
+              >
+                <CalendarToday sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                    End Date
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                    {formatDate(project.end_date)}
+                  </Typography>
                 </Box>
-              </Grid>
+              </Box>
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    mb: 2,
-                  }}
-                >
-                  <Construction color="primary" />
-                  <Box>
-                    <Typography variant="body2" color="text.secondary">
-                      Construction Type
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{ fontWeight: 500, textTransform: "capitalize" }}
-                    >
-                      {project.construction_type}
-                    </Typography>
-                  </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  p: { xs: 2, md: 3 },
+                  borderRadius: { xs: 2, md: 3 },
+                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
+                  border: "1px solid rgba(102, 126, 234, 0.2)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
+                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
+                  }
+                }}
+              >
+                <TrendingUp sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                    Progress
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                    {project.progress}%
+                  </Typography>
                 </Box>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
 
-            {project.notes && (
-              <Box sx={{ mt: 3 }}>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  Special Notes
+            {/* Enhanced Progress Bar */}
+            <Box sx={{ mt: { xs: 3, md: 4 } }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                  Overall Progress
                 </Typography>
-                <Typography variant="body1" sx={{ lineHeight: 1.6 }}>
-                  {project.notes}
+                <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                  {project.progress}%
                 </Typography>
               </Box>
-            )}
+              <Box
+                sx={{
+                  width: "100%",
+                  height: 16,
+                  backgroundColor: "rgba(102, 126, 234, 0.1)",
+                  borderRadius: 10,
+                  overflow: "hidden",
+                  border: "1px solid rgba(102, 126, 234, 0.2)",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: `${project.progress}%`,
+                    height: "100%",
+                    background: project.status === "completed" 
+                      ? "linear-gradient(90deg, #4caf50, #81c784)" 
+                      : "linear-gradient(90deg, #667eea, #764ba2)",
+                    transition: "width 0.8s ease",
+                    position: "relative",
+                    "&::after": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
+                      animation: "shimmer 2s infinite",
+                    }
+                  }}
+                />
+              </Box>
+            </Box>
           </Paper>
 
-          {/* Tasks Section */}
-          {project.tasks && project.tasks.length > 0 && (
-            <Paper elevation={3} sx={{ p: 4, borderRadius: 3, mb: 3 }}>
-              <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
-                Project Tasks
-              </Typography>
+          {/* Progress Descriptions */}
+          {project.progress_descriptions && project.progress_descriptions.length > 0 && (
+            <Paper 
+              elevation={3} 
+              sx={{ 
+                p: { xs: 2, sm: 3, md: 4 }, 
+                borderRadius: { xs: 3, md: 4 }, 
+                mb: 3,
+                background: "#ffffff",
+                border: "1px solid #e0e0e0",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 3, md: 4 } }}>
+                <Box
+                  sx={{
+                    width: { xs: 40, md: 50 },
+                    height: { xs: 40, md: 50 },
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #667eea, #764ba2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mr: 2,
+                    flexShrink: 0,
+                  }}
+                >
+                  <Description sx={{ color: "white", fontSize: { xs: "1.2rem", md: "1.5rem" } }} />
+                </Box>
+                <Typography 
+                  variant="h4" 
+                  sx={{ 
+                    fontWeight: 700,
+                    background: "linear-gradient(135deg, #667eea, #764ba2)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.125rem" },
+                  }}
+                >
+                  Progress Updates
+                </Typography>
+              </Box>
 
-              {project.tasks.map((task, index) => (
-                <Card key={task.id} sx={{ mb: 2, border: "1px solid #e0e0e0" }}>
-                  <CardContent>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                        mb: 2,
-                      }}
-                    >
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        {task.name}
+              {project.progress_descriptions.map((update, index) => (
+                <Card 
+                  key={index} 
+                  sx={{ 
+                    mb: { xs: 2, md: 3 }, 
+                    border: "none",
+                    borderRadius: { xs: 2, md: 3 },
+                    background: "linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05))",
+                    border: "1px solid rgba(102, 126, 234, 0.1)",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      transform: "translateY(-3px)",
+                      boxShadow: "0 10px 25px rgba(102, 126, 234, 0.15)",
+                    }
+                  }}
+                >
+                  <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2, gap: 1, flexWrap: "wrap" }}>
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          fontWeight: 600,
+                          color: "#667eea",
+                          background: "linear-gradient(135deg, #667eea, #764ba2)",
+                          backgroundClip: "text",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          fontSize: { xs: "1rem", md: "1.25rem" },
+                        }}
+                      >
+                        Update #{project.progress_descriptions.length - index}
                       </Typography>
-                      <Chip
-                        label={getStatusLabel(task.status)}
-                        color={getStatusColor(task.status)}
-                        size="small"
-                      />
+                      <Box
+                        sx={{
+                          px: { xs: 1.5, md: 2 },
+                          py: 0.5,
+                          borderRadius: 2,
+                          background: "rgba(102, 126, 234, 0.1)",
+                          border: "1px solid rgba(102, 126, 234, 0.2)",
+                        }}
+                      >
+                        <Typography variant="caption" sx={{ fontWeight: 500, color: "#667eea", fontSize: { xs: "0.7rem", md: "0.75rem" } }}>
+                          {formatDate(update.timestamp)}
+                        </Typography>
+                      </Box>
                     </Box>
-
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ mb: 2 }}
-                    >
-                      {task.description}
-                    </Typography>
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: 3,
-                        mb: 2,
-                        flexWrap: "wrap",
+                    <Typography 
+                      variant="body1" 
+                      sx={{ 
+                        lineHeight: 1.7,
+                        color: "text.primary",
+                        fontSize: { xs: "0.95rem", md: "1.05rem" },
                       }}
                     >
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">
-                          Start Date
-                        </Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          {formatDate(task.start_date)}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">
-                          Due Date
-                        </Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          {formatDate(task.due_date)}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">
-                          Progress
-                        </Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          {task.progress_percent}%
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    {/* Materials */}
-                    {task.materials && task.materials.length > 0 && (
-                      <Box sx={{ mb: 2 }}>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ fontWeight: 600, mb: 1 }}
-                        >
-                          Materials Required:
-                        </Typography>
-                        <List dense>
-                          {task.materials.map((material) => (
-                            <ListItem key={material.id} sx={{ py: 0.5 }}>
-                              <ListItemText
-                                primary={`${material.name} - ${material.quantity_required} ${material.unit}`}
-                                secondary={`Unit Cost: ${formatCurrency(material.unit_cost, project.currency)}`}
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-                      </Box>
-                    )}
-
-                    {/* Equipment */}
-                    {task.equipment && task.equipment.length > 0 && (
-                      <Box>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ fontWeight: 600, mb: 1 }}
-                        >
-                          Equipment Required:
-                        </Typography>
-                        <List dense>
-                          {task.equipment.map((equip) => (
-                            <ListItem key={equip.id} sx={{ py: 0.5 }}>
-                              <ListItemText
-                                primary={`${equip.name} (${equip.type})`}
-                                secondary={`Rental: ${formatCurrency(equip.rental_cost_per_day, project.currency)}/day`}
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-                      </Box>
-                    )}
+                      {update.description}
+                    </Typography>
                   </CardContent>
                 </Card>
               ))}
             </Paper>
           )}
 
-          {/* Progress Updates Section */}
-          {project.tasks &&
-            project.tasks.some(
-              (task) => task.progressUpdates && task.progressUpdates.length > 0
-            ) && (
-              <Paper elevation={3} sx={{ p: 4, borderRadius: 3, mb: 3 }}>
-                <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
-                  Progress Updates
+          {/* Project Images */}
+          {project.update_images && project.update_images.length > 0 && (
+            <Paper 
+              elevation={3} 
+              sx={{ 
+                p: { xs: 2, sm: 3, md: 4 }, 
+                borderRadius: { xs: 3, md: 4 }, 
+                mb: 3,
+                background: "#ffffff",
+                border: "1px solid #e0e0e0",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 3, md: 4 } }}>
+                <Box
+                  sx={{
+                    width: { xs: 40, md: 50 },
+                    height: { xs: 40, md: 50 },
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #667eea, #764ba2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mr: 2,
+                    flexShrink: 0,
+                  }}
+                >
+                  <ImageIcon sx={{ color: "white", fontSize: { xs: "1.2rem", md: "1.5rem" } }} />
+                </Box>
+                <Typography 
+                  variant="h4" 
+                  sx={{ 
+                    fontWeight: 700,
+                    background: "linear-gradient(135deg, #667eea, #764ba2)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.125rem" },
+                  }}
+                >
+                  Project Gallery ({project.update_images.length})
                 </Typography>
+              </Box>
 
-                {project.tasks.map(
-                  (task) =>
-                    task.progressUpdates &&
-                    task.progressUpdates.length > 0 && (
-                      <Box key={task.id} sx={{ mb: 4 }}>
-                        <Typography
-                          variant="h6"
-                          sx={{ mb: 2, fontWeight: 600, color: "primary.main" }}
-                        >
-                          {task.name}
+              <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
+                {project.update_images.map((imageData, index) => (
+                  <Grid item xs={12} sm={6} md={4} key={index}>
+                    <Box
+                      sx={{
+                        position: "relative",
+                        width: "100%",
+                        height: { xs: 220, sm: 250, md: 280 },
+                        borderRadius: { xs: 2, md: 3 },
+                        overflow: "hidden",
+                        border: "none",
+                        cursor: "pointer",
+                        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                        background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
+                        "&:hover": {
+                          transform: { xs: "translateY(-5px)", md: "translateY(-10px) scale(1.02)" },
+                          boxShadow: "0 25px 50px rgba(102, 126, 234, 0.3)",
+                          "& .image-overlay": {
+                            opacity: 1,
+                          },
+                          "& .image-info": {
+                            transform: "translateY(0)",
+                          }
+                        },
+                      }}
+                      onClick={() =>
+                        window.open(
+                          `${window.location.origin}/${imageData.path}`,
+                          "_blank"
+                        )
+                      }
+                    >
+                      <img
+                        src={`/${imageData.path}`}
+                        alt={`Project image ${index + 1}`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          transition: "transform 0.4s ease",
+                        }}
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                          e.target.nextSibling.style.display = "flex";
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          display: "none",
+                          width: "100%",
+                          height: "100%",
+                          background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <ImageIcon sx={{ fontSize: 48, color: "#667eea" }} />
+                        <Typography variant="caption" sx={{ color: "#667eea", fontWeight: 500 }}>
+                          Image not available
                         </Typography>
-
-                        {task.progressUpdates.map((update, updateIndex) => (
-                          <Card
-                            key={update.id}
-                            sx={{ mb: 3, border: "1px solid #e0e0e0" }}
-                          >
-                            <CardContent>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                  alignItems: "flex-start",
-                                  mb: 2,
-                                }}
-                              >
-                                <Box>
-                                  <Typography
-                                    variant="subtitle1"
-                                    sx={{ fontWeight: 600, mb: 1 }}
-                                  >
-                                    Progress Update #{updateIndex + 1}
-                                  </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    sx={{ mb: 1 }}
-                                  >
-                                    {formatDate(update.date)} •{" "}
-                                    {update.progress_percent}% Complete
-                                  </Typography>
-                                </Box>
-                                <Chip
-                                  label={`${update.progress_percent}%`}
-                                  color="primary"
-                                  size="small"
-                                />
-                              </Box>
-
-                              <Typography
-                                variant="body1"
-                                sx={{ mb: 2, lineHeight: 1.6 }}
-                              >
-                                {update.description}
-                              </Typography>
-
-                              {/* Progress Update Images */}
-                              {update.images && update.images.length > 0 && (
-                                <Box>
-                                  <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                      mb: 2,
-                                      fontWeight: 600,
-                                      color: "text.secondary",
-                                    }}
-                                  >
-                                    Progress Images ({update.images.length})
-                                  </Typography>
-                                  <Grid container spacing={2}>
-                                    {update.images.map(
-                                      (imageUrl, imageIndex) => (
-                                        <Grid
-                                          item
-                                          xs={12}
-                                          sm={6}
-                                          md={4}
-                                          key={imageIndex}
-                                        >
-                                          <Box
-                                            sx={{
-                                              position: "relative",
-                                              width: "100%",
-                                              height: 200,
-                                              borderRadius: 2,
-                                              overflow: "hidden",
-                                              border: "1px solid #e0e0e0",
-                                              cursor: "pointer",
-                                              transition: "transform 0.2s ease",
-                                              "&:hover": {
-                                                transform: "scale(1.02)",
-                                              },
-                                            }}
-                                            onClick={() =>
-                                              window.open(
-                                                `${window.location.origin}${imageUrl}`,
-                                                "_blank"
-                                              )
-                                            }
-                                          >
-                                            <img
-                                              src={`${window.location.origin}${imageUrl}`}
-                                              alt={`Progress image ${imageIndex + 1}`}
-                                              style={{
-                                                width: "100%",
-                                                height: "100%",
-                                                objectFit: "cover",
-                                              }}
-                                              onError={(e) => {
-                                                e.target.style.display = "none";
-                                                e.target.nextSibling.style.display =
-                                                  "flex";
-                                              }}
-                                            />
-                                            <Box
-                                              sx={{
-                                                display: "none",
-                                                width: "100%",
-                                                height: "100%",
-                                                backgroundColor: "#f8f9fa",
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                                flexDirection: "column",
-                                              }}
-                                            >
-                                              <ImageIcon
-                                                sx={{
-                                                  fontSize: 48,
-                                                  color: "#666",
-                                                }}
-                                              />
-                                              <Typography
-                                                variant="caption"
-                                                sx={{ color: "#666" }}
-                                              >
-                                                Image not available
-                                              </Typography>
-                                            </Box>
-
-                                            {/* Overlay with camera icon */}
-                                            <Box
-                                              sx={{
-                                                position: "absolute",
-                                                top: 8,
-                                                right: 8,
-                                                backgroundColor:
-                                                  "rgba(0, 0, 0, 0.6)",
-                                                borderRadius: "50%",
-                                                width: 32,
-                                                height: 32,
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                              }}
-                                            >
-                                              <PhotoCamera
-                                                sx={{
-                                                  color: "white",
-                                                  fontSize: 16,
-                                                }}
-                                              />
-                                            </Box>
-                                          </Box>
-                                        </Grid>
-                                      )
-                                    )}
-                                  </Grid>
-                                </Box>
-                              )}
-
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                  alignItems: "center",
-                                  mt: 2,
-                                }}
-                              >
-                                <Typography
-                                  variant="caption"
-                                  color="text.secondary"
-                                >
-                                  Created: {formatDate(update.createdAt)}
-                                </Typography>
-                              </Box>
-                            </CardContent>
-                          </Card>
-                        ))}
                       </Box>
-                    )
-                )}
-              </Paper>
-            )}
 
-          {/* Project Team */}
-          <Paper elevation={3} sx={{ p: 4, borderRadius: 3, mb: 3 }}>
-            <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
-              Project Team
-            </Typography>
+                      {/* Hover overlay */}
+                      <Box
+                        className="image-overlay"
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: "linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8))",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          opacity: 0,
+                          transition: "opacity 0.3s ease",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            textAlign: "center",
+                            color: "white",
+                            px: 2,
+                          }}
+                        >
+                          <PhotoCamera sx={{ fontSize: { xs: "1.5rem", md: "2rem" }, mb: 1 }} />
+                          <Typography variant="body2" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                            Click to view full size
+                          </Typography>
+                        </Box>
+                      </Box>
 
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={4}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    mb: 2,
-                  }}
-                >
-                  <Person color="primary" />
-                  <Box>
-                    <Typography variant="body2" color="text.secondary">
-                      Client
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {project.client_name}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} sm={4}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    mb: 2,
-                  }}
-                >
-                  <Business color="primary" />
-                  <Box>
-                    <Typography variant="body2" color="text.secondary">
-                      Contractor
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {project.contractor_name}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Grid>
-
-              {project.engineer && (
-                <Grid item xs={12} sm={4}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 2,
-                      mb: 2,
-                    }}
-                  >
-                    <Engineering color="primary" />
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        Engineer in Charge
-                      </Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                        {project.engineer.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {project.engineer.email}
-                      </Typography>
+                      {/* Image info overlay */}
+                      <Box
+                        className="image-info"
+                        sx={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          background: "linear-gradient(transparent, rgba(0, 0, 0, 0.8))",
+                          color: "white",
+                          p: { xs: 1.5, md: 2 },
+                          transform: "translateY(100%)",
+                          transition: "transform 0.3s ease",
+                        }}
+                      >
+                        <Typography 
+                          variant="caption" 
+                          sx={{ 
+                            display: "flex", 
+                            alignItems: "center", 
+                            gap: 1,
+                            fontWeight: 500,
+                            fontSize: { xs: "0.7rem", md: "0.75rem" },
+                          }}
+                        >
+                          <PhotoCamera sx={{ fontSize: { xs: 14, md: 16 } }} />
+                          {formatDate(imageData.timestamp)}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                </Grid>
-              )}
-            </Grid>
-          </Paper>
-
-          {/* Project Details */}
-          <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
-            <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
-              Project Details
-            </Typography>
-
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6} md={3}>
-                <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Funding Source
-                  </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                    {project.funding_source}
-                  </Typography>
-                </Box>
+                  </Grid>
+                ))}
               </Grid>
+            </Paper>
+          )}
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Actual Cost
-                  </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                    {formatCurrency(project.actual_cost, project.currency)}
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={3}>
-                <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Created
-                  </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                    {formatDate(project.createdAt)}
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={3}>
-                <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Last Updated
-                  </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                    {formatDate(project.updatedAt)}
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </Paper>
         </MotionBox>
       </Container>
-    </Box>
+      </Box>
+
+      {/* CSS Animations */}
+      <style>
+        {`
+          @keyframes shimmer {
+            0% {
+              transform: translateX(-100%);
+            }
+            100% {
+              transform: translateX(100%);
+            }
+          }
+        `}
+      </style>
+    </>
   );
 }
