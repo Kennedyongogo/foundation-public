@@ -210,94 +210,99 @@ export default function PublicHeader() {
         </Toolbar>
       </AppBar>
 
-      {/* Enhanced Mobile Drawer */}
+      {/* Compact Mobile Dropdown */}
       <Drawer
         anchor="right"
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
         sx={{
           "& .MuiDrawer-paper": {
-            width: "320px",
+            width: { xs: "280px", sm: "320px" },
             backgroundColor: "background.paper",
-            backgroundImage: "linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 248, 255, 0.9) 100%)",
+            backgroundImage: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.95) 100%)",
             backdropFilter: "blur(20px)",
             borderLeft: "1px solid rgba(33, 150, 243, 0.1)",
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
+            height: "auto",
+            top: "80px",
+            bottom: "auto",
           },
         }}
       >
-        <Box sx={{ p: 3 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+        <Box sx={{ p: 2 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
             <Typography 
-              variant="h5" 
+              variant="h6" 
               sx={{ 
                 fontWeight: 700, 
                 background: "linear-gradient(45deg, #2196f3, #1976d2)",
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
+                fontSize: { xs: "1.1rem", sm: "1.25rem" }
               }}
             >
               Menu
             </Typography>
             <IconButton
               onClick={() => setMobileMenuOpen(false)}
+              size="small"
               sx={{
-                transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                borderRadius: "12px",
+                transition: "all 0.3s ease",
+                borderRadius: "8px",
                 "&:hover": {
-                  transform: "rotate(90deg) scale(1.1)",
+                  transform: "rotate(90deg)",
                   backgroundColor: "rgba(33, 150, 243, 0.1)",
-                  boxShadow: "0 8px 25px rgba(33, 150, 243, 0.3)",
                 },
               }}
             >
-              <Close />
+              <Close fontSize="small" />
             </IconButton>
           </Box>
-          <Divider sx={{ mb: 3, borderColor: "rgba(33, 150, 243, 0.2)" }} />
-          <List>
+          <Divider sx={{ mb: 2, borderColor: "rgba(33, 150, 243, 0.2)" }} />
+          <List sx={{ py: 0 }}>
             {navItems.map((item, index) => (
-              <Slide direction="left" in={true} timeout={1000 + index * 200} key={item.label}>
               <ListItem
+                key={item.label}
                 button
                 onClick={() => handleNavigateToSection(item.sectionId)}
                 sx={{
-                    borderRadius: "16px",
-                    mb: 2,
-                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                  borderRadius: "12px",
+                  mb: 1,
+                  py: 1.5,
+                  px: 2,
+                  transition: "all 0.3s ease",
                   "&:hover": {
-                      backgroundColor: `${item.color}15`,
-                      transform: "translateX(12px) scale(1.02)",
-                      boxShadow: `0 8px 25px ${item.color}30`,
-                      "& .icon": {
-                        color: item.color,
-                        transform: "rotate(360deg)",
-                      },
+                    backgroundColor: `${item.color}15`,
+                    transform: "translateX(8px)",
+                    boxShadow: `0 4px 12px ${item.color}20`,
+                    "& .icon": {
+                      color: item.color,
+                      transform: "rotate(180deg)",
                     },
-                  }}
-                >
-                  <ListItemIcon 
-                    sx={{ 
-                      color: item.color, 
-                      minWidth: 45,
-                      "& .icon": {
-                        transition: "all 0.4s ease",
                   },
                 }}
               >
-                    {React.cloneElement(item.icon, { className: "icon" })}
+                <ListItemIcon 
+                  sx={{ 
+                    color: item.color, 
+                    minWidth: 36,
+                    "& .icon": {
+                      transition: "all 0.3s ease",
+                    },
+                  }}
+                >
+                  {React.cloneElement(item.icon, { className: "icon", fontSize: "small" })}
                 </ListItemIcon>
                 <ListItemText
                   primary={item.label}
                   primaryTypographyProps={{
-                      fontSize: "1.2rem",
-                      fontWeight: 600,
-                      color: "text.primary",
+                    fontSize: { xs: "0.95rem", sm: "1.1rem" },
+                    fontWeight: 600,
+                    color: "text.primary",
                   }}
                 />
               </ListItem>
-              </Slide>
             ))}
           </List>
         </Box>

@@ -55,7 +55,7 @@ export default function Footer() {
       sx={{
         background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%)",
         color: "white",
-        pt: 8,
+        pt: { xs: 4, sm: 6, md: 8 },
         pb: 2,
         mt: "auto",
         position: "relative",
@@ -78,11 +78,11 @@ export default function Footer() {
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
         <Fade in timeout={1000}>
           <Box>
-            <Grid container spacing={10}>
+            <Grid container spacing={{ xs: 4, sm: 6, md: 10 }}>
               <Grid item xs={12} md={4}>
                 <Slide direction="up" in timeout={1200}>
                   <Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 2 }, mb: { xs: 2, sm: 3 } }}>
                       <Box
                         sx={{
                           position: "relative",
@@ -107,7 +107,7 @@ export default function Footer() {
                           src="/foundation-logo.png"
                           alt="Mwalimu Hope Foundation Logo"
                           style={{
-                            height: "48px",
+                            height: { xs: "36px", sm: "48px" },
                             width: "auto",
                             filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
                           }}
@@ -122,20 +122,22 @@ export default function Footer() {
                           WebkitBackgroundClip: "text",
                           WebkitTextFillColor: "transparent",
                           textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                          fontSize: { xs: "1.1rem", sm: "1.5rem" },
                         }}
                       >
                         Mwalimu Hope Foundation
                       </Typography>
                     </Box>
                     
-                    <Box sx={{ mb: 3 }}>
+                    <Box sx={{ mb: { xs: 2, sm: 3 } }}>
                       <Typography 
                         variant="h6" 
                         sx={{ 
-                          mb: 2,
+                          mb: { xs: 1, sm: 2 },
                           fontWeight: 600,
                           color: "#ffeb3b",
                           textShadow: "0 1px 2px rgba(0,0,0,0.3)",
+                          fontSize: { xs: "1rem", sm: "1.25rem" },
                         }}
                       >
                         Empowering Minds, Restoring Hope.
@@ -143,9 +145,10 @@ export default function Footer() {
                       <Typography 
                         variant="body1" 
                         sx={{ 
-                          mb: 1,
+                          mb: 0.5,
                           lineHeight: 1.6,
                           color: "rgba(255,255,255,0.9)",
+                          fontSize: { xs: "0.8rem", sm: "1rem" },
                         }}
                       >
                         Building a brighter future for Kenya through education,
@@ -153,9 +156,10 @@ export default function Footer() {
                       <Typography 
                         variant="body1" 
                         sx={{ 
-                          mb: 3,
+                          mb: { xs: 2, sm: 3 },
                           lineHeight: 1.6,
                           color: "rgba(255,255,255,0.9)",
+                          fontSize: { xs: "0.8rem", sm: "1rem" },
                         }}
                       >
                         mental health awareness, poverty alleviation, and community empowerment.
@@ -163,7 +167,7 @@ export default function Footer() {
                     </Box>
 
                     {/* Mission Chips */}
-                    <Box sx={{ mb: 4, display: "flex", flexWrap: "wrap", gap: 1 }}>
+                    <Box sx={{ mb: { xs: 2, sm: 4 }, display: "flex", flexWrap: "wrap", gap: { xs: 0.5, sm: 1 } }}>
                       <Chip
                         label="Education"
                         size="small"
@@ -171,6 +175,7 @@ export default function Footer() {
                           background: "linear-gradient(45deg, #4caf50, #66bb6a)",
                           color: "white",
                           fontWeight: 600,
+                          fontSize: { xs: "0.7rem", sm: "0.75rem" },
                           "&:hover": {
                             transform: "scale(1.05)",
                             boxShadow: "0 4px 12px rgba(76, 175, 80, 0.4)",
@@ -184,6 +189,7 @@ export default function Footer() {
                           background: "linear-gradient(45deg, #e91e63, #f06292)",
                           color: "white",
                           fontWeight: 600,
+                          fontSize: { xs: "0.7rem", sm: "0.75rem" },
                           "&:hover": {
                             transform: "scale(1.05)",
                             boxShadow: "0 4px 12px rgba(233, 30, 99, 0.4)",
@@ -197,6 +203,7 @@ export default function Footer() {
                           background: "linear-gradient(45deg, #ff9800, #ffb74d)",
                           color: "white",
                           fontWeight: 600,
+                          fontSize: { xs: "0.7rem", sm: "0.75rem" },
                           "&:hover": {
                             transform: "scale(1.05)",
                             boxShadow: "0 4px 12px rgba(255, 152, 0, 0.4)",
@@ -206,10 +213,10 @@ export default function Footer() {
                     </Box>
 
                     {/* Social Media Icons */}
-                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: "#e3f2fd" }}>
+                    <Typography variant="h6" sx={{ mb: { xs: 1, sm: 2 }, fontWeight: 600, color: "#e3f2fd", fontSize: { xs: "1rem", sm: "1.25rem" } }}>
                       Follow Us
             </Typography>
-                    <Box sx={{ display: "flex", gap: 1 }}>
+                    <Box sx={{ display: "flex", gap: { xs: 0.5, sm: 1 } }}>
                       {[
                         { icon: <Facebook />, color: "#1877f2", label: "Facebook" },
                         { icon: <Twitter />, color: "#1da1f2", label: "Twitter" },
@@ -241,7 +248,7 @@ export default function Footer() {
           </Grid>
               
               <Grid item xs={12} md={8}>
-                <Box sx={{ display: "flex", width: "100%", gap: 4 }}>
+                <Box sx={{ display: "flex", width: "100%", gap: { xs: 2, sm: 3, md: 4 }, flexDirection: { xs: "column", md: "row" } }}>
                   {/* Quick Links Column */}
                   <Box sx={{ flex: 1 }}>
                     <Slide direction="up" in timeout={1400}>
@@ -249,19 +256,20 @@ export default function Footer() {
                         <Typography 
                           variant="h5" 
                           sx={{ 
-                            mb: 3,
+                            mb: { xs: 2, sm: 3 },
                             fontWeight: 700,
                             background: "linear-gradient(45deg, #ffffff, #e3f2fd)",
                             backgroundClip: "text",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent",
                             textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                            fontSize: { xs: "1.3rem", sm: "1.5rem" },
                           }}
                         >
                           Quick Links
                         </Typography>
                         
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, sm: 1.5 } }}>
                           {[
                             { label: "Home", icon: <Home />, section: "hero-section", color: "#2196f3" },
                             { label: "Our Mission", icon: <Favorite />, section: "mission-section", color: "#e91e63" },
@@ -275,8 +283,8 @@ export default function Footer() {
                               sx={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: 1.5,
-                                p: 1.5,
+                                gap: { xs: 1, sm: 1.5 },
+                                p: { xs: 1, sm: 1.5 },
                                 background: "rgba(255,255,255,0.05)",
                                 backdropFilter: "blur(10px)",
                                 border: "1px solid rgba(255,255,255,0.1)",
@@ -299,8 +307,8 @@ export default function Footer() {
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
-                                  width: 32,
-                                  height: 32,
+                                  width: { xs: 28, sm: 32 },
+                                  height: { xs: 28, sm: 32 },
                                   borderRadius: "50%",
                                   background: "rgba(255,255,255,0.1)",
                                   transition: "all 0.3s ease",
@@ -312,7 +320,7 @@ export default function Footer() {
                                 variant="body2" 
                                 sx={{ 
                                   fontWeight: 500,
-                                  fontSize: "0.9rem",
+                                  fontSize: { xs: "0.8rem", sm: "0.9rem" },
                                 }}
                               >
                                 {link.label}
@@ -331,23 +339,24 @@ export default function Footer() {
                         <Typography 
                           variant="h5" 
                           sx={{ 
-                            mb: 3,
+                            mb: { xs: 2, sm: 3 },
                             fontWeight: 700,
                             background: "linear-gradient(45deg, #ffffff, #e3f2fd)",
                             backgroundClip: "text",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent",
                             textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                            fontSize: { xs: "1.3rem", sm: "1.5rem" },
                           }}
                         >
                           Contact Us
                         </Typography>
                         
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, sm: 1.5 } }}>
                           {/* Physical Address */}
                           <Box
                             sx={{
-                              p: 2,
+                              p: { xs: 1.5, sm: 2 },
                               background: "rgba(255,255,255,0.05)",
                               backdropFilter: "blur(10px)",
                               border: "1px solid rgba(255,255,255,0.1)",
@@ -359,26 +368,26 @@ export default function Footer() {
                               },
                             }}
                           >
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 }, mb: { xs: 0.25, sm: 0.5 } }}>
                               <Box
                                 sx={{
                                   color: "#4caf50",
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
-                                  width: 28,
-                                  height: 28,
+                                  width: { xs: 24, sm: 28 },
+                                  height: { xs: 24, sm: 28 },
                                   borderRadius: "50%",
                                   background: "rgba(76, 175, 80, 0.1)",
                                 }}
                               >
-                                <LocationOn sx={{ fontSize: "16px" }} />
+                                <LocationOn sx={{ fontSize: { xs: "14px", sm: "16px" } }} />
                               </Box>
-                              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "#e3f2fd", fontSize: "0.8rem" }}>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "#e3f2fd", fontSize: { xs: "0.7rem", sm: "0.8rem" } }}>
                                 Physical Address
                               </Typography>
                             </Box>
-                            <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", lineHeight: 1.4, fontSize: "0.75rem" }}>
+                            <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", lineHeight: 1.4, fontSize: { xs: "0.7rem", sm: "0.75rem" } }}>
                               Meghon Plaza, Bungoma Town,<br />
                               along Moi Avenue
             </Typography>
@@ -387,7 +396,7 @@ export default function Footer() {
                           {/* Postal Address */}
                           <Box
                             sx={{
-                              p: 2,
+                              p: { xs: 1.5, sm: 2 },
                               background: "rgba(255,255,255,0.05)",
                               backdropFilter: "blur(10px)",
                               border: "1px solid rgba(255,255,255,0.1)",
@@ -399,68 +408,68 @@ export default function Footer() {
                               },
                             }}
                           >
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 }, mb: { xs: 0.25, sm: 0.5 } }}>
                               <Box
                                 sx={{
                                   color: "#ff9800",
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
-                                  width: 28,
-                                  height: 28,
+                                  width: { xs: 24, sm: 28 },
+                                  height: { xs: 24, sm: 28 },
                                   borderRadius: "50%",
                                   background: "rgba(255, 152, 0, 0.1)",
                                 }}
                               >
-                                <LocationOn sx={{ fontSize: "16px" }} />
+                                <LocationOn sx={{ fontSize: { xs: "14px", sm: "16px" } }} />
                               </Box>
-                              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "#e3f2fd", fontSize: "0.8rem" }}>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "#e3f2fd", fontSize: { xs: "0.7rem", sm: "0.8rem" } }}>
                                 Postal Address
             </Typography>
                             </Box>
-                            <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", lineHeight: 1.4, fontSize: "0.75rem" }}>
+                            <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", lineHeight: 1.4, fontSize: { xs: "0.7rem", sm: "0.75rem" } }}>
                               P.O. Box 2072-50200
             </Typography>
                           </Box>
 
                           {/* Contact Info */}
-                          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                          <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 0.5, sm: 1 } }}>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 } }}>
                               <Box
                                 sx={{
                                   color: "#2196f3",
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
-                                  width: 24,
-                                  height: 24,
+                                  width: { xs: 20, sm: 24 },
+                                  height: { xs: 20, sm: 24 },
                                   borderRadius: "50%",
                                   background: "rgba(33, 150, 243, 0.1)",
                                 }}
                               >
-                                <Phone sx={{ fontSize: "14px" }} />
+                                <Phone sx={{ fontSize: { xs: "12px", sm: "14px" } }} />
                               </Box>
-                              <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", fontSize: "0.75rem" }}>
+                              <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", fontSize: { xs: "0.7rem", sm: "0.75rem" } }}>
                                 0721660901
             </Typography>
                             </Box>
                             
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 } }}>
                               <Box
                                 sx={{
                                   color: "#e91e63",
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
-                                  width: 24,
-                                  height: 24,
+                                  width: { xs: 20, sm: 24 },
+                                  height: { xs: 20, sm: 24 },
                                   borderRadius: "50%",
                                   background: "rgba(233, 30, 99, 0.1)",
                                 }}
                               >
-                                <Email sx={{ fontSize: "14px" }} />
+                                <Email sx={{ fontSize: { xs: "12px", sm: "14px" } }} />
                               </Box>
-                              <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", fontSize: "0.75rem" }}>
+                              <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", fontSize: { xs: "0.7rem", sm: "0.75rem" } }}>
                                 mwalimuhopefoundation@gmail.com
             </Typography>
                             </Box>
@@ -501,6 +510,7 @@ export default function Footer() {
                     sx={{ 
                       color: "rgba(255,255,255,0.8)",
                       fontWeight: 500,
+                      fontSize: { xs: "0.75rem", sm: "1rem" },
                     }}
                   >
                     © {new Date().getFullYear()} Mwalimu Hope Foundation. All rights reserved.
@@ -509,8 +519,9 @@ export default function Footer() {
                     variant="body2" 
                     sx={{ 
                       color: "rgba(255,255,255,0.6)",
-                      mt: 1,
+                      mt: { xs: 0.5, sm: 1 },
                       fontStyle: "italic",
+                      fontSize: { xs: "0.7rem", sm: "0.875rem" },
                     }}
                   >
                     Empowering Minds, Restoring Hope, Building Kenya's Future

@@ -156,7 +156,7 @@ export default function HeroSection() {
           </Typography>
             
             {/* Enhanced Call-to-Action Button */}
-            <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap", mb: 4 }}>
+            <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap", mb: 1 }}>
               <Button
                 variant="contained"
                 color="primary"
@@ -187,22 +187,22 @@ export default function HeroSection() {
             <Box
               sx={{
                 display: "flex",
-                gap: 4,
+                gap: { xs: 2, sm: 3, md: 4 },
                 flexWrap: "wrap",
-                mt: 2,
+                mb: 6,
                 "& > *": {
                   textAlign: "center",
                   "& .number": {
-                    fontSize: "1.8rem",
+                    fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.8rem" },
                     fontWeight: 700,
                     color: "#2196f3",
                     textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
                   },
                   "& .label": {
-                    fontSize: "0.8rem",
+                    fontSize: { xs: "0.65rem", sm: "0.75rem", md: "0.8rem" },
                     opacity: 0.9,
                     textTransform: "uppercase",
-                    letterSpacing: "1px",
+                    letterSpacing: { xs: "0.5px", md: "1px" },
                   },
                 },
               }}

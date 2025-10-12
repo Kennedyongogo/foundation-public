@@ -301,7 +301,7 @@ export default function ProjectsSection() {
                         >
                           <Card
                             sx={{
-                              height: "520px",
+                              height: { xs: "480px", sm: "520px" },
                               width: "100%",
                               display: "flex",
                               flexDirection: "column",
@@ -315,7 +315,7 @@ export default function ProjectsSection() {
                           >
                             <CardMedia
                               component="img"
-                              height="180"
+                              height={isMobile ? "140" : "180"}
                               image={project.image}
                               alt={project.title}
                               sx={{
@@ -326,14 +326,14 @@ export default function ProjectsSection() {
                             <CardContent
                               sx={{
                                 flexGrow: 1,
-                                p: 3,
+                                p: { xs: 2, sm: 3 },
                                 display: "flex",
                                 flexDirection: "column",
-                                minHeight: "340px",
+                                minHeight: { xs: "300px", sm: "340px" },
                               }}
                             >
-                              <Box sx={{ mb: 2 }}>
-                                <Box sx={{ display: "flex", gap: 0.5, mb: 2, flexWrap: "wrap" }}>
+                              <Box sx={{ mb: { xs: 1, sm: 2 } }}>
+                                <Box sx={{ display: "flex", gap: 0.5, mb: { xs: 1, sm: 2 }, flexWrap: "wrap" }}>
                                   <Chip
                                     label={getStatusLabel(project.status)}
                                     color={getStatusColor(project.status)}
@@ -351,8 +351,9 @@ export default function ProjectsSection() {
                                   component="h3"
                                   sx={{
                                     fontWeight: 600,
-                                    mb: 1,
+                                    mb: { xs: 0.5, sm: 1 },
                                     color: "text.primary",
+                                    fontSize: { xs: "1rem", sm: "1.25rem" },
                                   }}
                                 >
                                   {project.title}
@@ -363,34 +364,35 @@ export default function ProjectsSection() {
                                 variant="body2"
                                 color="text.secondary"
                                 sx={{
-                                  mb: 2,
+                                  mb: { xs: 1, sm: 2 },
                                   overflow: "hidden",
                                   display: "-webkit-box",
                                   WebkitLineClamp: 2,
                                   WebkitBoxOrient: "vertical",
                                   lineHeight: 1.4,
                                   flexGrow: 1,
+                                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
                                 }}
                               >
                                 {project.description}
                               </Typography>
 
-                              <Box sx={{ mb: 1 }}>
+                              <Box sx={{ mb: { xs: 0.5, sm: 1 } }}>
                                 <Box
                                   sx={{
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: 1,
-                                    mb: 0.5,
+                                    gap: 0.5,
+                                    mb: { xs: 0.25, sm: 0.5 },
                                   }}
                                 >
                                   <Category
-                                    sx={{ fontSize: 14, color: "primary.main" }}
+                                    sx={{ fontSize: { xs: 12, sm: 14 }, color: "primary.main" }}
                                   />
                                   <Typography
                                     variant="body2"
                                     color="text.secondary"
-                                    sx={{ fontSize: "0.8rem" }}
+                                    sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
                                   >
                                     {getCategoryLabel(project.category)}
                                   </Typography>
@@ -399,17 +401,17 @@ export default function ProjectsSection() {
                                   sx={{
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: 1,
-                                    mb: 0.5,
+                                    gap: 0.5,
+                                    mb: { xs: 0.25, sm: 0.5 },
                                   }}
                                 >
                                   <LocationOn
-                                    sx={{ fontSize: 14, color: "primary.main" }}
+                                    sx={{ fontSize: { xs: 12, sm: 14 }, color: "primary.main" }}
                                   />
                                   <Typography
                                     variant="body2"
                                     color="text.secondary"
-                                    sx={{ fontSize: "0.8rem" }}
+                                    sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
                                   >
                                     {project.location}
                                   </Typography>
@@ -418,17 +420,17 @@ export default function ProjectsSection() {
                                   sx={{
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: 1,
-                                    mb: 0.5,
+                                    gap: 0.5,
+                                    mb: { xs: 0.25, sm: 0.5 },
                                   }}
                                 >
                                   <People
-                                    sx={{ fontSize: 14, color: "primary.main" }}
+                                    sx={{ fontSize: { xs: 12, sm: 14 }, color: "primary.main" }}
                                   />
                                   <Typography
                                     variant="body2"
                                     color="text.secondary"
-                                    sx={{ fontSize: "0.8rem" }}
+                                    sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
                                   >
                                     Target: {project.targetIndividual}
                                   </Typography>
@@ -437,35 +439,35 @@ export default function ProjectsSection() {
                                   sx={{
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: 1,
-                                    mb: 0.5,
+                                    gap: 0.5,
+                                    mb: { xs: 0.25, sm: 0.5 },
                                   }}
                                 >
                                   <Schedule
-                                    sx={{ fontSize: 14, color: "primary.main" }}
+                                    sx={{ fontSize: { xs: 12, sm: 14 }, color: "primary.main" }}
                                   />
                                   <Typography
                                     variant="body2"
                                     color="text.secondary"
-                                    sx={{ fontSize: "0.8rem" }}
+                                    sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
                                   >
                                     Started: {formatDate(project.startDate)}
                                   </Typography>
                                 </Box>
                               </Box>
 
-                              <Box sx={{ mb: 1 }}>
+                              <Box sx={{ mb: { xs: 0.5, sm: 1 } }}>
                                 <Typography
                                   variant="body2"
                                   color="text.secondary"
-                                  sx={{ mb: 0.5, fontSize: "0.8rem" }}
+                                  sx={{ mb: { xs: 0.25, sm: 0.5 }, fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
                                 >
                                   Progress: {project.progress}%
                                 </Typography>
                                 <Box
                                   sx={{
                                     width: "100%",
-                                    height: 4,
+                                    height: { xs: 3, sm: 4 },
                                     backgroundColor: "grey.200",
                                     borderRadius: 2,
                                     overflow: "hidden",
@@ -485,7 +487,7 @@ export default function ProjectsSection() {
                                 </Box>
                               </Box>
 
-                              <Box sx={{ mt: "auto", pt: 1 }}>
+                              <Box sx={{ mt: "auto", pt: { xs: 0.5, sm: 1 } }}>
                                 <Button
                                   variant="outlined"
                                   size="small"

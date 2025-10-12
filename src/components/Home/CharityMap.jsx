@@ -932,7 +932,7 @@ const CharityMap = () => {
             sx={{
               fontWeight: 600,
               color: "#4caf50",
-              fontSize: "1.1rem",
+              fontSize: { xs: "0.9rem", sm: "1.1rem" },
             }}
           >
             Our Community Impact Map
@@ -1054,22 +1054,29 @@ const CharityMap = () => {
         <Box
           sx={{
             display: "flex",
-            gap: 1.5,
-            alignItems: "center",
+            gap: { xs: 1, sm: 1.5 },
+            alignItems: { xs: "stretch", sm: "center" },
             mb: 0,
+            flexDirection: { xs: "column", md: "row" },
             justifyContent: "space-between",
           }}
         >
           {/* Left side - Search controls */}
-          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+          <Box sx={{ 
+            display: "flex", 
+            gap: { xs: 1, sm: 2 }, 
+            alignItems: "center",
+            flexDirection: { xs: "column", sm: "row" },
+            width: { xs: "100%", md: "auto" }
+          }}>
             {/* Search Input */}
             <TextField
               size="small"
-              placeholder="Search by project name, location, category, description..."
+              placeholder="Search by project name, location, category..."
               value={searchQuery}
               onChange={handleSearchChange}
               sx={{
-                width: 350,
+                width: { xs: "100%", sm: 350 },
                 "& .MuiOutlinedInput-root": {
                   backgroundColor: "white",
                 },
@@ -1095,7 +1102,10 @@ const CharityMap = () => {
             />
 
             {/* Search Column Selector */}
-            <FormControl size="small" sx={{ minWidth: 150 }}>
+            <FormControl size="small" sx={{ 
+              minWidth: { xs: "100%", sm: 150 },
+              width: { xs: "100%", sm: "auto" }
+            }}>
               <InputLabel>Search in</InputLabel>
               <Select
                 value={searchColumn}
@@ -1115,7 +1125,7 @@ const CharityMap = () => {
           {/* Right side - Search Status Indicators */}
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "none", md: "flex" },
               gap: 1,
               alignItems: "center",
               flexShrink: 0,
@@ -1288,21 +1298,7 @@ const CharityMap = () => {
             },
           },
           "& .ol-zoomslider": {
-            top: "7em",
-            left: "1em",
-            height: "150px",
-            width: "28px",
-            background: "rgba(255,255,255,0.8)",
-            border: "1px solid #ccc",
-            borderRadius: "2px",
-            margin: "2px",
-            padding: 0,
-            "& .ol-zoomslider-thumb": {
-              height: "20px",
-              width: "24px",
-              backgroundColor: "#666",
-              margin: "2px",
-            },
+            display: "none",
           },
         }}
       >
@@ -1366,7 +1362,7 @@ const CharityMap = () => {
           sx={{
             position: "absolute",
             left: "1em",
-            top: "calc(7em + 150px + 1em)",
+            top: "10em",
             zIndex: 1000,
             backgroundColor: "rgba(255,255,255,0.8)",
             borderRadius: "2px",
@@ -1433,6 +1429,7 @@ const CharityMap = () => {
             minWidth: "220px",
             boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
             opacity: 0.9,
+            display: { xs: "none", md: "block" },
           }}
         >
           <Typography
@@ -1645,18 +1642,18 @@ const CharityMap = () => {
           onClose={() => setDrawerOpen(false)}
           sx={{
             "& .MuiDrawer-paper": {
-              width: "420px",
+              width: { xs: "100%", sm: "420px" },
               padding: 0,
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               display: "flex",
               flexDirection: "column",
               height: "100vh",
               position: "fixed",
-              top: "64px",
+              top: { xs: 0, sm: "64px" },
               right: 0,
               border: "none",
               boxShadow: "0px 8px 32px rgba(0,0,0,0.12)",
-              borderRadius: "8px 0 0 8px",
+              borderRadius: { xs: 0, sm: "8px 0 0 8px" },
               overflow: "hidden",
             },
           }}
@@ -1665,7 +1662,7 @@ const CharityMap = () => {
             sx={{
               display: "flex",
               flexDirection: "column",
-              height: "calc(100vh - 64px)",
+              height: { xs: "100vh", sm: "calc(100vh - 64px)" },
             }}
           >
             {/* Header */}
