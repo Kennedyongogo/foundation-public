@@ -107,7 +107,7 @@ export default function Footer() {
                           src="/foundation-logo.png"
                           alt="Mwalimu Hope Foundation Logo"
                           style={{
-                            height: { xs: "36px", sm: "48px" },
+                            height: "32px",
                             width: "auto",
                             filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
                           }}
