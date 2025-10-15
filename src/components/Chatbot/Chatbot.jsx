@@ -192,7 +192,8 @@ const Chatbot = () => {
             bottom: 24,
             right: 24,
             width: { xs: 'calc(100vw - 48px)', sm: 420 },
-            height: isMinimized ? 60 : 500,
+            height: isMinimized ? 60 : 450,
+            maxHeight: 'calc(100vh - 120px)', // Ensure it doesn't exceed viewport minus header and margins
             zIndex: 1001,
             display: 'flex',
             flexDirection: 'column',
