@@ -16,6 +16,7 @@ import "./App.css";
 import React, { useState, useEffect, Suspense, lazy } from "react";
 import PublicHeader from "./components/Header/PublicHeader";
 import Footer from "./components/Footer/Footer";
+import Chatbot from "./components/Chatbot/Chatbot";
 
 // Lazy load components
 const Home = lazy(() => import("./pages/Home"));
@@ -96,6 +97,7 @@ function App() {
             />
           </Routes>
         </Suspense>
+        <Chatbot />
       </Router>
     </ThemeProvider>
   );
