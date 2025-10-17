@@ -92,25 +92,37 @@ export default function ProjectsSection() {
 
       if (data.success && data.data) {
         // Map API data to component format
-        const mappedProjects = data.data.map((project) => ({
-          id: project.id,
-          title: project.name,
-          description: project.description,
-          // Use first update image or fallback to logo
-          image: project.update_images && project.update_images.length > 0
-            ? `/${project.update_images[0].path}`
-            : "/foundation-logo.png",
-          location: `${project.subcounty}, ${project.county}`,
-          category: project.category,
-          status: project.status,
-          startDate: project.start_date,
-          endDate: project.end_date,
-          progress: project.progress || 0,
-          targetIndividual: project.target_individual,
-          creatorName: project.creator?.full_name,
-          assigneeName: project.assignee?.full_name,
-          updateImages: project.update_images || [],
-        }));
+        const mappedProjects = data.data.map((project) => {
+          // Determine project image with robust fallback logic
+          let projectImage = "/foundation-logo.png"; // Default foundation logo
+          
+          if (project.update_images && Array.isArray(project.update_images) && project.update_images.length > 0) {
+            // Find the first valid image path
+            const validImage = project.update_images.find(img => 
+              img && img.path && typeof img.path === 'string' && img.path.trim() !== ''
+            );
+            if (validImage) {
+              projectImage = `/${validImage.path}`;
+            }
+          }
+          
+          return {
+            id: project.id,
+            title: project.name,
+            description: project.description,
+            image: projectImage,
+            location: `${project.subcounty}, ${project.county}`,
+            category: project.category,
+            status: project.status,
+            startDate: project.start_date,
+            endDate: project.end_date,
+            progress: project.progress || 0,
+            targetIndividual: project.target_individual,
+            creatorName: project.creator?.full_name,
+            assigneeName: project.assignee?.full_name,
+            updateImages: project.update_images || [],
+          };
+        });
         setProjects(mappedProjects);
       } else {
         setProjects([]);

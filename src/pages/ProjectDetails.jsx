@@ -102,7 +102,27 @@ export default function ProjectDetails() {
       const data = await response.json();
 
       if (data.success && data.data) {
-        setProject(data.data);
+        // Process project data with image fallback logic
+        const projectData = data.data;
+        
+        // Determine hero image with robust fallback logic
+        let heroImage = "/foundation-logo.png"; // Default foundation logo
+        
+        if (projectData.update_images && Array.isArray(projectData.update_images) && projectData.update_images.length > 0) {
+          // Find the first valid image path
+          const validImage = projectData.update_images.find(img => 
+            img && img.path && typeof img.path === 'string' && img.path.trim() !== ''
+          );
+          if (validImage) {
+            heroImage = `/${validImage.path}`;
+          }
+        }
+        
+        // Add hero image to project data
+        setProject({
+          ...projectData,
+          heroImage
+        });
       } else {
         setError("Project not found");
       }
@@ -234,6 +254,95 @@ export default function ProjectDetails() {
             >
               Back to Projects
             </Button>
+
+            {/* Hero Image Section */}
+            <Paper 
+              elevation={6} 
+              sx={{ 
+                mb: 4,
+                borderRadius: { xs: 3, md: 4 },
+                overflow: "hidden",
+                position: "relative",
+                background: "#ffffff",
+                border: "1px solid #e0e0e0",
+              }}
+            >
+              <Box
+                sx={{
+                  position: "relative",
+                  height: { xs: "250px", sm: "350px", md: "450px" },
+                  overflow: "hidden",
+                }}
+              >
+                <img
+                  src={project.heroImage}
+                  alt={project.name}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                  onError={(e) => {
+                    // Fallback to foundation logo if image fails to load
+                    e.target.src = "/foundation-logo.png";
+                  }}
+                />
+                {/* Gradient overlay for better text readability */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: "60%",
+                    background: "linear-gradient(transparent, rgba(0, 0, 0, 0.7))",
+                    display: "flex",
+                    alignItems: "flex-end",
+                    p: { xs: 3, sm: 4, md: 5 },
+                  }}
+                >
+                  <Box>
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        color: "white",
+                        fontWeight: 700,
+                        fontSize: { xs: "1.8rem", sm: "2.5rem", md: "3rem" },
+                        textShadow: "0 2px 4px rgba(0,0,0,0.5)",
+                        mb: 1,
+                      }}
+                    >
+                      {project.name}
+                    </Typography>
+                    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                      <Chip
+                        label={getStatusLabel(project.status)}
+                        color={getStatusColor(project.status)}
+                        sx={{
+                          color: "white",
+                          fontWeight: 600,
+                          "& .MuiChip-label": {
+                            color: "white",
+                          },
+                        }}
+                      />
+                      <Chip
+                        label={getCategoryLabel(project.category)}
+                        variant="outlined"
+                        sx={{
+                          color: "white",
+                          borderColor: "white",
+                          fontWeight: 600,
+                          "& .MuiChip-label": {
+                            color: "white",
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+            </Paper>
 
             <Paper 
               elevation={3} 
