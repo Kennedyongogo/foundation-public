@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AppBar, Toolbar, Box, Typography, Link, Button, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Fade, Slide } from "@mui/material";
-import { Construction, ContactSupport, Home, Menu as MenuIcon, Close, VolunteerActivism, Psychology, Favorite, School, LocalHospital, Groups } from "@mui/icons-material";
+import { Construction, ContactSupport, Home, Menu as MenuIcon, Close, VolunteerActivism, Psychology, Favorite, School, LocalHospital, Groups, RateReview } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function PublicHeader() {
@@ -42,8 +42,9 @@ export default function PublicHeader() {
     { label: "Home", icon: <Home />, sectionId: "hero-section", color: "#2196f3" },
     { label: "Our Mission", icon: <Favorite />, sectionId: "mission-section", color: "#e91e63" },
     { label: "Projects", icon: <School />, sectionId: "projects-section", color: "#4caf50" },
+    { label: "Testimonials", icon: <RateReview />, sectionId: "testimonials-section", color: "#ff9800" },
     { label: "Our Team", icon: <Groups />, sectionId: "team-section", color: "#9c27b0" },
-    { label: "Contact", icon: <LocalHospital />, sectionId: "contact-section", color: "#ff9800" },
+    { label: "Contact", icon: <LocalHospital />, sectionId: "contact-section", color: "#607d8b" },
   ];
 
   return (
