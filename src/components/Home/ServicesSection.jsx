@@ -280,6 +280,22 @@ export default function ServicesSection() {
                         />
                       </Box>
 
+                      {/* Service Title */}
+                      <Typography 
+                        variant="h6"
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem" },
+                          color: service.color,
+                          textAlign: "center",
+                          mb: 1.5,
+                          mt: 2,
+                          px: { xs: 0.5, sm: 0 },
+                        }}
+                      >
+                        {service.title}
+                      </Typography>
+
                       <Typography 
                         color="text.secondary"
                         sx={{
@@ -287,7 +303,6 @@ export default function ServicesSection() {
                           fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" },
                           mb: 1.5,
                           px: { xs: 0.5, sm: 0 },
-                          mt: 2,
                         }}
                       >
                         {service.description}
