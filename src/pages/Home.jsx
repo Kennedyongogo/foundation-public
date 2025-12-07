@@ -218,7 +218,7 @@ export default function Home() {
                 variant="h2"
                 sx={{
                   fontWeight: 700,
-                  fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" },
+                  fontSize: { xs: "1.3rem", sm: "1.5rem", md: "1.8rem" },
                   background: "linear-gradient(45deg, #2196f3, #e91e63)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",

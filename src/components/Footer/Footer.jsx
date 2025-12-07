@@ -55,8 +55,8 @@ export default function Footer() {
       sx={{
         background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%)",
         color: "white",
-        pt: { xs: 4, sm: 6, md: 8 },
-        pb: 2,
+        pt: { xs: 2, sm: 3, md: 4 },
+        pb: 1,
         mt: "auto",
         position: "relative",
         overflow: "hidden",
@@ -78,11 +78,11 @@ export default function Footer() {
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
         <Fade in timeout={1000}>
           <Box>
-            <Grid container spacing={{ xs: 4, sm: 6, md: 10 }}>
+            <Grid container spacing={{ xs: 2, sm: 3, md: 5 }}>
               <Grid item xs={12} md={4}>
                 <Slide direction="up" in timeout={1200}>
                   <Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 2 }, mb: { xs: 2, sm: 3 } }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 2 }, mb: { xs: 1, sm: 1.5 } }}>
                       <Box
                         sx={{
                           position: "relative",
@@ -129,11 +129,11 @@ export default function Footer() {
                       </Typography>
                     </Box>
                     
-                    <Box sx={{ mb: { xs: 2, sm: 3 } }}>
+                    <Box sx={{ mb: { xs: 1, sm: 1.5 } }}>
                       <Typography 
                         variant="h6" 
                         sx={{ 
-                          mb: { xs: 1, sm: 2 },
+                          mb: { xs: 0.5, sm: 1 },
                           fontWeight: 600,
                           color: "#ffeb3b",
                           textShadow: "0 1px 2px rgba(0,0,0,0.3)",
@@ -156,7 +156,7 @@ export default function Footer() {
                       <Typography 
                         variant="body1" 
                         sx={{ 
-                          mb: { xs: 2, sm: 3 },
+                          mb: { xs: 1, sm: 1.5 },
                           lineHeight: 1.6,
                           color: "rgba(255,255,255,0.9)",
                           fontSize: { xs: "0.8rem", sm: "1rem" },
@@ -167,7 +167,7 @@ export default function Footer() {
                     </Box>
 
                     {/* Mission Chips */}
-                    <Box sx={{ mb: { xs: 2, sm: 4 }, display: "flex", flexWrap: "wrap", gap: { xs: 0.5, sm: 1 } }}>
+                    <Box sx={{ mb: { xs: 1, sm: 2 }, display: "flex", flexWrap: "wrap", gap: { xs: 0.5, sm: 1 } }}>
                       <Chip
                         label="Education"
                         size="small"
@@ -213,7 +213,7 @@ export default function Footer() {
                     </Box>
 
                     {/* Social Media Icons */}
-                    <Typography variant="h6" sx={{ mb: { xs: 1, sm: 2 }, fontWeight: 600, color: "#e3f2fd", fontSize: { xs: "1rem", sm: "1.25rem" } }}>
+                    <Typography variant="h6" sx={{ mb: { xs: 0.5, sm: 1 }, fontWeight: 600, color: "#e3f2fd", fontSize: { xs: "1rem", sm: "1.25rem" } }}>
                       Follow Us
             </Typography>
                     <Box sx={{ display: "flex", gap: { xs: 0.5, sm: 1 } }}>
@@ -248,7 +248,7 @@ export default function Footer() {
           </Grid>
               
               <Grid item xs={12} md={8}>
-                <Box sx={{ display: "flex", width: "100%", gap: { xs: 2, sm: 3, md: 4 }, flexDirection: { xs: "column", md: "row" } }}>
+                <Box sx={{ display: "flex", width: "100%", gap: { xs: 1, sm: 1.5, md: 2 }, flexDirection: { xs: "column", md: "row" } }}>
                   {/* Quick Links Column */}
                   <Box sx={{ flex: 1 }}>
                     <Slide direction="up" in timeout={1400}>
@@ -256,7 +256,7 @@ export default function Footer() {
                         <Typography 
                           variant="h5" 
                           sx={{ 
-                            mb: { xs: 2, sm: 3 },
+                            mb: { xs: 1, sm: 1.5 },
                             fontWeight: 700,
                             background: "linear-gradient(45deg, #ffffff, #e3f2fd)",
                             backgroundClip: "text",
@@ -269,7 +269,7 @@ export default function Footer() {
                           Quick Links
                         </Typography>
                         
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, sm: 1.5 } }}>
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 0.5, sm: 0.75 } }}>
                           {[
                             { label: "Home", icon: <Home />, section: "hero-section", color: "#2196f3" },
                             { label: "Our Mission", icon: <Favorite />, section: "mission-section", color: "#e91e63" },
@@ -284,7 +284,7 @@ export default function Footer() {
                                 display: "flex",
                                 alignItems: "center",
                                 gap: { xs: 1, sm: 1.5 },
-                                p: { xs: 1, sm: 1.5 },
+                                p: { xs: 0.75, sm: 1 },
                                 background: "rgba(255,255,255,0.05)",
                                 backdropFilter: "blur(10px)",
                                 border: "1px solid rgba(255,255,255,0.1)",
@@ -339,7 +339,7 @@ export default function Footer() {
                         <Typography 
                           variant="h5" 
                           sx={{ 
-                            mb: { xs: 2, sm: 3 },
+                            mb: { xs: 1, sm: 1.5 },
                             fontWeight: 700,
                             background: "linear-gradient(45deg, #ffffff, #e3f2fd)",
                             backgroundClip: "text",
@@ -352,11 +352,11 @@ export default function Footer() {
                           Contact Us
                         </Typography>
                         
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, sm: 1.5 } }}>
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 0.5, sm: 0.75 } }}>
                           {/* Physical Address */}
                           <Box
                             sx={{
-                              p: { xs: 1.5, sm: 2 },
+                              p: { xs: 1, sm: 1.25 },
                               background: "rgba(255,255,255,0.05)",
                               backdropFilter: "blur(10px)",
                               border: "1px solid rgba(255,255,255,0.1)",
@@ -396,7 +396,7 @@ export default function Footer() {
                           {/* Postal Address */}
                           <Box
                             sx={{
-                              p: { xs: 1.5, sm: 2 },
+                              p: { xs: 1, sm: 1.25 },
                               background: "rgba(255,255,255,0.05)",
                               backdropFilter: "blur(10px)",
                               border: "1px solid rgba(255,255,255,0.1)",
@@ -487,7 +487,7 @@ export default function Footer() {
               <Box>
                 <Divider 
                   sx={{ 
-                    my: 2, 
+                    my: 1, 
                     borderColor: "rgba(255,255,255,0.2)",
                     "&::before, &::after": {
                       borderColor: "rgba(255,255,255,0.1)",
@@ -497,7 +497,7 @@ export default function Footer() {
                 <Box
                   sx={{
                     textAlign: "center",
-                    py: 2,
+                    py: 1,
                     background: "rgba(255,255,255,0.03)",
                     borderRadius: "12px",
                     backdropFilter: "blur(10px)",
