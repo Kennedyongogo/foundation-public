@@ -3,6 +3,7 @@ import { Box, Container, Card, CardContent, Typography, Fade } from "@mui/materi
 import HeroSection from "../components/Home/HeroSection";
 import ServicesSection from "../components/Home/ServicesSection";
 import ProjectsSection from "../components/Home/ProjectsSection";
+import PostsSection from "../components/Home/PostsSection";
 import CharityMap from "../components/Home/CharityMap";
 import ContactSection from "../components/Home/ContactSection";
 import TeamSection from "../components/Home/TeamSection";
@@ -16,6 +17,7 @@ export default function Home() {
       <HeroSection />
       <ServicesSection />
       <ProjectsSection />
+      <PostsSection />
       
       {/* Charity Map Section */}
       <Box
@@ -58,7 +60,7 @@ export default function Home() {
                   variant="h2"
                   sx={{
                     fontWeight: 700,
-                    fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" },
+                    fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.2rem" },
                     background: "linear-gradient(45deg, #4caf50, #2196f3)",
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",

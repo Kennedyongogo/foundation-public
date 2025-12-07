@@ -68,6 +68,7 @@ export default function ProjectsSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [imageIndices, setImageIndices] = useState({}); // Track current image index for each project
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -80,6 +81,25 @@ export default function ProjectsSection() {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  // Auto-transition images for projects with multiple images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setImageIndices((prev) => {
+        const newIndices = { ...prev };
+        projects.forEach((project) => {
+          if (project.updateImages && project.updateImages.length > 1) {
+            const currentIdx = newIndices[project.id] || 0;
+            const nextIdx = (currentIdx + 1) % project.updateImages.length;
+            newIndices[project.id] = nextIdx;
+          }
+        });
+        return newIndices;
+      });
+    }, 4000); // Change image every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [projects]);
 
   const fetchProjects = async () => {
     try {
@@ -106,11 +126,26 @@ export default function ProjectsSection() {
             }
           }
           
+          // Get all valid images for the project
+          const allImages = [];
+          if (project.update_images && Array.isArray(project.update_images) && project.update_images.length > 0) {
+            project.update_images.forEach(img => {
+              if (img && img.path && typeof img.path === 'string' && img.path.trim() !== '') {
+                allImages.push(`/${img.path}`);
+              }
+            });
+          }
+          // If no images found, use default
+          if (allImages.length === 0) {
+            allImages.push("/foundation-logo.png");
+          }
+          
           return {
             id: project.id,
             title: project.name,
             description: project.description,
-            image: projectImage,
+            image: allImages[0], // First image as default
+            images: allImages, // All images for transitions
             location: `${project.subcounty}, ${project.county}`,
             category: project.category,
             status: project.status,
@@ -325,16 +360,101 @@ export default function ProjectsSection() {
                               },
                             }}
                           >
-                            <CardMedia
-                              component="img"
-                              height={isMobile ? "140" : "180"}
-                              image={project.image}
-                              alt={project.title}
+                            <Box
                               sx={{
-                                objectFit: "cover",
-                                flexShrink: 0,
+                                position: "relative",
+                                height: isMobile ? "140px" : "180px",
+                                width: "100%",
+                                overflow: "hidden",
+                                backgroundColor: "#f5f5f5",
                               }}
-                            />
+                            >
+                              {project.images && project.images.length > 0 ? (
+                                <>
+                                  {project.images.map((img, imgIndex) => {
+                                    const currentImgIndex = imageIndices[project.id] || 0;
+                                    const isActive = imgIndex === currentImgIndex;
+                                    return (
+                                      <Box
+                                        key={imgIndex}
+                                        sx={{
+                                          position: "absolute",
+                                          top: 0,
+                                          left: 0,
+                                          width: "100%",
+                                          height: "100%",
+                                          opacity: isActive ? 1 : 0,
+                                          transition: "opacity 0.8s ease-in-out",
+                                          zIndex: isActive ? 1 : 0,
+                                        }}
+                                      >
+                                        <Box
+                                          component="img"
+                                          src={img}
+                                          alt={`${project.title} - Image ${imgIndex + 1}`}
+                                          sx={{
+                                            width: "100%",
+                                            height: "100%",
+                                            objectFit: "cover",
+                                            display: "block",
+                                          }}
+                                          onError={(e) => {
+                                            e.target.src = "/foundation-logo.png";
+                                          }}
+                                        />
+                                      </Box>
+                                    );
+                                  })}
+                                  {/* Image indicators */}
+                                  {project.images.length > 1 && (
+                                    <Box
+                                      sx={{
+                                        position: "absolute",
+                                        bottom: 8,
+                                        left: "50%",
+                                        transform: "translateX(-50%)",
+                                        display: "flex",
+                                        gap: 0.5,
+                                        zIndex: 2,
+                                      }}
+                                    >
+                                      {project.images.map((_, dotIndex) => {
+                                        const currentImgIndex = imageIndices[project.id] || 0;
+                                        return (
+                                          <Box
+                                            key={dotIndex}
+                                            sx={{
+                                              width: 6,
+                                              height: 6,
+                                              borderRadius: "50%",
+                                              backgroundColor:
+                                                dotIndex === currentImgIndex
+                                                  ? "rgba(255, 255, 255, 0.9)"
+                                                  : "rgba(255, 255, 255, 0.4)",
+                                              transition: "background-color 0.3s ease",
+                                            }}
+                                          />
+                                        );
+                                      })}
+                                    </Box>
+                                  )}
+                                </>
+                              ) : (
+                                <Box
+                                  component="img"
+                                  src={project.image}
+                                  alt={project.title}
+                                  sx={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                  }}
+                                  onError={(e) => {
+                                    e.target.src = "/foundation-logo.png";
+                                  }}
+                                />
+                              )}
+                            </Box>
                             <CardContent
                               sx={{
                                 flexGrow: 1,

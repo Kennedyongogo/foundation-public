@@ -110,8 +110,8 @@ export default function TeamMemberDetail() {
 
   if (error || !teamMember) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Alert severity="error" sx={{ mb: 3 }}>
+      <Container maxWidth="lg" sx={{ py: 2 }}>
+        <Alert severity="error" sx={{ mb: 1.5 }}>
           {error || "Team member not found"}
         </Alert>
         <Button variant="outlined" onClick={handleBack}>
@@ -136,7 +136,7 @@ export default function TeamMemberDetail() {
             scroll-behavior: smooth;
           }
           html, body, #root {
-            background: white !important;
+            background: #f8f9fa !important;
             margin: 0 !important;
             padding: 0 !important;
           }
@@ -158,20 +158,20 @@ export default function TeamMemberDetail() {
           background: "transparent",
         }}
       >
-        <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3 }, position: "relative", zIndex: 1 }}>
+        <Container maxWidth="lg" sx={{ py: { xs: 1, sm: 1.5, md: 2 }, px: { xs: 0.25, sm: 0.375 }, position: "relative", zIndex: 1 }}>
           <MotionBox
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             {/* Header Section */}
-            <Box sx={{ mb: 4 }}>
+            <Box sx={{ mb: 2 }}>
               <Button
                 variant="contained"
                 startIcon={<ArrowBack />}
                 onClick={handleBack}
                 sx={{ 
-                  mb: 3,
+                  mb: 1.5,
                   background: "linear-gradient(135deg, #667eea, #764ba2)",
                   color: "white",
                   fontWeight: 600,
@@ -181,6 +181,12 @@ export default function TeamMemberDetail() {
                     background: "linear-gradient(135deg, #5568d3, #653a8b)",
                     transform: "translateY(-2px)",
                     boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
+                  },
+                  "&:focus": {
+                    outline: "none",
+                  },
+                  "&:focus-visible": {
+                    outline: "none",
                   },
                   transition: "all 0.3s ease",
                 }}
@@ -237,8 +243,8 @@ export default function TeamMemberDetail() {
                       color: "white",
                     }}
                   >
-                    <Person sx={{ fontSize: { xs: "6rem", sm: "8rem", md: "10rem" }, mb: 2 }} />
-                    <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                    <Person sx={{ fontSize: { xs: "5rem", sm: "6.5rem", md: "8rem" }, mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.7rem" } }}>
                       No Photo Available
                     </Typography>
                   </Box>
@@ -257,7 +263,7 @@ export default function TeamMemberDetail() {
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
-                    fontSize: { xs: "1.5rem", sm: "1.875rem", md: "2.25rem" },
+                    fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.85rem" },
                     textAlign: "left",
                     mb: 0,
                   }}
@@ -270,10 +276,10 @@ export default function TeamMemberDetail() {
                   variant="h5"
                   sx={{
                     color: "#4caf50",
-                    fontSize: { xs: "0.9rem", sm: "1.05rem", md: "1.2rem" },
+                    fontSize: { xs: "0.75rem", sm: "0.85rem", md: "1rem" },
                     fontWeight: 600,
                     textAlign: "left",
-                    mb: 3,
+                    mb: 1.5,
                   }}
                 >
                   {teamMember.position || "Team Member"}
@@ -286,7 +292,7 @@ export default function TeamMemberDetail() {
                     sx={{
                       lineHeight: 1.8,
                       color: "text.primary",
-                      fontSize: { xs: "0.75rem", sm: "0.825rem", md: "0.9rem" },
+                      fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" },
                       textAlign: "left",
                     }}
                   >
@@ -301,7 +307,7 @@ export default function TeamMemberDetail() {
                     sx={{
                       lineHeight: 1.8,
                       color: "text.secondary",
-                      fontSize: { xs: "0.75rem", sm: "0.825rem", md: "0.9rem" },
+                      fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" },
                       textAlign: "left",
                       fontStyle: "italic",
                     }}
@@ -316,7 +322,7 @@ export default function TeamMemberDetail() {
             <Paper 
               elevation={3} 
               sx={{ 
-                p: { xs: 3, sm: 4 }, 
+                p: { xs: 1.5, sm: 2 }, 
                 borderRadius: { xs: 3, md: 4 },
                 background: "#ffffff",
                 border: "1px solid #e0e0e0",
@@ -328,18 +334,19 @@ export default function TeamMemberDetail() {
                 sx={{
                   fontWeight: 600,
                   color: "#667eea",
-                  mb: 3,
+                  mb: 1.5,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 1,
+                  fontSize: { xs: "1rem", sm: "1.2rem", md: "1.45rem" },
                 }}
               >
-                <Share sx={{ fontSize: "1.5rem" }} />
+                <Share sx={{ fontSize: { xs: "1.2rem", md: "1.35rem" } }} />
                 Connect with {teamMember?.full_name}
               </Typography>
               
-              <Box sx={{ display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
+              <Box sx={{ display: "flex", justifyContent: "center", gap: 1, flexWrap: "wrap" }}>
                 <Button
                   variant="contained"
                   startIcon={<Facebook />}
@@ -347,9 +354,10 @@ export default function TeamMemberDetail() {
                   sx={{
                     backgroundColor: "#1877f2",
                     "&:hover": { backgroundColor: "#166fe5" },
-                    px: 3,
-                    py: 1.5,
-                    minWidth: 120,
+                    px: 1.5,
+                    py: 0.75,
+                    minWidth: 100,
+                    fontSize: { xs: "0.7rem", md: "0.8rem" },
                   }}
                 >
                   Facebook
@@ -362,9 +370,10 @@ export default function TeamMemberDetail() {
                   sx={{
                     backgroundColor: "#25d366",
                     "&:hover": { backgroundColor: "#22c55e" },
-                    px: 3,
-                    py: 1.5,
-                    minWidth: 120,
+                    px: 1.5,
+                    py: 0.75,
+                    minWidth: 100,
+                    fontSize: { xs: "0.7rem", md: "0.8rem" },
                   }}
                 >
                   WhatsApp
@@ -377,9 +386,10 @@ export default function TeamMemberDetail() {
                   sx={{
                     backgroundColor: "#1da1f2",
                     "&:hover": { backgroundColor: "#1a91da" },
-                    px: 3,
-                    py: 1.5,
-                    minWidth: 120,
+                    px: 1.5,
+                    py: 0.75,
+                    minWidth: 100,
+                    fontSize: { xs: "0.7rem", md: "0.8rem" },
                   }}
                 >
                   X
@@ -392,9 +402,10 @@ export default function TeamMemberDetail() {
                   sx={{
                     backgroundColor: "#db4437",
                     "&:hover": { backgroundColor: "#c23321" },
-                    px: 3,
-                    py: 1.5,
-                    minWidth: 120,
+                    px: 1.5,
+                    py: 0.75,
+                    minWidth: 100,
+                    fontSize: { xs: "0.7rem", md: "0.8rem" },
                   }}
                 >
                   Google

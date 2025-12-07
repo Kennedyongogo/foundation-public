@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Grid, Card, CardContent, Fade, Slide, Chip } from "@mui/material";
+import { Box, Typography, Grid, Card, CardContent, CardMedia, Fade, Slide, Chip, CircularProgress, IconButton, useMediaQuery, useTheme, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import {
   School,
   Psychology,
@@ -7,83 +7,344 @@ import {
   LocalHospital,
   Group,
   EmojiPeople,
+  ChevronLeft,
+  ChevronRight,
+  ArrowForward,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 
-const foundationServices = [
-  {
-    title: "Educational Support",
-    description:
-      "Providing scholarships, school supplies, and educational resources to underprivileged children across Kenya",
-    icon: <School sx={{ fontSize: 40, color: "white" }} />,
+// Category configuration mapping
+const categoryConfig = {
+  educational_support: {
+    icon: School,
     color: "#2196f3",
     gradient: "linear-gradient(135deg, #2196f3, #21cbf3)",
-    stats: "500+ Students",
-    impact: "High Impact",
-    image: "/education.png",
   },
-  {
-    title: "Mental Health Awareness",
-    description:
-      "Raising awareness about mental health issues and providing counseling services to communities in need",
-    icon: <Psychology sx={{ fontSize: 40, color: "white" }} />,
+  mental_health_awareness: {
+    icon: Psychology,
     color: "#e91e63",
     gradient: "linear-gradient(135deg, #e91e63, #f06292)",
-    stats: "200+ Sessions",
-    impact: "Critical Need",
-    image: "/mental.png",
   },
-  {
-    title: "Poverty Alleviation",
-    description:
-      "Implementing sustainable programs to help families break the cycle of poverty through skills training and micro-finance",
-    icon: <VolunteerActivism sx={{ fontSize: 40, color: "white" }} />,
+  poverty_alleviation: {
+    icon: VolunteerActivism,
     color: "#4caf50",
     gradient: "linear-gradient(135deg, #4caf50, #81c784)",
-    stats: "100+ Families",
-    impact: "Life Changing",
-    image: "/poverty.png",
   },
-  {
-    title: "Community Empowerment",
-    description:
-      "Building stronger communities through leadership development, civic education, and social cohesion programs",
-    icon: <Group sx={{ fontSize: 40, color: "white" }} />,
+  community_empowerment: {
+    icon: Group,
     color: "#ff9800",
     gradient: "linear-gradient(135deg, #ff9800, #ffb74d)",
-    stats: "50+ Communities",
-    impact: "Transformative",
-    image: "/community.png",
   },
-  {
-    title: "Healthcare Access",
-    description:
-      "Improving healthcare access in rural areas through mobile clinics and health education programs",
-    icon: <LocalHospital sx={{ fontSize: 40, color: "white" }} />,
+  healthcare_access: {
+    icon: LocalHospital,
     color: "#9c27b0",
     gradient: "linear-gradient(135deg, #9c27b0, #ba68c8)",
-    stats: "1000+ Patients",
-    impact: "Essential",
-    image: "/health.png",
   },
-  {
-    title: "Youth Development",
-    description:
-      "Nurturing the next generation through mentorship programs, career guidance, and life skills training",
-    icon: <EmojiPeople sx={{ fontSize: 40, color: "white" }} />,
+  youth_development: {
+    icon: EmojiPeople,
     color: "#00bcd4",
     gradient: "linear-gradient(135deg, #00bcd4, #4dd0e1)",
-    stats: "300+ Youth",
-    impact: "Future Focused",
-    image: "/youth.png",
   },
-];
+};
+
+// Helper to build image URL
+const buildImageUrl = (imagePath) => {
+  if (!imagePath) return "";
+  if (imagePath.startsWith("http")) return imagePath;
+  if (imagePath.startsWith("uploads/")) return `/${imagePath}`;
+  if (imagePath.startsWith("/uploads/")) return imagePath;
+  return imagePath;
+};
+
+// Mission Card Component
+const MissionCard = ({ category, config, IconComponent, isVisible, index, onViewMore }) => {
+  const [imageError, setImageError] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Get all images from the category
+  const getAllImages = () => {
+    if (category.images && Array.isArray(category.images) && category.images.length > 0) {
+      return category.images.map((img) => {
+        const path = typeof img === 'object' ? img.path : img;
+        return buildImageUrl(path);
+      }).filter(url => url); // Filter out empty URLs
+    }
+    return [];
+  };
+
+  const images = getAllImages();
+  const hasMultipleImages = images.length > 1;
+  const currentImageUrl = images.length > 0 ? images[currentImageIndex] : null;
+
+  // Auto-transition images if there are multiple
+  useEffect(() => {
+    if (!hasMultipleImages) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [hasMultipleImages, images.length]);
+
+  return (
+    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+      <Slide direction="up" in={isVisible} timeout={800 + index * 200}>
+        <Card
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+            cursor: "pointer",
+            "&:hover": {
+              transform: "translateY(-8px)",
+              boxShadow: "0 12px 40px rgba(0,0,0,0.15)",
+            },
+          }}
+          onClick={() => onViewMore(category)}
+        >
+          {/* Image Section - Fixed 200px height like news cards */}
+          <Box
+            sx={{
+              position: "relative",
+              height: 200,
+              overflow: "hidden",
+              flexShrink: 0,
+            }}
+          >
+            {currentImageUrl && !imageError ? (
+              <>
+                {images.map((imageUrl, imgIndex) => {
+                  const isActive = imgIndex === currentImageIndex;
+                  return (
+                    <Box
+                      key={imgIndex}
+                      component="img"
+                      src={imageUrl}
+                      alt={category.title}
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        opacity: isActive ? 1 : 0,
+                        transition: "opacity 0.5s ease-in-out",
+                      }}
+                    />
+                  );
+                })}
+                {hasMultipleImages && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      bottom: 8,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      display: "flex",
+                      gap: 0.5,
+                      zIndex: 3,
+                    }}
+                  >
+                    {images.map((_, idx) => (
+                      <Box
+                        key={idx}
+                        sx={{
+                          width: currentImageIndex === idx ? 20 : 6,
+                          height: 6,
+                          borderRadius: "3px",
+                          backgroundColor: currentImageIndex === idx ? "white" : "rgba(255, 255, 255, 0.5)",
+                          transition: "all 0.3s ease",
+                        }}
+                      />
+                    ))}
+                  </Box>
+                )}
+              </>
+            ) : (
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: `linear-gradient(135deg, ${config.color}05, ${config.color}02)`,
+                }}
+              >
+                <IconComponent sx={{ fontSize: 80, color: config.color }} />
+              </Box>
+            )}
+          </Box>
+
+          <CardContent
+            sx={{
+              flexGrow: 1,
+              p: { xs: 2, sm: 3 },
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Box sx={{ mb: 1.5 }}>
+              <Typography
+                variant="h6"
+                component="h3"
+                sx={{
+                  fontWeight: 600,
+                  mb: 1,
+                  color: "text.primary",
+                  fontSize: { xs: "1rem", sm: "1.125rem" },
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+              >
+                {category.title}
+              </Typography>
+            </Box>
+
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                mb: 2,
+                overflow: "hidden",
+                display: "-webkit-box",
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: "vertical",
+                lineHeight: 1.5,
+                flexGrow: 1,
+                fontSize: { xs: "0.75rem", sm: "0.875rem" },
+              }}
+            >
+              {category.description}
+            </Typography>
+
+            <Button
+              variant="outlined"
+              size="small"
+              endIcon={<ArrowForward />}
+              fullWidth
+              onClick={(e) => {
+                e.stopPropagation();
+                onViewMore(category);
+              }}
+              sx={{
+                borderColor: config.color,
+                color: config.color,
+                fontSize: "0.875rem",
+                py: 1,
+                mt: "auto",
+                "&:hover": {
+                  borderColor: config.color,
+                  backgroundColor: config.color,
+                  color: "white",
+                },
+              }}
+            >
+              View More
+            </Button>
+          </CardContent>
+        </Card>
+      </Slide>
+    </Grid>
+  );
+};
 
 export default function ServicesSection() {
   const [isVisible, setIsVisible] = useState(false);
+  const [missionCategories, setMissionCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedMission, setSelectedMission] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [missionDetails, setMissionDetails] = useState(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+
+  // Determine how many cards to show based on screen size
+  const cardsToShow = isMobile ? 1 : isTablet ? 2 : 3;
+  const maxIndex = Math.max(0, missionCategories.length - cardsToShow);
 
   useEffect(() => {
     setIsVisible(true);
+    fetchMissionCategories();
   }, []);
+
+  const fetchMissionCategories = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch("/api/mission-categories/public");
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.success && result.data) {
+        setMissionCategories(result.data);
+      } else {
+        throw new Error(result.message || "Failed to fetch mission categories");
+      }
+    } catch (err) {
+      console.error("Error fetching mission categories:", err);
+      setError(err.message);
+      setMissionCategories([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePrevious = () => {
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
+  };
+
+  const getVisibleCategories = () => {
+    return missionCategories.slice(currentIndex, currentIndex + cardsToShow);
+  };
+
+  const handleViewMore = async (category) => {
+    setSelectedMission(category);
+    setDialogOpen(true);
+    setLoadingDetails(true);
+    
+    try {
+      const response = await fetch(`/api/mission-categories/public/${category.id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch mission details");
+      }
+      const data = await response.json();
+      if (data.success && data.data) {
+        setMissionDetails(data.data);
+      } else {
+        setMissionDetails(category); // Fallback to category data
+      }
+    } catch (err) {
+      console.error("Error fetching mission details:", err);
+      setMissionDetails(category); // Fallback to category data
+    } finally {
+      setLoadingDetails(false);
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setSelectedMission(null);
+    setMissionDetails(null);
+  };
 
   return (
     <Box
@@ -115,7 +376,7 @@ export default function ServicesSection() {
               sx={{
                 mb: 2,
                 fontWeight: 800,
-                fontSize: { xs: "1.8rem", sm: "2.2rem", md: "2.8rem" },
+                fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.2rem" },
                 background: "linear-gradient(45deg, #2196f3, #e91e63, #4caf50)",
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
@@ -145,7 +406,7 @@ export default function ServicesSection() {
                 mx: "auto",
                 px: { xs: 1, sm: 0 },
                 fontWeight: 500,
-                fontSize: { xs: "0.95rem", sm: "1.1rem", md: "1.2rem" },
+                fontSize: { xs: "0.85rem", sm: "0.95rem", md: "1rem" },
                 lineHeight: 1.6,
                 color: "text.primary",
               }}
@@ -199,123 +460,298 @@ export default function ServicesSection() {
         </Fade>
 
         <Box sx={{ position: "relative" }}>
-          <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
-            {foundationServices.map((service, index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
-                <Slide direction="up" in={isVisible} timeout={800 + index * 200}>
-                  <Card
+          {loading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" py={8}>
+              <CircularProgress />
+            </Box>
+          ) : error ? (
+            <Box textAlign="center" py={4}>
+              <Typography color="error" variant="body1">
+                {error}
+              </Typography>
+            </Box>
+          ) : missionCategories.length === 0 ? (
+            <Box textAlign="center" py={4}>
+              <Typography color="text.secondary" variant="body1">
+                No mission categories available at the moment.
+              </Typography>
+            </Box>
+          ) : (
+            <Box>
+              {/* Navigation Controls */}
+              {missionCategories.length > cardsToShow && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 3,
+                  }}
+                >
+                  <IconButton
+                    onClick={handlePrevious}
+                    disabled={currentIndex === 0}
                     sx={{
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-                      position: "relative",
-                      zIndex: 1,
-                      borderRadius: "20px",
-                      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-                      border: "1px solid rgba(255, 255, 255, 0.3)",
-                      background: "rgba(255, 255, 255, 0.9)",
-                      backdropFilter: "blur(10px)",
-                      overflow: "hidden",
-                      "&::before": {
-                        content: '""',
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: "4px",
-                        background: service.gradient,
-                        zIndex: 2,
-                      },
+                      backgroundColor: "primary.main",
+                      color: "white",
                       "&:hover": {
-                        transform: "translateY(-12px) scale(1.03)",
-                        boxShadow: `0 20px 60px ${service.color}30`,
-                        "& .icon-container": {
-                          transform: "scale(1.15) rotate(10deg)",
-                          boxShadow: `0 12px 30px ${service.color}50`,
-                        },
-                        "& .stats-chip": {
-                          transform: "scale(1.1)",
-                        },
-                        "& .impact-chip": {
-                          transform: "scale(1.1)",
-                        },
+                        backgroundColor: "primary.dark",
+                      },
+                      "&:disabled": {
+                        backgroundColor: "grey.300",
+                        color: "grey.500",
                       },
                     }}
                   >
-                    <CardContent sx={{ flexGrow: 1, textAlign: "center", p: 2, pt: 3 }}>
-                      <Box
-                        sx={{
-                          width: "100%",
-                          height: { xs: "200px", sm: "220px", md: "240px" },
-                          borderRadius: "12px",
-                          border: `2px solid ${service.color}20`,
-                          background: `linear-gradient(135deg, ${service.color}05, ${service.color}02)`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          position: "relative",
-                          transition: "all 0.3s ease",
-                          overflow: "hidden",
-                          "&:hover": {
-                            borderColor: service.color,
-                            background: `linear-gradient(135deg, ${service.color}10, ${service.color}05)`,
-                          },
-                        }}
-                      >
-                        <Box
-                          component="img"
-                          src={service.image}
-                          alt={service.title}
-                          sx={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            borderRadius: "10px",
-                            transition: "all 0.3s ease",
-                            "&:hover": {
-                              transform: "scale(1.05)",
-                            },
-                          }}
-                        />
-                      </Box>
+                    <ChevronLeft />
+                  </IconButton>
 
-                      {/* Service Title */}
-                      <Typography 
-                        variant="h6"
-                        sx={{
-                          fontWeight: 700,
-                          fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem" },
-                          color: service.color,
-                          textAlign: "center",
-                          mb: 1.5,
-                          mt: 2,
-                          px: { xs: 0.5, sm: 0 },
-                        }}
-                      >
-                        {service.title}
-                      </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Showing {currentIndex + 1}-
+                    {Math.min(currentIndex + cardsToShow, missionCategories.length)} of{" "}
+                    {missionCategories.length} categories
+                  </Typography>
 
-                      <Typography 
-                        color="text.secondary"
-                        sx={{
-                          lineHeight: 1.5,
-                          fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" },
-                          mb: 1.5,
-                          px: { xs: 0.5, sm: 0 },
-                        }}
-                      >
-                        {service.description}
-                      </Typography>
+                  <IconButton
+                    onClick={handleNext}
+                    disabled={currentIndex >= maxIndex}
+                    sx={{
+                      backgroundColor: "primary.main",
+                      color: "white",
+                      "&:hover": {
+                        backgroundColor: "primary.dark",
+                      },
+                      "&:disabled": {
+                        backgroundColor: "grey.300",
+                        color: "grey.500",
+                      },
+                    }}
+                  >
+                    <ChevronRight />
+                  </IconButton>
+                </Box>
+              )}
 
-                    </CardContent>
-                  </Card>
-                </Slide>
+              {/* Mission Categories Grid */}
+              <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }} justifyContent="center">
+                {getVisibleCategories().map((category, index) => {
+                  const config = categoryConfig[category.category] || categoryConfig.educational_support;
+                  const IconComponent = config.icon;
+                  
+                  return (
+                    <MissionCard
+                      key={category.id || index}
+                      category={category}
+                      config={config}
+                      IconComponent={IconComponent}
+                      isVisible={isVisible}
+                      index={currentIndex + index}
+                      onViewMore={handleViewMore}
+                    />
+                  );
+                })}
               </Grid>
-            ))}
-          </Grid>
+
+              {/* Page Indicators */}
+              {missionCategories.length > cardsToShow && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: 1,
+                    mt: 4,
+                  }}
+                >
+                  {Array.from({
+                    length: Math.ceil(missionCategories.length / cardsToShow),
+                  }).map((_, index) => (
+                    <Box
+                      key={index}
+                      onClick={() => setCurrentIndex(index * cardsToShow)}
+                      sx={{
+                        width: 12,
+                        height: 12,
+                        borderRadius: "50%",
+                        backgroundColor:
+                          Math.floor(currentIndex / cardsToShow) === index
+                            ? "primary.main"
+                            : "grey.300",
+                        cursor: "pointer",
+                        transition: "background-color 0.3s ease",
+                        "&:hover": {
+                          backgroundColor: "primary.light",
+                        },
+                      }}
+                    />
+                  ))}
+                </Box>
+              )}
+            </Box>
+          )}
         </Box>
       </Box>
+
+      {/* Mission Detail Dialog */}
+      <Dialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            maxHeight: "90vh",
+          },
+        }}
+      >
+        {missionDetails && (
+          <>
+            <DialogTitle
+              sx={{
+                background: (theme) => {
+                  const config = categoryConfig[missionDetails.category] || categoryConfig.educational_support;
+                  return config.gradient;
+                },
+                color: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                pb: 2,
+              }}
+            >
+              <Box display="flex" alignItems="center" gap={2}>
+                {(() => {
+                  const config = categoryConfig[missionDetails.category] || categoryConfig.educational_support;
+                  const IconComponent = config.icon;
+                  return <IconComponent sx={{ fontSize: 32 }} />;
+                })()}
+                <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                  {missionDetails.title}
+                </Typography>
+              </Box>
+              <IconButton
+                onClick={handleCloseDialog}
+                sx={{
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  },
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent sx={{ p: 0 }}>
+              {/* Images */}
+              {missionDetails.images && Array.isArray(missionDetails.images) && missionDetails.images.length > 0 && (
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: { xs: "200px", sm: "300px" },
+                    overflow: "hidden",
+                    position: "relative",
+                  }}
+                >
+                  <img
+                    src={buildImageUrl(typeof missionDetails.images[0] === 'object' ? missionDetails.images[0].path : missionDetails.images[0])}
+                    alt={missionDetails.title}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </Box>
+              )}
+
+              <Box sx={{ p: 3 }}>
+                {/* Impact Chip */}
+                {missionDetails.impact && (
+                  <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
+                    <Chip
+                      label={missionDetails.impact}
+                      sx={{
+                        backgroundColor: (() => {
+                          const config = categoryConfig[missionDetails.category] || categoryConfig.educational_support;
+                          return config.color;
+                        })(),
+                        color: "white",
+                        fontWeight: 600,
+                      }}
+                    />
+                  </Box>
+                )}
+
+                {/* Description */}
+                <Typography
+                  variant="body1"
+                  sx={{
+                    whiteSpace: "pre-wrap",
+                    lineHeight: 1.8,
+                    color: "text.primary",
+                    mb: 2,
+                  }}
+                >
+                  {missionDetails.description}
+                </Typography>
+
+                {/* Additional Images Gallery */}
+                {missionDetails.images && Array.isArray(missionDetails.images) && missionDetails.images.length > 1 && (
+                  <>
+                    <Box sx={{ mt: 3, pt: 2, borderTop: "1px solid #e0e0e0" }}>
+                      <Typography variant="h6" gutterBottom>
+                        More Images
+                      </Typography>
+                      <Grid container spacing={2} sx={{ mt: 1 }}>
+                        {missionDetails.images.slice(1).map((imageObj, index) => {
+                          const imagePath = typeof imageObj === "object" ? imageObj.path : imageObj;
+                          return (
+                            <Grid item xs={12} sm={6} key={index}>
+                              <img
+                                src={buildImageUrl(imagePath)}
+                                alt={`${missionDetails.title} - Image ${index + 2}`}
+                                style={{
+                                  width: "100%",
+                                  height: "200px",
+                                  objectFit: "cover",
+                                  borderRadius: "8px",
+                                }}
+                              />
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
+                    </Box>
+                  </>
+                )}
+              </Box>
+            </DialogContent>
+            <DialogActions sx={{ p: 2, pt: 0 }}>
+              <Button
+                onClick={handleCloseDialog}
+                variant="contained"
+                sx={{
+                  background: (() => {
+                    const config = categoryConfig[missionDetails.category] || categoryConfig.educational_support;
+                    return config.gradient;
+                  })(),
+                  color: "white",
+                  "&:hover": {
+                    opacity: 0.9,
+                  },
+                }}
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </>
+        )}
+        {loadingDetails && (
+          <DialogContent sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+            <CircularProgress />
+          </DialogContent>
+        )}
+      </Dialog>
     </Box>
   );
 }

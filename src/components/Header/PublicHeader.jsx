@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { AppBar, Toolbar, Box, Typography, Link, Button, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Fade, Slide } from "@mui/material";
 import { Construction, ContactSupport, Home, Menu as MenuIcon, Close, VolunteerActivism, Psychology, Favorite, School, LocalHospital, Groups, RateReview } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -8,24 +8,82 @@ export default function PublicHeader() {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero-section");
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  const navItems = useMemo(() => [
+    { label: "Home", icon: <Home />, sectionId: "hero-section", color: "#2196f3" },
+    { label: "Our Mission", icon: <Favorite />, sectionId: "mission-section", color: "#e91e63" },
+    { label: "Projects", icon: <School />, sectionId: "projects-section", color: "#4caf50" },
+    { label: "Contact", icon: <LocalHospital />, sectionId: "contact-section", color: "#607d8b" },
+    { label: "Testimonials", icon: <RateReview />, sectionId: "testimonials-section", color: "#ff9800" },
+    { label: "Our Team", icon: <Groups />, sectionId: "team-section", color: "#9c27b0" },
+  ], []);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
+      
+      // Don't update active section if we're currently navigating (clicked a nav item)
+      if (isNavigating) return;
+      
+      // Detect active section based on scroll position
+      if (location.pathname === "/") {
+        // Get all sections in the order they appear on the page
+        const sectionIds = navItems.map(item => item.sectionId);
+        const sections = sectionIds
+          .map(id => {
+            const element = document.getElementById(id);
+            return element ? { id, top: element.offsetTop, bottom: element.offsetTop + element.offsetHeight } : null;
+          })
+          .filter(section => section !== null)
+          .sort((a, b) => a.top - b.top); // Sort by position on page
+        
+        const scrollPosition = window.scrollY + 200; // Offset for header height
+        
+        // If at top, set hero section as active
+        if (window.scrollY < 100) {
+          setActiveSection("hero-section");
+          return;
+        }
+        
+        // Find the section that's currently in view
+        // Check from bottom to top to get the most recent section passed
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const section = sections[i];
+          if (scrollPosition >= section.top - 100) { // Add some threshold
+            setActiveSection(section.id);
+            break;
+          }
+        }
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Check on mount
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [location.pathname, navItems, isNavigating]);
 
   const isActive = (path) => location.pathname === path;
 
   const handleNavigateToSection = (sectionId) => {
     setMobileMenuOpen(false);
+    // Set active section immediately when clicked
+    setActiveSection(sectionId);
+    setIsNavigating(true);
+    
     if (location.pathname === "/") {
       const section = document.getElementById(sectionId);
       if (section) {
         section.scrollIntoView({ behavior: "smooth", block: "start" });
+        // Ensure active section is set after scroll and re-enable scroll detection
+        setTimeout(() => {
+          setActiveSection(sectionId);
+          setIsNavigating(false);
+        }, 1000);
+      } else {
+        console.warn(`Section with id "${sectionId}" not found`);
+        setIsNavigating(false);
       }
     } else {
       navigate("/");
@@ -33,19 +91,16 @@ export default function PublicHeader() {
         const section = document.getElementById(sectionId);
         if (section) {
           section.scrollIntoView({ behavior: "smooth", block: "start" });
+          setTimeout(() => {
+            setActiveSection(sectionId);
+            setIsNavigating(false);
+          }, 1000);
+        } else {
+          setIsNavigating(false);
         }
       }, 100);
     }
   };
-
-  const navItems = [
-    { label: "Home", icon: <Home />, sectionId: "hero-section", color: "#2196f3" },
-    { label: "Our Mission", icon: <Favorite />, sectionId: "mission-section", color: "#e91e63" },
-    { label: "Projects", icon: <School />, sectionId: "projects-section", color: "#4caf50" },
-    { label: "Testimonials", icon: <RateReview />, sectionId: "testimonials-section", color: "#ff9800" },
-    { label: "Our Team", icon: <Groups />, sectionId: "team-section", color: "#9c27b0" },
-    { label: "Contact", icon: <LocalHospital />, sectionId: "contact-section", color: "#607d8b" },
-  ];
 
   return (
     <>
@@ -130,22 +185,51 @@ export default function PublicHeader() {
                 alignItems: "center",
               }}
             >
-              {navItems.map((item, index) => (
+              {navItems.map((item, index) => {
+                const isActiveItem = activeSection === item.sectionId && location.pathname === "/";
+                return (
                 <Slide direction="down" in={true} timeout={800 + index * 200} key={item.label}>
                 <Button
                   onClick={() => handleNavigateToSection(item.sectionId)}
                   startIcon={item.icon}
+                  disableRipple
                   sx={{
-                    color: scrolled ? "text.primary" : "white",
-                    fontSize: "1rem",
-                      fontWeight: 600,
-                      px: 3,
-                      py: 1.5,
+                    color: isActiveItem 
+                      ? item.color 
+                      : scrolled ? "text.primary" : "white",
+                    fontSize: { md: "0.875rem", lg: "0.8rem", xl: "0.85rem" },
+                      fontWeight: isActiveItem ? 700 : 600,
+                      px: { md: 2, lg: 1.5, xl: 2 },
+                      py: { md: 1.2, lg: 1, xl: 1.2 },
                       borderRadius: "25px",
                     textTransform: "none",
                       transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                     position: "relative",
                       overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    backgroundColor: isActiveItem
+                      ? scrolled
+                        ? `${item.color}20`
+                        : `${item.color}30`
+                      : "transparent",
+                    "&:focus": {
+                      outline: "none",
+                      backgroundColor: isActiveItem
+                        ? scrolled
+                          ? `${item.color}20`
+                          : `${item.color}30`
+                        : "transparent",
+                    },
+                    "&:focus-visible": {
+                      outline: "none",
+                    },
+                    "& .MuiButton-startIcon": {
+                      marginRight: { md: 1, lg: 0.75, xl: 1 },
+                      "& > *:nth-of-type(1)": {
+                        fontSize: { md: "1.1rem", lg: "1rem", xl: "1.1rem" },
+                        color: isActiveItem ? item.color : "inherit",
+                      },
+                    },
                     "&:hover": {
                       backgroundColor: scrolled
                           ? `${item.color}15`
@@ -172,34 +256,70 @@ export default function PublicHeader() {
                       "&:hover::before": {
                         left: "100%",
                       },
+                      "&::after": isActiveItem ? {
+                        content: '""',
+                        position: "absolute",
+                        bottom: 0,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        width: "60%",
+                        height: "3px",
+                        backgroundColor: item.color,
+                        borderRadius: "2px 2px 0 0",
+                      } : {},
                       "& .icon": {
                         transition: "all 0.4s ease",
-                        color: scrolled ? item.color : "white",
+                        color: isActiveItem 
+                          ? item.color 
+                          : scrolled ? item.color : "white",
                     },
                   }}
                 >
                   {item.label}
                 </Button>
                 </Slide>
-              ))}
+              )})}
             </Box>
 
             {/* Enhanced Mobile Menu Button */}
             <Fade in={true} timeout={1200}>
             <IconButton
+              disableRipple
               sx={{
                 display: { xs: "flex", md: "none" },
-                color: scrolled ? "primary.main" : "white",
-                  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                  borderRadius: "12px",
+                color: mobileMenuOpen 
+                  ? "#2196f3" 
+                  : scrolled ? "primary.main" : "white",
+                transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                borderRadius: "12px",
+                backgroundColor: mobileMenuOpen
+                  ? scrolled
+                    ? "rgba(33, 150, 243, 0.2)"
+                    : "rgba(33, 150, 243, 0.3)"
+                  : "transparent",
+                "&:focus": {
+                  outline: "none",
+                  backgroundColor: mobileMenuOpen
+                    ? scrolled
+                      ? "rgba(33, 150, 243, 0.2)"
+                      : "rgba(33, 150, 243, 0.3)"
+                    : "transparent",
+                },
+                "&:focus-visible": {
+                  outline: "none",
+                },
                 "&:hover": {
-                  backgroundColor: scrolled
+                  backgroundColor: mobileMenuOpen
+                    ? scrolled
+                      ? "rgba(33, 150, 243, 0.25)"
+                      : "rgba(33, 150, 243, 0.35)"
+                    : scrolled
                       ? "rgba(33, 150, 243, 0.1)"
                       : "rgba(255, 255, 255, 0.15)",
-                    transform: "rotate(90deg) scale(1.1)",
-                    boxShadow: scrolled 
-                      ? "0 8px 25px rgba(33, 150, 243, 0.3)" 
-                      : "0 8px 25px rgba(255, 255, 255, 0.2)",
+                  transform: mobileMenuOpen ? "scale(1.05)" : "rotate(90deg) scale(1.1)",
+                  boxShadow: scrolled 
+                    ? "0 8px 25px rgba(33, 150, 243, 0.3)" 
+                    : "0 8px 25px rgba(255, 255, 255, 0.2)",
                 },
               }}
               onClick={() => setMobileMenuOpen(true)}
@@ -262,17 +382,29 @@ export default function PublicHeader() {
           </Box>
           <Divider sx={{ mb: 2, borderColor: "rgba(33, 150, 243, 0.2)" }} />
           <List sx={{ py: 0 }}>
-            {navItems.map((item, index) => (
+            {navItems.map((item, index) => {
+              const isActiveItem = activeSection === item.sectionId && location.pathname === "/";
+              return (
               <ListItem
                 key={item.label}
                 button
                 onClick={() => handleNavigateToSection(item.sectionId)}
+                disableRipple
                 sx={{
                   borderRadius: "12px",
                   mb: 1,
                   py: 1.5,
                   px: 2,
                   transition: "all 0.3s ease",
+                  backgroundColor: isActiveItem ? `${item.color}20` : "transparent",
+                  borderLeft: isActiveItem ? `3px solid ${item.color}` : "3px solid transparent",
+                  "&:focus": {
+                    outline: "none",
+                    backgroundColor: isActiveItem ? `${item.color}20` : "transparent",
+                  },
+                  "&:focus-visible": {
+                    outline: "none",
+                  },
                   "&:hover": {
                     backgroundColor: `${item.color}15`,
                     transform: "translateX(8px)",
@@ -286,7 +418,7 @@ export default function PublicHeader() {
               >
                 <ListItemIcon 
                   sx={{ 
-                    color: item.color, 
+                    color: isActiveItem ? item.color : item.color, 
                     minWidth: 36,
                     "& .icon": {
                       transition: "all 0.3s ease",
@@ -299,12 +431,12 @@ export default function PublicHeader() {
                   primary={item.label}
                   primaryTypographyProps={{
                     fontSize: { xs: "0.95rem", sm: "1.1rem" },
-                    fontWeight: 600,
-                    color: "text.primary",
+                    fontWeight: isActiveItem ? 700 : 600,
+                    color: isActiveItem ? item.color : "text.primary",
                   }}
                 />
               </ListItem>
-            ))}
+            )})}
           </List>
         </Box>
       </Drawer>

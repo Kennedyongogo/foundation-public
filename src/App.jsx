@@ -22,6 +22,7 @@ import Chatbot from "./components/Chatbot/Chatbot";
 const Home = lazy(() => import("./pages/Home"));
 const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
 const TeamMemberDetail = lazy(() => import("./pages/TeamMemberDetail"));
+const AboutUs = lazy(() => import("./pages/AboutUs"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -91,6 +92,16 @@ function App() {
                 <>
                   <PublicHeader />
                   <TeamMemberDetail />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/about-us"
+              element={
+                <>
+                  <PublicHeader />
+                  <AboutUs />
                   <Footer />
                 </>
               }

@@ -188,7 +188,7 @@ export default function ProjectDetails() {
             scroll-behavior: smooth;
           }
           html, body, #root {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: #f8f9fa !important;
             background-attachment: fixed !important;
             margin: 0 !important;
             padding: 0 !important;
@@ -225,20 +225,20 @@ export default function ProjectDetails() {
           background: "transparent",
         }}
       >
-      <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3 }, position: "relative", zIndex: 1 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 1, sm: 1.5, md: 2 }, px: { xs: 0.25, sm: 0.375 }, position: "relative", zIndex: 1 }}>
         <MotionBox
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           {/* Header Section */}
-          <Box sx={{ mb: 4 }}>
+          <Box sx={{ mb: 2 }}>
             <Button
               variant="contained"
               startIcon={<ArrowBack />}
               onClick={handleBack}
               sx={{ 
-                mb: 3,
+                mb: 1.5,
                 background: "linear-gradient(135deg, #667eea, #764ba2)",
                 color: "white",
                 fontWeight: 600,
@@ -248,6 +248,12 @@ export default function ProjectDetails() {
                   background: "linear-gradient(135deg, #5568d3, #653a8b)",
                   transform: "translateY(-2px)",
                   boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
+                },
+                "&:focus": {
+                  outline: "none",
+                },
+                "&:focus-visible": {
+                  outline: "none",
                 },
                 transition: "all 0.3s ease",
               }}
@@ -259,7 +265,7 @@ export default function ProjectDetails() {
             <Paper 
               elevation={6} 
               sx={{ 
-                mb: 4,
+                mb: 2,
                 borderRadius: { xs: 3, md: 4 },
                 overflow: "hidden",
                 position: "relative",
@@ -307,7 +313,7 @@ export default function ProjectDetails() {
                       sx={{
                         color: "white",
                         fontWeight: 700,
-                        fontSize: { xs: "1.8rem", sm: "2.5rem", md: "3rem" },
+                        fontSize: { xs: "1.2rem", sm: "1.7rem", md: "2rem" },
                         textShadow: "0 2px 4px rgba(0,0,0,0.5)",
                         mb: 1,
                       }}
@@ -369,7 +375,7 @@ export default function ProjectDetails() {
                   display: "flex",
                   alignItems: "flex-start",
                   gap: { xs: 2, sm: 3, md: 4 },
-                  mb: { xs: 2, md: 3 },
+                  mb: { xs: 1, md: 1.5 },
                   flexDirection: { xs: "column", sm: "row" },
                 }}
               >
@@ -397,7 +403,7 @@ export default function ProjectDetails() {
                     }
                   }}
                 >
-                  <VolunteerActivism sx={{ fontSize: { xs: "1.8rem", sm: "2rem", md: "2.5rem" }, color: "white" }} />
+                  <VolunteerActivism sx={{ fontSize: { xs: "1.2rem", sm: "1.35rem", md: "1.7rem" }, color: "white" }} />
                 </Box>
                 <Box sx={{ flex: 1 }}>
                   <Box
@@ -418,7 +424,7 @@ export default function ProjectDetails() {
                         backgroundClip: "text",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
-                        fontSize: { xs: "1.8rem", sm: "2.2rem", md: "2.5rem" }
+                        fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.7rem" }
                       }}
                     >
                       {project.name}
@@ -430,7 +436,7 @@ export default function ProjectDetails() {
                         size={isMobile ? "medium" : "large"}
                         sx={{
                           fontWeight: 600,
-                          fontSize: { xs: "0.75rem", sm: "0.85rem", md: "0.9rem" },
+                          fontSize: { xs: "0.55rem", sm: "0.6rem", md: "0.65rem" },
                           px: { xs: 1.5, md: 2 },
                           py: { xs: 0.5, md: 1 },
                         }}
@@ -442,7 +448,7 @@ export default function ProjectDetails() {
                         size={isMobile ? "medium" : "large"}
                         sx={{
                           fontWeight: 600,
-                          fontSize: { xs: "0.75rem", sm: "0.85rem", md: "0.9rem" },
+                          fontSize: { xs: "0.55rem", sm: "0.6rem", md: "0.65rem" },
                           px: { xs: 1.5, md: 2 },
                           py: { xs: 0.5, md: 1 },
                           borderWidth: "2px",
@@ -456,7 +462,7 @@ export default function ProjectDetails() {
                     sx={{ 
                       mb: 3,
                       lineHeight: 1.6,
-                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem" }
+                      fontSize: { xs: "0.75rem", sm: "0.8rem", md: "0.85rem" }
                     }}
                   >
                     {project.description}
@@ -473,8 +479,8 @@ export default function ProjectDetails() {
                       width: "fit-content",
                     }}
                   >
-                    <LocationOn sx={{ color: "#667eea", fontSize: "1.5rem" }} />
-                    <Typography variant="body1" sx={{ fontWeight: 500, color: "#667eea" }}>
+                    <LocationOn sx={{ color: "#667eea", fontSize: "1.2rem" }} />
+                    <Typography variant="body1" sx={{ fontWeight: 500, color: "#667eea", fontSize: "0.75rem" }}>
                       {project.subcounty}, {project.county}
                     </Typography>
                   </Box>
@@ -487,14 +493,14 @@ export default function ProjectDetails() {
           <Paper 
             elevation={3} 
             sx={{ 
-              p: { xs: 2, sm: 3, md: 4 }, 
+              p: { xs: 1, sm: 1.5, md: 2 }, 
               borderRadius: { xs: 3, md: 4 }, 
-              mb: 3,
+              mb: 1.5,
               background: "#ffffff",
               border: "1px solid #e0e0e0",
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 3, md: 4 } }}>
+            <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 1.5, md: 2 } }}>
               <Box
                 sx={{
                   width: { xs: 40, md: 50 },
@@ -508,7 +514,7 @@ export default function ProjectDetails() {
                   flexShrink: 0,
                 }}
               >
-                <TrendingUp sx={{ color: "white", fontSize: { xs: "1.2rem", md: "1.5rem" } }} />
+                <TrendingUp sx={{ color: "white", fontSize: { xs: "0.85rem", md: "1rem" } }} />
               </Box>
               <Typography 
                 variant="h4" 
@@ -518,20 +524,20 @@ export default function ProjectDetails() {
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.125rem" },
+                  fontSize: { xs: "1rem", sm: "1.2rem", md: "1.45rem" },
                 }}
               >
                 Project Overview
               </Typography>
             </Box>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, md: 3 } }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, md: 1.5 } }}>
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 2,
-                  p: { xs: 2, md: 3 },
+                  gap: 1,
+                  p: { xs: 1, md: 1.5 },
                   borderRadius: { xs: 2, md: 3 },
                   background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
                   border: "1px solid rgba(102, 126, 234, 0.2)",
@@ -542,12 +548,12 @@ export default function ProjectDetails() {
                   }
                 }}
               >
-                <Category sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <Category sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
                 <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
                     Category
                   </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
                     {getCategoryLabel(project.category)}
                   </Typography>
                 </Box>
@@ -557,8 +563,8 @@ export default function ProjectDetails() {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 2,
-                  p: { xs: 2, md: 3 },
+                  gap: 1,
+                  p: { xs: 1, md: 1.5 },
                   borderRadius: { xs: 2, md: 3 },
                   background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
                   border: "1px solid rgba(102, 126, 234, 0.2)",
@@ -569,12 +575,12 @@ export default function ProjectDetails() {
                   }
                 }}
               >
-                <LocationOn sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <LocationOn sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
                 <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
                     Location
                   </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
                     {project.subcounty}, {project.county}
                   </Typography>
                 </Box>
@@ -584,8 +590,8 @@ export default function ProjectDetails() {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 2,
-                  p: { xs: 2, md: 3 },
+                  gap: 1,
+                  p: { xs: 1, md: 1.5 },
                   borderRadius: { xs: 2, md: 3 },
                   background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
                   border: "1px solid rgba(102, 126, 234, 0.2)",
@@ -596,12 +602,12 @@ export default function ProjectDetails() {
                   }
                 }}
               >
-                <People sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <People sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
                 <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
                     Target Audience
                   </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
                     {project.target_individual}
                   </Typography>
                 </Box>
@@ -611,8 +617,8 @@ export default function ProjectDetails() {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 2,
-                  p: { xs: 2, md: 3 },
+                  gap: 1,
+                  p: { xs: 1, md: 1.5 },
                   borderRadius: { xs: 2, md: 3 },
                   background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
                   border: "1px solid rgba(102, 126, 234, 0.2)",
@@ -623,12 +629,12 @@ export default function ProjectDetails() {
                   }
                 }}
               >
-                <Schedule sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <Schedule sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
                 <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
                     Start Date
                   </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
                     {formatDate(project.start_date)}
                   </Typography>
                 </Box>
@@ -638,8 +644,8 @@ export default function ProjectDetails() {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 2,
-                  p: { xs: 2, md: 3 },
+                  gap: 1,
+                  p: { xs: 1, md: 1.5 },
                   borderRadius: { xs: 2, md: 3 },
                   background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
                   border: "1px solid rgba(102, 126, 234, 0.2)",
@@ -650,12 +656,12 @@ export default function ProjectDetails() {
                   }
                 }}
               >
-                <CalendarToday sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <CalendarToday sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
                 <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
                     End Date
                   </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
                     {formatDate(project.end_date)}
                   </Typography>
                 </Box>
@@ -665,8 +671,8 @@ export default function ProjectDetails() {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 2,
-                  p: { xs: 2, md: 3 },
+                  gap: 1,
+                  p: { xs: 1, md: 1.5 },
                   borderRadius: { xs: 2, md: 3 },
                   background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
                   border: "1px solid rgba(102, 126, 234, 0.2)",
@@ -677,12 +683,12 @@ export default function ProjectDetails() {
                   }
                 }}
               >
-                <TrendingUp sx={{ color: "#667eea", fontSize: { xs: "1.5rem", md: "1.8rem" }, flexShrink: 0 }} />
+                <TrendingUp sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
                 <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
                     Progress
                   </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
                     {project.progress}%
                   </Typography>
                 </Box>
@@ -690,12 +696,12 @@ export default function ProjectDetails() {
             </Box>
 
             {/* Enhanced Progress Bar */}
-            <Box sx={{ mt: { xs: 3, md: 4 } }}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+            <Box sx={{ mt: { xs: 1.5, md: 2 } }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1.05rem" } }}>
                   Overall Progress
                 </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" } }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1.05rem" } }}>
                   {project.progress}%
                 </Typography>
               </Box>
@@ -746,7 +752,7 @@ export default function ProjectDetails() {
                 border: "1px solid #e0e0e0",
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 3, md: 4 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 1.5, md: 2 } }}>
                 <Box
                   sx={{
                     width: { xs: 40, md: 50 },
@@ -760,7 +766,7 @@ export default function ProjectDetails() {
                     flexShrink: 0,
                   }}
                 >
-                  <Description sx={{ color: "white", fontSize: { xs: "1.2rem", md: "1.5rem" } }} />
+                  <Description sx={{ color: "white", fontSize: { xs: "0.85rem", md: "1rem" } }} />
                 </Box>
                 <Typography 
                   variant="h4" 
@@ -770,7 +776,7 @@ export default function ProjectDetails() {
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
-                    fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.125rem" },
+                    fontSize: { xs: "1rem", sm: "1.2rem", md: "1.45rem" },
                   }}
                 >
                   Progress Updates
@@ -781,7 +787,7 @@ export default function ProjectDetails() {
                 <Card 
                   key={index} 
                   sx={{ 
-                    mb: { xs: 2, md: 3 }, 
+                    mb: { xs: 1, md: 1.5 }, 
                     border: "none",
                     borderRadius: { xs: 2, md: 3 },
                     background: "linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05))",
@@ -804,7 +810,7 @@ export default function ProjectDetails() {
                           backgroundClip: "text",
                           WebkitBackgroundClip: "text",
                           WebkitTextFillColor: "transparent",
-                          fontSize: { xs: "1rem", md: "1.25rem" },
+                          fontSize: { xs: "0.75rem", md: "0.85rem" },
                         }}
                       >
                         Update #{project.progress_descriptions.length - index}
@@ -818,7 +824,7 @@ export default function ProjectDetails() {
                           border: "1px solid rgba(102, 126, 234, 0.2)",
                         }}
                       >
-                        <Typography variant="caption" sx={{ fontWeight: 500, color: "#667eea", fontSize: { xs: "0.7rem", md: "0.75rem" } }}>
+                        <Typography variant="caption" sx={{ fontWeight: 500, color: "#667eea", fontSize: { xs: "0.55rem", md: "0.6rem" } }}>
                           {formatDate(update.timestamp)}
                         </Typography>
                       </Box>
@@ -828,7 +834,7 @@ export default function ProjectDetails() {
                       sx={{ 
                         lineHeight: 1.7,
                         color: "text.primary",
-                        fontSize: { xs: "0.95rem", md: "1.05rem" },
+                        fontSize: { xs: "0.7rem", md: "0.8rem" },
                       }}
                     >
                       {update.description}
@@ -851,7 +857,7 @@ export default function ProjectDetails() {
                 border: "1px solid #e0e0e0",
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 3, md: 4 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 1.5, md: 2 } }}>
                 <Box
                   sx={{
                     width: { xs: 40, md: 50 },
@@ -865,7 +871,7 @@ export default function ProjectDetails() {
                     flexShrink: 0,
                   }}
                 >
-                  <ImageIcon sx={{ color: "white", fontSize: { xs: "1.2rem", md: "1.5rem" } }} />
+                  <ImageIcon sx={{ color: "white", fontSize: { xs: "0.85rem", md: "1rem" } }} />
                 </Box>
                 <Typography 
                   variant="h4" 
@@ -875,14 +881,14 @@ export default function ProjectDetails() {
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
-                    fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.125rem" },
+                    fontSize: { xs: "1rem", sm: "1.2rem", md: "1.45rem" },
                   }}
                 >
                   Project Gallery ({project.update_images.length})
                 </Typography>
               </Box>
 
-              <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
+              <Grid container spacing={{ xs: 1, sm: 1, md: 1.5 }}>
                 {project.update_images.map((imageData, index) => (
                   <Grid item xs={12} sm={6} md={4} key={index}>
                     <Box
@@ -969,8 +975,8 @@ export default function ProjectDetails() {
                             px: 2,
                           }}
                         >
-                          <PhotoCamera sx={{ fontSize: { xs: "1.5rem", md: "2rem" }, mb: 1 }} />
-                          <Typography variant="body2" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" } }}>
+                          <PhotoCamera sx={{ fontSize: { xs: "1rem", md: "1.35rem" }, mb: 1 }} />
+                          <Typography variant="body2" sx={{ fontWeight: 500, fontSize: { xs: "0.55rem", md: "0.65rem" } }}>
                             Click to view full size
                           </Typography>
                         </Box>
@@ -998,10 +1004,10 @@ export default function ProjectDetails() {
                             alignItems: "center", 
                             gap: 1,
                             fontWeight: 500,
-                            fontSize: { xs: "0.7rem", md: "0.75rem" },
+                            fontSize: { xs: "0.55rem", md: "0.6rem" },
                           }}
                         >
-                          <PhotoCamera sx={{ fontSize: { xs: 14, md: 16 } }} />
+                          <PhotoCamera sx={{ fontSize: { xs: 12, md: 14 } }} />
                           {formatDate(imageData.timestamp)}
                         </Typography>
                       </Box>

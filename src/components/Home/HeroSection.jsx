@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Typography, Box, Container, Tooltip, Button, Fade, Slide } from "@mui/material";
 import Hero1 from "../../assets/images/foundation1.jpg";
 import Hero2 from "../../assets/images/foundation2.jpg";
@@ -6,6 +7,7 @@ import Hero3 from "../../assets/images/foundation3.jpg";
 import { School, VolunteerActivism, Psychology, ArrowForward } from "@mui/icons-material";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const images = [Hero1, Hero2, Hero3];
@@ -19,11 +21,8 @@ export default function HeroSection() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleExploreMission = () => {
-    const missionSection = document.getElementById('mission-section');
-    if (missionSection) {
-      missionSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+  const handleExploreAboutUs = () => {
+    navigate('/about-us');
   };
 
   return (
@@ -156,13 +155,13 @@ export default function HeroSection() {
           </Typography>
             
             {/* Enhanced Call-to-Action Button */}
-            <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap", mb: 1 }}>
+            <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap", mb: { xs: 6, sm: 5, md: 4 } }}>
               <Button
                 variant="contained"
                 color="primary"
                 size="large"
                 endIcon={<ArrowForward />}
-                onClick={handleExploreMission}
+                onClick={handleExploreAboutUs}
                 sx={{
                   px: 4,
                   py: 2,
@@ -177,9 +176,15 @@ export default function HeroSection() {
                     boxShadow: "0 12px 40px rgba(33, 150, 243, 0.4)",
                     background: "linear-gradient(45deg, #1976d2 30%, #1cb5e0 90%)",
                   },
+                  "&:focus": {
+                    outline: "none",
+                  },
+                  "&:focus-visible": {
+                    outline: "none",
+                  },
                 }}
               >
-                Explore Our Mission
+                Explore About Us
               </Button>
             </Box>
 
@@ -190,6 +195,7 @@ export default function HeroSection() {
                 gap: { xs: 2, sm: 3, md: 4 },
                 flexWrap: "wrap",
                 mb: 6,
+                mt: { xs: 2, sm: 1, md: 0 },
                 "& > *": {
                   textAlign: "center",
                   "& .number": {
