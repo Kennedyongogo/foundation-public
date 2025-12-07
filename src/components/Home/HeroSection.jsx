@@ -4,7 +4,7 @@ import { Typography, Box, Container, Tooltip, Button, Fade, Slide } from "@mui/m
 import Hero1 from "../../assets/images/foundation1.jpg";
 import Hero2 from "../../assets/images/foundation2.jpg";
 import Hero3 from "../../assets/images/foundation3.jpg";
-import { School, VolunteerActivism, Psychology, ArrowForward } from "@mui/icons-material";
+import { School, VolunteerActivism, Psychology, ArrowForward, RecordVoiceOver } from "@mui/icons-material";
 
 export default function HeroSection() {
   const navigate = useNavigate();
@@ -23,6 +23,10 @@ export default function HeroSection() {
 
   const handleExploreAboutUs = () => {
     navigate('/about-us');
+  };
+
+  const handleOpenCeoMessage = () => {
+    navigate('/ceo-message');
   };
 
   return (
@@ -163,14 +167,17 @@ export default function HeroSection() {
                 endIcon={<ArrowForward />}
                 onClick={handleExploreAboutUs}
                 sx={{
-                  px: 4,
-                  py: 2,
+                  px: 2,
+                  py: 0.75,
                   fontSize: "1.1rem",
                   fontWeight: 600,
                   borderRadius: "50px",
                   background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
                   boxShadow: "0 8px 32px rgba(33, 150, 243, 0.3)",
                   transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                  "& .MuiButton-endIcon": {
+                    marginLeft: 0.5,
+                  },
                   "&:hover": {
                     transform: "translateY(-3px) scale(1.05)",
                     boxShadow: "0 12px 40px rgba(33, 150, 243, 0.4)",
@@ -185,6 +192,42 @@ export default function HeroSection() {
                 }}
               >
                 Explore About Us
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<RecordVoiceOver />}
+                onClick={handleOpenCeoMessage}
+                sx={{
+                  px: 2,
+                  py: 0.75,
+                  fontSize: "1.1rem",
+                  fontWeight: 600,
+                  borderRadius: "50px",
+                  borderColor: "rgba(255, 255, 255, 0.8)",
+                  color: "white",
+                  borderWidth: 2,
+                  backdropFilter: "blur(10px)",
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                  "& .MuiButton-startIcon": {
+                    marginRight: 0.5,
+                  },
+                  "&:hover": {
+                    transform: "translateY(-3px) scale(1.05)",
+                    borderColor: "white",
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    boxShadow: "0 12px 40px rgba(255, 255, 255, 0.2)",
+                  },
+                  "&:focus": {
+                    outline: "none",
+                  },
+                  "&:focus-visible": {
+                    outline: "none",
+                  },
+                }}
+              >
+                CEO's Message
               </Button>
             </Box>
 

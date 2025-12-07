@@ -23,6 +23,7 @@ const Home = lazy(() => import("./pages/Home"));
 const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
 const TeamMemberDetail = lazy(() => import("./pages/TeamMemberDetail"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
+const CEOMessage = lazy(() => import("./pages/CEOMessage"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -102,6 +103,16 @@ function App() {
                 <>
                   <PublicHeader />
                   <AboutUs />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/ceo-message"
+              element={
+                <>
+                  <PublicHeader />
+                  <CEOMessage />
                   <Footer />
                 </>
               }
