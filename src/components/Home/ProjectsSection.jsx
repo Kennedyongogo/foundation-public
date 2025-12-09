@@ -198,15 +198,16 @@ export default function ProjectsSection() {
     <Box
       id="projects-section"
       sx={{
-        py: 4,
+        pt: 0,
+        pb: 3,
+        px: { xs: 1, sm: 1.5, md: 2 },
         backgroundColor: "#f8f9fa",
       }}
     >
       <Box
         sx={{
-          maxWidth: "1400px",
+          maxWidth: "1300px",
           margin: "0 auto",
-          px: { xs: 2, sm: 4, md: 6 },
         }}
       >
         <MotionBox
@@ -216,15 +217,17 @@ export default function ProjectsSection() {
           viewport={{ once: true }}
         >
           <Paper
-            elevation={6}
+            elevation={3}
             sx={{
-              borderRadius: 4,
+              borderRadius: { xs: 3, md: 4 },
               overflow: "hidden",
               backgroundColor: "white",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+              border: "1px solid #e0e0e0",
+              py: { xs: 1.5, sm: 2, md: 2.5 },
+              px: { xs: 3, sm: 4, md: 5 },
             }}
           >
-            <Box sx={{ p: 6 }}>
+            <Box>
               <Box
                 sx={{
                   textAlign: "center",

@@ -77,7 +77,6 @@ export default function CEOMessage() {
 
       <Box
         sx={{
-          minHeight: "100vh",
           position: "relative",
           zIndex: 1,
           background: "transparent",
@@ -87,7 +86,7 @@ export default function CEOMessage() {
           maxWidth="xl"
           sx={{
             pt: { xs: 1, sm: 1.5, md: 2 },
-            pb: { xs: 0.5, sm: 0.75, md: 1 },
+            pb: { xs: 1, sm: 1.5, md: 2 },
             px: { xs: 2, sm: 3, md: 4 },
             position: "relative",
             zIndex: 1,
@@ -99,26 +98,37 @@ export default function CEOMessage() {
             transition={{ duration: 0.5 }}
           >
             {/* Navigation Button */}
-            <Tooltip title="Back to the homepage" arrow>
+            <Tooltip title="Back to Home" arrow placement="right">
               <Button
                 onClick={handleBack}
                 sx={{
-                  mb: 2,
+                  mb: { xs: 1, sm: 1.5, md: 2 },
                   minWidth: "auto",
-                  width: { xs: 32, md: 36 },
-                  height: { xs: 32, md: 36 },
+                  width: { xs: 28, md: 32 },
+                  height: { xs: 28, md: 32 },
                   borderRadius: "50%",
                   background: "linear-gradient(135deg, #667eea, #764ba2)",
                   color: "white",
+                  minHeight: "auto",
                   "&:hover": {
                     background: "linear-gradient(135deg, #5568d3, #653a8b)",
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
+                    transform: "translateY(-2px) scale(1.05)",
+                    boxShadow: "0 8px 25px rgba(102, 126, 234, 0.4)",
                   },
                   boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  transition: "all 0.3s ease",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                   "& .MuiSvgIcon-root": {
-                    fontSize: { xs: "1.2rem", md: "1.4rem" },
+                    fontSize: { xs: "1rem", md: "1.2rem" },
+                    transition: "transform 0.3s ease",
+                  },
+                  "&:hover .MuiSvgIcon-root": {
+                    transform: "translateX(-2px)",
+                  },
+                  "&:focus": {
+                    outline: "none",
+                  },
+                  "&:focus-visible": {
+                    outline: "none",
                   },
                 }}
               >
@@ -135,7 +145,7 @@ export default function CEOMessage() {
                 overflow: "hidden",
                 background: "#ffffff",
                 border: "1px solid #e0e0e0",
-                minHeight: { xs: "auto", md: "450px" },
+                minHeight: { xs: "auto", md: "300px" },
               }}
             >
               {/* Left Side - CEO Image */}
@@ -145,7 +155,7 @@ export default function CEOMessage() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  p: { xs: 3, md: 4 },
+                  p: { xs: 1.5, md: 2 },
                   position: "relative",
                   background: "transparent",
                 }}
@@ -153,8 +163,8 @@ export default function CEOMessage() {
                 <Box
                   sx={{
                     position: "relative",
-                    width: { xs: 180, sm: 220, md: 250 },
-                    height: { xs: 180, sm: 220, md: 250 },
+                    width: { xs: 150, sm: 180, md: 200 },
+                    height: { xs: 150, sm: 180, md: 200 },
                   }}
                 >
                   {/* Circular Image Frame */}
@@ -249,7 +259,7 @@ export default function CEOMessage() {
               <Box
                 sx={{
                   width: { xs: "100%", md: "60%" },
-                  p: { xs: 2.5, sm: 3, md: 4 },
+                  p: { xs: 1.25, sm: 1.5, md: 2 },
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
@@ -258,13 +268,13 @@ export default function CEOMessage() {
                 {/* Main Title */}
                 <Typography
                   sx={{
-                    fontSize: { xs: "1.1rem", sm: "1.4rem", md: "1.75rem" },
+                    fontSize: { xs: "0.875rem", sm: "1rem", md: "1.2rem" },
                     fontWeight: 700,
                     background: "linear-gradient(135deg, #667eea, #764ba2)",
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
-                    mb: 2,
+                    mb: 1,
                     lineHeight: 1.2,
                     fontFamily: "sans-serif",
                   }}
@@ -278,7 +288,7 @@ export default function CEOMessage() {
                     width: "100%",
                     height: "2px",
                     background: "linear-gradient(90deg, #ddd 0%, transparent 100%)",
-                    mb: 3,
+                    mb: 1.5,
                   }}
                 />
 
@@ -289,7 +299,7 @@ export default function CEOMessage() {
                     lineHeight: 1.8,
                     fontSize: { xs: "0.85rem", sm: "0.95rem", md: "1rem" },
                     color: "#666",
-                    mb: 2,
+                    mb: 1,
                     fontFamily: "sans-serif",
                   }}
                 >
@@ -302,7 +312,7 @@ export default function CEOMessage() {
                     lineHeight: 1.8,
                     fontSize: { xs: "0.85rem", sm: "0.95rem", md: "1rem" },
                     color: "#666",
-                    mb: 2,
+                    mb: 1,
                     fontFamily: "sans-serif",
                   }}
                 >

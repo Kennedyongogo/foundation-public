@@ -250,7 +250,9 @@ export default function PostsSection() {
     <Box
       id="posts-section"
       sx={{
-        py: { xs: 4, md: 6 },
+        pt: 0,
+        pb: 6,
+        px: { xs: 1, sm: 1.5, md: 2 },
         background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%)",
         position: "relative",
         overflow: "hidden",
@@ -266,7 +268,7 @@ export default function PostsSection() {
         },
       }}
     >
-      <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1 }}>
+      <Box sx={{ maxWidth: "1300px", margin: "0 auto", position: "relative", zIndex: 1 }}>
         <MotionBox
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -274,15 +276,17 @@ export default function PostsSection() {
           viewport={{ once: true }}
         >
           <Paper
-            elevation={6}
+            elevation={3}
             sx={{
-              borderRadius: 4,
+              borderRadius: { xs: 3, md: 4 },
               overflow: "hidden",
               backgroundColor: "white",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+              border: "1px solid #e0e0e0",
+              py: { xs: 1.5, sm: 2, md: 2.5 },
+              px: { xs: 3, sm: 4, md: 5 },
             }}
           >
-            <Box sx={{ p: { xs: 3, md: 6 } }}>
+            <Box>
               {/* Header */}
               <Box
                 sx={{
@@ -721,7 +725,7 @@ export default function PostsSection() {
             </Box>
           </Paper>
         </MotionBox>
-      </Container>
+      </Box>
 
       {/* Post Detail Dialog */}
       <Dialog

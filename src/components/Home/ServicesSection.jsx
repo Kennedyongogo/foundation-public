@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Grid, Card, CardContent, CardMedia, Fade, Slide, Chip, CircularProgress, IconButton, useMediaQuery, useTheme, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Box, Typography, Grid, Card, CardContent, CardMedia, Fade, Slide, Chip, CircularProgress, IconButton, useMediaQuery, useTheme, Button, Dialog, DialogTitle, DialogContent, DialogActions, Paper } from "@mui/material";
 import {
   School,
   Psychology,
@@ -243,6 +243,13 @@ const MissionCard = ({ category, config, IconComponent, isVisible, index, onView
                   backgroundColor: config.color,
                   color: "white",
                 },
+                "&:focus": {
+                  outline: "none",
+                },
+                "&:focus-visible": {
+                  outline: "none",
+                  boxShadow: "none",
+                },
               }}
             >
               View More
@@ -350,8 +357,9 @@ export default function ServicesSection() {
     <Box
       id="mission-section"
       sx={{ 
-        py: 6, 
-        px: { xs: 2, sm: 3, md: 4 }, 
+        pt: 3,
+        pb: 3,
+        px: { xs: 1, sm: 1.5, md: 2 }, 
         bgcolor: "background.paper",
         background: "linear-gradient(135deg, rgba(240, 248, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(248, 250, 252, 0.9) 100%)",
         position: "relative",
@@ -369,12 +377,24 @@ export default function ServicesSection() {
       }}
     >
       <Box sx={{ maxWidth: "1300px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+        <Paper
+          elevation={3}
+          sx={{
+            py: { xs: 1.5, sm: 2, md: 2.5 },
+            px: { xs: 3, sm: 4, md: 5 },
+            borderRadius: { xs: 3, md: 4 },
+            background: "white",
+            border: "1px solid #e0e0e0",
+            minHeight: "auto",
+            height: "auto",
+          }}
+        >
         <Fade in={isVisible} timeout={1000}>
-          <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Box sx={{ textAlign: "center", mb: 2 }}>
             <Typography
               variant="h2"
               sx={{
-                mb: 2,
+                mb: 1,
                 fontWeight: 800,
                 fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.2rem" },
                 background: "linear-gradient(45deg, #2196f3, #e91e63, #4caf50)",
@@ -401,7 +421,7 @@ export default function ServicesSection() {
             <Typography
               variant="h5"
               sx={{ 
-                mb: 2, 
+                mb: 1, 
                 maxWidth: { xs: "100%", sm: "800px", md: "900px" }, 
                 mx: "auto",
                 px: { xs: 1, sm: 0 },
@@ -419,7 +439,7 @@ export default function ServicesSection() {
               justifyContent: "center", 
               gap: { xs: 1, sm: 1.5, md: 2 }, 
               flexWrap: "wrap", 
-              mb: 3,
+              mb: 1.5,
               px: { xs: 1, sm: 0 }
             }}>
               <Chip
@@ -485,7 +505,7 @@ export default function ServicesSection() {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    mb: 3,
+                    mb: 1.5,
                   }}
                 >
                   <IconButton
@@ -559,7 +579,7 @@ export default function ServicesSection() {
                     display: "flex",
                     justifyContent: "center",
                     gap: 1,
-                    mt: 4,
+                    mt: 2,
                   }}
                 >
                   {Array.from({
@@ -589,18 +609,20 @@ export default function ServicesSection() {
             </Box>
           )}
         </Box>
+        </Paper>
       </Box>
 
       {/* Mission Detail Dialog */}
       <Dialog
         open={dialogOpen}
         onClose={handleCloseDialog}
-        maxWidth="md"
+        maxWidth="sm"
         fullWidth
         PaperProps={{
           sx: {
             borderRadius: 3,
             maxHeight: "90vh",
+            maxWidth: { xs: "95%", sm: "600px" },
           },
         }}
       >
@@ -616,16 +638,27 @@ export default function ServicesSection() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                pb: 2,
+                p: { xs: 1.5, sm: 2 },
+                pb: { xs: 1.5, sm: 2 },
               }}
             >
-              <Box display="flex" alignItems="center" gap={2}>
+              <Box display="flex" alignItems="center" gap={1} sx={{ flex: 1, minWidth: 0 }}>
                 {(() => {
                   const config = categoryConfig[missionDetails.category] || categoryConfig.educational_support;
                   const IconComponent = config.icon;
-                  return <IconComponent sx={{ fontSize: 32 }} />;
+                  return <IconComponent sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem", md: "1.75rem" } }} />;
                 })()}
-                <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                <Typography 
+                  variant="h5" 
+                  sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: "0.875rem", sm: "1rem", md: "1.125rem" },
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    maxWidth: { xs: "200px", sm: "300px", md: "400px" },
+                  }}
+                >
                   {missionDetails.title}
                 </Typography>
               </Box>
@@ -665,23 +698,6 @@ export default function ServicesSection() {
               )}
 
               <Box sx={{ p: 3 }}>
-                {/* Impact Chip */}
-                {missionDetails.impact && (
-                  <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
-                    <Chip
-                      label={missionDetails.impact}
-                      sx={{
-                        backgroundColor: (() => {
-                          const config = categoryConfig[missionDetails.category] || categoryConfig.educational_support;
-                          return config.color;
-                        })(),
-                        color: "white",
-                        fontWeight: 600,
-                      }}
-                    />
-                  </Box>
-                )}
-
                 {/* Description */}
                 <Typography
                   variant="body1"
@@ -694,6 +710,50 @@ export default function ServicesSection() {
                 >
                   {missionDetails.description}
                 </Typography>
+
+                {/* Impact List */}
+                {missionDetails.impact && (
+                  <Box sx={{ mb: 2 }}>
+                    {Array.isArray(missionDetails.impact) && missionDetails.impact.length > 0 ? (
+                      // Display as bullet list if array
+                      <Box>
+                        <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 600, color: "text.primary" }}>
+                          Key Impacts:
+                        </Typography>
+                        <Box component="ul" sx={{ pl: 3, mb: 0, "& li": { mb: 1, lineHeight: 1.7 } }}>
+                          {missionDetails.impact.map((impactItem, index) => (
+                            <Typography
+                              key={index}
+                              component="li"
+                              variant="body1"
+                              sx={{
+                                color: "text.primary",
+                                fontSize: "0.95rem",
+                              }}
+                            >
+                              {impactItem}
+                            </Typography>
+                          ))}
+                        </Box>
+                      </Box>
+                    ) : (
+                      // Display as chip if string (backward compatibility)
+                      <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                        <Chip
+                          label={typeof missionDetails.impact === 'string' ? missionDetails.impact : 'High Impact'}
+                          sx={{
+                            backgroundColor: (() => {
+                              const config = categoryConfig[missionDetails.category] || categoryConfig.educational_support;
+                              return config.color;
+                            })(),
+                            color: "white",
+                            fontWeight: 600,
+                          }}
+                        />
+                      </Box>
+                    )}
+                  </Box>
+                )}
 
                 {/* Additional Images Gallery */}
                 {missionDetails.images && Array.isArray(missionDetails.images) && missionDetails.images.length > 1 && (
