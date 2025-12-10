@@ -1,5 +1,6 @@
-import React from "react";
-import { Box, Container, Card, CardContent, Typography, Fade } from "@mui/material";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { Box, Container, Card, CardContent, Typography, Fade, Paper } from "@mui/material";
 import HeroSection from "../components/Home/HeroSection";
 import ServicesSection from "../components/Home/ServicesSection";
 import ProjectsSection from "../components/Home/ProjectsSection";
@@ -12,6 +13,25 @@ import Footer from "../components/Footer/Footer";
 import MapIcon from "@mui/icons-material/Map";
 
 export default function Home() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Handle scroll to section from location state (after ScrollToTop has run)
+    if (location.state?.scrollTo) {
+      const scrollToSection = () => {
+        const section = document.getElementById(location.state.scrollTo);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          // Retry if section not found yet
+          setTimeout(scrollToSection, 100);
+        }
+      };
+      // Wait for ScrollToTop to finish (it runs on pathname change)
+      setTimeout(scrollToSection, 300);
+    }
+  }, [location.state]);
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <HeroSection />
@@ -22,251 +42,81 @@ export default function Home() {
       {/* Charity Map Section */}
       <Box
         sx={{
-          py: { xs: 4, md: 6 },
-          background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%)",
-          position: "relative",
-          overflow: "hidden",
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "radial-gradient(circle at 80% 20%, rgba(76, 175, 80, 0.08) 0%, transparent 50%)",
-            zIndex: 0,
-          },
+          pt: 0,
+          pb: 3,
+          px: { xs: 1, sm: 1.5, md: 2 },
+          backgroundColor: "#f8f9fa",
         }}
       >
-        <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1 }}>
+        <Box
+          sx={{
+            maxWidth: "1300px",
+            margin: "0 auto",
+          }}
+        >
           <Fade in={true} timeout={1000}>
-            <Box sx={{ textAlign: "center", mb: 4 }}>
-              <Box
-                sx={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  mb: 2,
-                }}
-              >
-                <MapIcon
-                  sx={{
-                    fontSize: { xs: "2rem", md: "2.5rem" },
-                    color: "#4caf50",
-                    mr: 1,
-                  }}
-                />
-                <Typography
-                  variant="h2"
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.2rem" },
-                    background: "linear-gradient(45deg, #4caf50, #2196f3)",
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  Explore Our Impact
-                </Typography>
-              </Box>
-              <Typography
-                variant="h6"
-                sx={{
-                  color: "text.secondary",
-                  fontWeight: 400,
-                  fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" },
-                  maxWidth: "800px",
-                  mx: "auto",
-                }}
-              >
-                Discover our projects across Kenya and see where we're making a difference in communities
-              </Typography>
-            </Box>
-          </Fade>
-
-          <Fade in={true} timeout={1200}>
-            <Card
-              elevation={8}
+            <Paper
+              elevation={3}
               sx={{
-                borderRadius: "20px",
+                borderRadius: { xs: 3, md: 4 },
                 overflow: "hidden",
-                backgroundColor: "rgba(255, 255, 255, 0.98)",
-                backdropFilter: "blur(10px)",
-                boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
-                border: "1px solid rgba(76, 175, 80, 0.2)",
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  boxShadow: "0 16px 48px rgba(0,0,0,0.15)",
-                  transform: "translateY(-4px)",
-                },
+                backgroundColor: "white",
+                border: "1px solid #e0e0e0",
+                py: { xs: 1.5, sm: 2, md: 2.5 },
+                px: { xs: 3, sm: 4, md: 5 },
               }}
             >
-              <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-                <CharityMap />
-              </CardContent>
-            </Card>
+              {/* Explore Our Impact Header */}
+              <Box sx={{ textAlign: "center", mb: 4 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 2,
+                    mb: 2,
+                  }}
+                >
+                  <MapIcon
+                    sx={{
+                      fontSize: { xs: "1.5rem", md: "2rem" },
+                      color: "primary.main",
+                    }}
+                  />
+                  <Typography
+                    variant="h2"
+                    sx={{
+                      fontWeight: 600,
+                      color: "primary.main",
+                      fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.8rem" },
+                    }}
+                  >
+                    Explore Our Impact
+                  </Typography>
+                </Box>
+                <Typography
+                  variant="h6"
+                  color="text.secondary"
+                  sx={{ maxWidth: 600, mx: "auto", fontSize: "0.875rem" }}
+                >
+                  Discover our projects across Kenya and see where we're making a difference in communities
+                </Typography>
+              </Box>
+
+              {/* Map Component */}
+              <CharityMap />
+            </Paper>
           </Fade>
-        </Container>
+        </Box>
       </Box>
 
       <ContactSection />
       
       {/* Testimonials Section */}
-      <Box
-        id="testimonials-section"
-        data-section="testimonials"
-        sx={{
-          py: { xs: 4, md: 6 },
-          background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%)",
-          position: "relative",
-          overflow: "hidden",
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "radial-gradient(circle at 50% 50%, rgba(76, 175, 80, 0.08) 0%, transparent 50%)",
-            zIndex: 0,
-          },
-        }}
-      >
-        <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1 }}>
-          <Fade in={true} timeout={1000}>
-            <Box sx={{ textAlign: "center", mb: 4 }}>
-              <Typography
-                variant="h2"
-                sx={{
-                  fontWeight: 700,
-                  fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" },
-                  background: "linear-gradient(45deg, #4caf50, #ff9800)",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                Testimonials
-              </Typography>
-              <Typography
-                variant="h6"
-                sx={{
-                  color: "text.secondary",
-                  fontWeight: 400,
-                  fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" },
-                  maxWidth: "800px",
-                  mx: "auto",
-                  mt: 2,
-                }}
-              >
-                Hear from the people whose lives we've touched through our community programs
-              </Typography>
-            </Box>
-          </Fade>
-
-          <Fade in={true} timeout={1200}>
-            <Card
-              elevation={8}
-              sx={{
-                borderRadius: "20px",
-                overflow: "hidden",
-                backgroundColor: "rgba(255, 255, 255, 0.98)",
-                backdropFilter: "blur(10px)",
-                boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
-                border: "1px solid rgba(76, 175, 80, 0.2)",
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  boxShadow: "0 16px 48px rgba(0,0,0,0.15)",
-                  transform: "translateY(-4px)",
-                },
-              }}
-            >
-              <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-                <TestimonySection />
-              </CardContent>
-            </Card>
-          </Fade>
-        </Container>
-      </Box>
+      <TestimonySection />
       
       {/* Meet Our Team Section */}
-      <Box
-        id="team-section"
-        data-section="team"
-        sx={{
-          py: { xs: 4, md: 6 },
-          background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%)",
-          position: "relative",
-          overflow: "hidden",
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "radial-gradient(circle at 20% 80%, rgba(33, 150, 243, 0.08) 0%, transparent 50%)",
-            zIndex: 0,
-          },
-        }}
-      >
-        <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1 }}>
-          <Fade in={true} timeout={1000}>
-            <Box sx={{ textAlign: "center", mb: 4 }}>
-              <Typography
-                variant="h2"
-                sx={{
-                  fontWeight: 700,
-                  fontSize: { xs: "1.3rem", sm: "1.5rem", md: "1.8rem" },
-                  background: "linear-gradient(45deg, #2196f3, #e91e63)",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                Meet Our Team
-              </Typography>
-              <Typography
-                variant="h6"
-                sx={{
-                  color: "text.secondary",
-                  fontWeight: 400,
-                  fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" },
-                  maxWidth: "800px",
-                  mx: "auto",
-                  mt: 2,
-                }}
-              >
-                Dedicated individuals working together to make a difference in our community
-              </Typography>
-            </Box>
-          </Fade>
-
-          <Fade in={true} timeout={1200}>
-            <Card
-              elevation={8}
-              sx={{
-                borderRadius: "20px",
-                overflow: "hidden",
-                backgroundColor: "rgba(255, 255, 255, 0.98)",
-                backdropFilter: "blur(10px)",
-                boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
-                border: "1px solid rgba(33, 150, 243, 0.2)",
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  boxShadow: "0 16px 48px rgba(0,0,0,0.15)",
-                  transform: "translateY(-4px)",
-                },
-              }}
-            >
-              <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-                <TeamSection />
-              </CardContent>
-            </Card>
-          </Fade>
-        </Container>
-      </Box>
+      <TeamSection />
 
       <Footer />
     </Box>

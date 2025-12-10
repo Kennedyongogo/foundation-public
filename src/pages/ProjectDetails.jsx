@@ -232,18 +232,26 @@ export default function ProjectDetails() {
           transition={{ duration: 0.5 }}
         >
           {/* Header Section */}
-          <Box sx={{ mb: 2 }}>
+          <Box sx={{ mb: { xs: 1, sm: 1.5, md: 2 } }}>
             <Button
               variant="contained"
               startIcon={<ArrowBack />}
               onClick={handleBack}
-              sx={{ 
-                mb: 1.5,
+              sx={{
+                mb: 0,
                 background: "linear-gradient(135deg, #667eea, #764ba2)",
                 color: "white",
                 fontWeight: 600,
-                px: 3,
-                py: 1.5,
+                px: 2,
+                py: 0.75,
+                fontSize: { xs: "0.75rem", md: "0.875rem" },
+                minHeight: "auto",
+                "& .MuiButton-startIcon": {
+                  marginRight: 0.5,
+                  "& > *:nth-of-type(1)": {
+                    fontSize: { xs: "0.875rem", md: "1rem" },
+                  },
+                },
                 "&:hover": {
                   background: "linear-gradient(135deg, #5568d3, #653a8b)",
                   transform: "translateY(-2px)",
@@ -260,24 +268,89 @@ export default function ProjectDetails() {
             >
               Back to Projects
             </Button>
+          </Box>
 
-            {/* Hero Image Section */}
-            <Paper 
-              elevation={6} 
-              sx={{ 
-                mb: 2,
-                borderRadius: { xs: 3, md: 4 },
-                overflow: "hidden",
-                position: "relative",
-                background: "#ffffff",
-                border: "1px solid #e0e0e0",
-              }}
-            >
+          {/* All Content in One Card */}
+          <Paper
+            elevation={3}
+            sx={{
+              p: { xs: 2, sm: 3, md: 4 },
+              borderRadius: { xs: 3, md: 4 },
+              background: "white",
+              border: "1px solid #e0e0e0",
+            }}
+          >
+              {/* Page Title */}
+              <Box sx={{ textAlign: "center", mb: { xs: 2, md: 3 } }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 2,
+                    mb: 2,
+                  }}
+                >
+                  <VolunteerActivism
+                    sx={{
+                      fontSize: { xs: "1rem", md: "1.25rem" },
+                      color: "primary.main",
+                    }}
+                  />
+                  <Typography
+                    variant="h2"
+                    sx={{
+                      fontWeight: 700,
+                      color: "primary.main",
+                      fontSize: { xs: "0.875rem", sm: "1.125rem", md: "1.5rem" },
+                    }}
+                  >
+                    {project.name}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "center", gap: 1, flexWrap: "wrap", mb: 2 }}>
+                  <Chip
+                    label={getStatusLabel(project.status)}
+                    color={getStatusColor(project.status)}
+                    size="small"
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: { xs: "0.65rem", md: "0.75rem" },
+                    }}
+                  />
+                  <Chip
+                    label={getCategoryLabel(project.category)}
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: { xs: "0.65rem", md: "0.75rem" },
+                    }}
+                  />
+                </Box>
+                <Typography
+                  variant="h6"
+                  color="text.secondary"
+                  sx={{
+                    maxWidth: 800,
+                    mx: "auto",
+                    fontSize: { xs: "0.875rem", md: "1rem" },
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {project.description}
+                </Typography>
+              </Box>
+
+              {/* Hero Image Section */}
               <Box
                 sx={{
                   position: "relative",
-                  height: { xs: "250px", sm: "350px", md: "450px" },
+                  height: { xs: "200px", sm: "300px", md: "400px" },
                   overflow: "hidden",
+                  borderRadius: { xs: 2, md: 3 },
+                  mb: { xs: 3, md: 4 },
                 }}
               >
                 <img
@@ -289,604 +362,256 @@ export default function ProjectDetails() {
                     objectFit: "cover",
                   }}
                   onError={(e) => {
-                    // Fallback to foundation logo if image fails to load
                     e.target.src = "/foundation-logo.png";
                   }}
                 />
-                {/* Gradient overlay for better text readability */}
-                <Box
+              </Box>
+
+              {/* Project Overview */}
+
+              {/* Project Overview */}
+              <Box sx={{ mb: { xs: 3, md: 4 } }}>
+                <Typography
+                  variant="h4"
                   sx={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: "60%",
-                    background: "linear-gradient(transparent, rgba(0, 0, 0, 0.7))",
-                    display: "flex",
-                    alignItems: "flex-end",
-                    p: { xs: 3, sm: 4, md: 5 },
+                    fontWeight: 700,
+                    mb: 1.5,
+                    background: "linear-gradient(135deg, #667eea, #764ba2)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    fontSize: { xs: "1.2rem", md: "1.45rem" },
                   }}
                 >
-                  <Box>
-                    <Typography
-                      variant="h3"
-                      sx={{
-                        color: "white",
-                        fontWeight: 700,
-                        fontSize: { xs: "1.2rem", sm: "1.7rem", md: "2rem" },
-                        textShadow: "0 2px 4px rgba(0,0,0,0.5)",
-                        mb: 1,
-                      }}
-                    >
-                      {project.name}
-                    </Typography>
-                    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                      <Chip
-                        label={getStatusLabel(project.status)}
-                        color={getStatusColor(project.status)}
-                        sx={{
-                          color: "white",
-                          fontWeight: 600,
-                          "& .MuiChip-label": {
-                            color: "white",
-                          },
-                        }}
-                      />
-                      <Chip
-                        label={getCategoryLabel(project.category)}
-                        variant="outlined"
-                        sx={{
-                          color: "white",
-                          borderColor: "white",
-                          fontWeight: 600,
-                          "& .MuiChip-label": {
-                            color: "white",
-                          },
-                        }}
-                      />
+                  Project Overview
+                </Typography>
+
+                <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1.5, md: 2 } }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, py: 1 }}>
+                    <Category sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" }, flexShrink: 0 }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" }, mb: 0.5 }}>
+                        Category
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.875rem", md: "1rem" } }}>
+                        {getCategoryLabel(project.category)}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, py: 1 }}>
+                    <LocationOn sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" }, flexShrink: 0 }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" }, mb: 0.5 }}>
+                        Location
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.875rem", md: "1rem" } }}>
+                        {project.subcounty}, {project.county}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, py: 1 }}>
+                    <People sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" }, flexShrink: 0 }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" }, mb: 0.5 }}>
+                        Target Audience
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.875rem", md: "1rem" } }}>
+                        {project.target_individual}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, py: 1 }}>
+                    <Schedule sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" }, flexShrink: 0 }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" }, mb: 0.5 }}>
+                        Start Date
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.875rem", md: "1rem" } }}>
+                        {formatDate(project.start_date)}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, py: 1 }}>
+                    <CalendarToday sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" }, flexShrink: 0 }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" }, mb: 0.5 }}>
+                        End Date
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.875rem", md: "1rem" } }}>
+                        {formatDate(project.end_date)}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, py: 1 }}>
+                    <TrendingUp sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.25rem" }, flexShrink: 0 }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.75rem", md: "0.875rem" }, mb: 0.5 }}>
+                        Progress
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.875rem", md: "1rem" } }}>
+                        {project.progress}%
+                      </Typography>
                     </Box>
                   </Box>
                 </Box>
-              </Box>
-            </Paper>
 
-            <Paper 
-              elevation={3} 
-              sx={{ 
-                p: { xs: 2, sm: 3, md: 5 }, 
-                borderRadius: { xs: 3, md: 4 },
-                background: "#ffffff",
-                border: "1px solid #e0e0e0",
-                overflow: "hidden",
-                position: "relative",
-                "&::before": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: "4px",
-                  background: "linear-gradient(90deg, #667eea, #764ba2, #f093fb)",
-                }
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: { xs: 2, sm: 3, md: 4 },
-                  mb: { xs: 1, md: 1.5 },
-                  flexDirection: { xs: "column", sm: "row" },
-                }}
-              >
-                <Box
-                  sx={{
-                    width: { xs: 70, sm: 80, md: 100 },
-                    height: { xs: 70, sm: 80, md: 100 },
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, #667eea, #764ba2)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 10px 30px rgba(102, 126, 234, 0.3)",
-                    position: "relative",
-                    flexShrink: 0,
-                    "&::before": {
-                      content: '""',
-                      position: "absolute",
-                      inset: "-2px",
-                      borderRadius: "50%",
-                      background: "linear-gradient(135deg, #667eea, #764ba2)",
-                      zIndex: -1,
-                      opacity: 0.3,
-                      filter: "blur(10px)",
-                    }
-                  }}
-                >
-                  <VolunteerActivism sx={{ fontSize: { xs: "1.2rem", sm: "1.35rem", md: "1.7rem" }, color: "white" }} />
-                </Box>
-                <Box sx={{ flex: 1 }}>
+                {/* Enhanced Progress Bar */}
+                <Box sx={{ mt: { xs: 2, md: 3 } }}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.875rem", md: "1rem" } }}>
+                      Overall Progress
+                    </Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.875rem", md: "1rem" } }}>
+                      {project.progress}%
+                    </Typography>
+                  </Box>
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 2,
-                      mb: 2,
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <Typography
-                      variant="h3"
-                      component="h1"
-                      sx={{ 
-                        fontWeight: 700,
-                        background: "linear-gradient(135deg, #667eea, #764ba2)",
-                        backgroundClip: "text",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.7rem" }
-                      }}
-                    >
-                      {project.name}
-                    </Typography>
-                    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                      <Chip
-                        label={getStatusLabel(project.status)}
-                        color={getStatusColor(project.status)}
-                        size={isMobile ? "medium" : "large"}
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: { xs: "0.55rem", sm: "0.6rem", md: "0.65rem" },
-                          px: { xs: 1.5, md: 2 },
-                          py: { xs: 0.5, md: 1 },
-                        }}
-                      />
-                      <Chip
-                        label={getCategoryLabel(project.category)}
-                        variant="outlined"
-                        color="primary"
-                        size={isMobile ? "medium" : "large"}
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: { xs: "0.55rem", sm: "0.6rem", md: "0.65rem" },
-                          px: { xs: 1.5, md: 2 },
-                          py: { xs: 0.5, md: 1 },
-                          borderWidth: "2px",
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    color="text.secondary"
-                    sx={{ 
-                      mb: 3,
-                      lineHeight: 1.6,
-                      fontSize: { xs: "0.75rem", sm: "0.8rem", md: "0.85rem" }
-                    }}
-                  >
-                    {project.description}
-                  </Typography>
-                  <Box 
-                    sx={{ 
-                      display: "flex", 
-                      alignItems: "center", 
-                      gap: 1,
-                      p: 2,
-                      borderRadius: 2,
+                      width: "100%",
+                      height: 16,
                       backgroundColor: "rgba(102, 126, 234, 0.1)",
+                      borderRadius: 10,
+                      overflow: "hidden",
                       border: "1px solid rgba(102, 126, 234, 0.2)",
-                      width: "fit-content",
                     }}
                   >
-                    <LocationOn sx={{ color: "#667eea", fontSize: "1.2rem" }} />
-                    <Typography variant="body1" sx={{ fontWeight: 500, color: "#667eea", fontSize: "0.75rem" }}>
-                      {project.subcounty}, {project.county}
-                    </Typography>
+                    <Box
+                      sx={{
+                        width: `${project.progress}%`,
+                        height: "100%",
+                        background: project.status === "completed" 
+                          ? "linear-gradient(90deg, #4caf50, #81c784)" 
+                          : "linear-gradient(90deg, #667eea, #764ba2)",
+                        transition: "width 0.8s ease",
+                        position: "relative",
+                        "&::after": {
+                          content: '""',
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
+                          animation: "shimmer 2s infinite",
+                        }
+                      }}
+                    />
                   </Box>
                 </Box>
               </Box>
-            </Paper>
-          </Box>
 
-          {/* Project Overview */}
-          <Paper 
-            elevation={3} 
-            sx={{ 
-              p: { xs: 1, sm: 1.5, md: 2 }, 
-              borderRadius: { xs: 3, md: 4 }, 
-              mb: 1.5,
-              background: "#ffffff",
-              border: "1px solid #e0e0e0",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 1.5, md: 2 } }}>
-              <Box
-                sx={{
-                  width: { xs: 40, md: 50 },
-                  height: { xs: 40, md: 50 },
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #667eea, #764ba2)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  mr: 2,
-                  flexShrink: 0,
-                }}
-              >
-                <TrendingUp sx={{ color: "white", fontSize: { xs: "0.85rem", md: "1rem" } }} />
-              </Box>
-              <Typography 
-                variant="h4" 
-                sx={{ 
-                  fontWeight: 700,
-                  background: "linear-gradient(135deg, #667eea, #764ba2)",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  fontSize: { xs: "1rem", sm: "1.2rem", md: "1.45rem" },
-                }}
-              >
-                Project Overview
-              </Typography>
-            </Box>
+              {/* Progress Descriptions */}
+              {project.progress_descriptions && project.progress_descriptions.length > 0 && (
+                <Box sx={{ mb: { xs: 3, md: 4 } }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      fontWeight: 700,
+                      mb: { xs: 1.5, md: 2 },
+                      textAlign: "center",
+                      background: "linear-gradient(135deg, #667eea, #764ba2)",
+                      backgroundClip: "text",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      fontSize: { xs: "1.2rem", md: "1.45rem" },
+                    }}
+                  >
+                    Progress Updates
+                  </Typography>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, md: 1.5 } }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  p: { xs: 1, md: 1.5 },
-                  borderRadius: { xs: 2, md: 3 },
-                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
-                  border: "1px solid rgba(102, 126, 234, 0.2)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
-                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
-                  }
-                }}
-              >
-                <Category sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
-                    Category
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
-                    {getCategoryLabel(project.category)}
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  p: { xs: 1, md: 1.5 },
-                  borderRadius: { xs: 2, md: 3 },
-                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
-                  border: "1px solid rgba(102, 126, 234, 0.2)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
-                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
-                  }
-                }}
-              >
-                <LocationOn sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
-                    Location
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
-                    {project.subcounty}, {project.county}
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  p: { xs: 1, md: 1.5 },
-                  borderRadius: { xs: 2, md: 3 },
-                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
-                  border: "1px solid rgba(102, 126, 234, 0.2)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
-                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
-                  }
-                }}
-              >
-                <People sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
-                    Target Audience
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
-                    {project.target_individual}
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  p: { xs: 1, md: 1.5 },
-                  borderRadius: { xs: 2, md: 3 },
-                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
-                  border: "1px solid rgba(102, 126, 234, 0.2)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
-                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
-                  }
-                }}
-              >
-                <Schedule sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
-                    Start Date
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
-                    {formatDate(project.start_date)}
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  p: { xs: 1, md: 1.5 },
-                  borderRadius: { xs: 2, md: 3 },
-                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
-                  border: "1px solid rgba(102, 126, 234, 0.2)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
-                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
-                  }
-                }}
-              >
-                <CalendarToday sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
-                    End Date
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
-                    {formatDate(project.end_date)}
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  p: { xs: 1, md: 1.5 },
-                  borderRadius: { xs: 2, md: 3 },
-                  background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))",
-                  border: "1px solid rgba(102, 126, 234, 0.2)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: { xs: "translateY(-3px)", md: "translateY(-5px)" },
-                    boxShadow: "0 15px 35px rgba(102, 126, 234, 0.2)",
-                  }
-                }}
-              >
-                <TrendingUp sx={{ color: "#667eea", fontSize: { xs: "1rem", md: "1.2rem" }, flexShrink: 0 }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
-                    Progress
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1rem" } }}>
-                    {project.progress}%
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
-
-            {/* Enhanced Progress Bar */}
-            <Box sx={{ mt: { xs: 1.5, md: 2 } }}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1.05rem" } }}>
-                  Overall Progress
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: "#667eea", fontSize: { xs: "0.85rem", md: "1.05rem" } }}>
-                  {project.progress}%
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  width: "100%",
-                  height: 16,
-                  backgroundColor: "rgba(102, 126, 234, 0.1)",
-                  borderRadius: 10,
-                  overflow: "hidden",
-                  border: "1px solid rgba(102, 126, 234, 0.2)",
-                }}
-              >
-                <Box
-                  sx={{
-                    width: `${project.progress}%`,
-                    height: "100%",
-                    background: project.status === "completed" 
-                      ? "linear-gradient(90deg, #4caf50, #81c784)" 
-                      : "linear-gradient(90deg, #667eea, #764ba2)",
-                    transition: "width 0.8s ease",
-                    position: "relative",
-                    "&::after": {
-                      content: '""',
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
-                      animation: "shimmer 2s infinite",
-                    }
-                  }}
-                />
-              </Box>
-            </Box>
-          </Paper>
-
-          {/* Progress Descriptions */}
-          {project.progress_descriptions && project.progress_descriptions.length > 0 && (
-            <Paper 
-              elevation={3} 
-              sx={{ 
-                p: { xs: 2, sm: 3, md: 4 }, 
-                borderRadius: { xs: 3, md: 4 }, 
-                mb: 3,
-                background: "#ffffff",
-                border: "1px solid #e0e0e0",
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 1.5, md: 2 } }}>
-                <Box
-                  sx={{
-                    width: { xs: 40, md: 50 },
-                    height: { xs: 40, md: 50 },
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, #667eea, #764ba2)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mr: 2,
-                    flexShrink: 0,
-                  }}
-                >
-                  <Description sx={{ color: "white", fontSize: { xs: "0.85rem", md: "1rem" } }} />
-                </Box>
-                <Typography 
-                  variant="h4" 
-                  sx={{ 
-                    fontWeight: 700,
-                    background: "linear-gradient(135deg, #667eea, #764ba2)",
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    fontSize: { xs: "1rem", sm: "1.2rem", md: "1.45rem" },
-                  }}
-                >
-                  Progress Updates
-                </Typography>
-              </Box>
-
-              {project.progress_descriptions.map((update, index) => (
-                <Card 
-                  key={index} 
-                  sx={{ 
-                    mb: { xs: 1, md: 1.5 }, 
-                    border: "none",
-                    borderRadius: { xs: 2, md: 3 },
-                    background: "linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05))",
-                    border: "1px solid rgba(102, 126, 234, 0.1)",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-3px)",
-                      boxShadow: "0 10px 25px rgba(102, 126, 234, 0.15)",
-                    }
-                  }}
-                >
-                  <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2, gap: 1, flexWrap: "wrap" }}>
-                      <Typography 
-                        variant="h6" 
-                        sx={{ 
-                          fontWeight: 600,
-                          color: "#667eea",
-                          background: "linear-gradient(135deg, #667eea, #764ba2)",
-                          backgroundClip: "text",
-                          WebkitBackgroundClip: "text",
-                          WebkitTextFillColor: "transparent",
-                          fontSize: { xs: "0.75rem", md: "0.85rem" },
-                        }}
-                      >
-                        Update #{project.progress_descriptions.length - index}
-                      </Typography>
+                  {project.progress_descriptions.map((update, index) => (
+                    <MotionBox
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                      sx={{ mb: index < project.progress_descriptions.length - 1 ? 2 : 0 }}
+                    >
                       <Box
                         sx={{
-                          px: { xs: 1.5, md: 2 },
-                          py: 0.5,
-                          borderRadius: 2,
-                          background: "rgba(102, 126, 234, 0.1)",
-                          border: "1px solid rgba(102, 126, 234, 0.2)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1.5,
+                          mb: 1,
+                          pb: 1,
+                          borderBottom: "1px solid rgba(102, 126, 234, 0.1)",
                         }}
                       >
-                        <Typography variant="caption" sx={{ fontWeight: 500, color: "#667eea", fontSize: { xs: "0.55rem", md: "0.6rem" } }}>
-                          {formatDate(update.timestamp)}
-                        </Typography>
+                        <Box
+                          sx={{
+                            p: 0.75,
+                            borderRadius: 1.5,
+                            backgroundColor: "rgba(102, 126, 234, 0.15)",
+                            color: "#667eea",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Description sx={{ fontSize: { xs: "1rem", md: "1.25rem" } }} />
+                        </Box>
+                        <Box sx={{ flex: 1 }}>
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              fontWeight: 700,
+                              color: "#667eea",
+                              fontSize: { xs: "0.9rem", md: "1.1rem" },
+                            }}
+                          >
+                            Update #{project.progress_descriptions.length - index}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: "text.secondary",
+                              fontSize: { xs: "0.65rem", md: "0.75rem" },
+                            }}
+                          >
+                            {formatDate(update.timestamp)}
+                          </Typography>
+                        </Box>
                       </Box>
-                    </Box>
-                    <Typography 
-                      variant="body1" 
-                      sx={{ 
-                        lineHeight: 1.7,
-                        color: "text.primary",
-                        fontSize: { xs: "0.7rem", md: "0.8rem" },
-                      }}
-                    >
-                      {update.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              ))}
-            </Paper>
-          )}
-
-          {/* Project Images */}
-          {project.update_images && project.update_images.length > 0 && (
-            <Paper 
-              elevation={3} 
-              sx={{ 
-                p: { xs: 2, sm: 3, md: 4 }, 
-                borderRadius: { xs: 3, md: 4 }, 
-                mb: 3,
-                background: "#ffffff",
-                border: "1px solid #e0e0e0",
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", mb: { xs: 1.5, md: 2 } }}>
-                <Box
-                  sx={{
-                    width: { xs: 40, md: 50 },
-                    height: { xs: 40, md: 50 },
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, #667eea, #764ba2)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mr: 2,
-                    flexShrink: 0,
-                  }}
-                >
-                  <ImageIcon sx={{ color: "white", fontSize: { xs: "0.85rem", md: "1rem" } }} />
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          lineHeight: 1.8,
+                          color: "text.secondary",
+                          fontSize: { xs: "0.875rem", md: "1rem" },
+                          pl: { xs: 0, md: 4 },
+                        }}
+                      >
+                        {update.description}
+                      </Typography>
+                    </MotionBox>
+                  ))}
                 </Box>
-                <Typography 
-                  variant="h4" 
-                  sx={{ 
-                    fontWeight: 700,
-                    background: "linear-gradient(135deg, #667eea, #764ba2)",
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    fontSize: { xs: "1rem", sm: "1.2rem", md: "1.45rem" },
-                  }}
-                >
-                  Project Gallery ({project.update_images.length})
-                </Typography>
-              </Box>
+              )}
+
+              {/* Project Images */}
+              {project.update_images && project.update_images.length > 0 && (
+                <Box sx={{ mb: { xs: 3, md: 4 } }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      fontWeight: 700,
+                      mb: { xs: 1.5, md: 2 },
+                      textAlign: "center",
+                      background: "linear-gradient(135deg, #667eea, #764ba2)",
+                      backgroundClip: "text",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      fontSize: { xs: "1.2rem", md: "1.45rem" },
+                    }}
+                  >
+                    Project Gallery ({project.update_images.length})
+                  </Typography>
 
               <Grid container spacing={{ xs: 1, sm: 1, md: 1.5 }}>
                 {project.update_images.map((imageData, index) => (
@@ -1015,11 +740,11 @@ export default function ProjectDetails() {
                   </Grid>
                 ))}
               </Grid>
+                </Box>
+              )}
             </Paper>
-          )}
-
-        </MotionBox>
-      </Container>
+          </MotionBox>
+        </Container>
       </Box>
 
       {/* CSS Animations */}

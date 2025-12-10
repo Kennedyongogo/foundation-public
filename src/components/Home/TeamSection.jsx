@@ -9,14 +9,18 @@ import {
   Avatar,
   CircularProgress,
   Chip,
-  Fade,
+  Paper,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { motion } from "framer-motion";
 import PersonIcon from "@mui/icons-material/Person";
+import GroupsIcon from "@mui/icons-material/Groups";
+
+const MotionBox = motion(Box);
 
 const StyledTeamCard = styled(Card)(({ theme }) => ({
-  height: "300px", // Reduced height
-  width: "300px", // Increased width
+  height: { xs: "280px", sm: "300px" },
+  width: { xs: "250px", sm: "280px", md: "300px" },
   borderRadius: "16px",
   overflow: "hidden",
   backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -125,49 +129,112 @@ export default function TeamSection() {
 
   return (
     <Box
+      id="team-section"
       sx={{
-        position: "relative",
-        width: "100%",
-        overflow: "hidden",
+        pt: 0,
+        pb: 3,
+        px: { xs: 1, sm: 1.5, md: 2 },
+        backgroundColor: "#f8f9fa",
       }}
     >
       <Box
         sx={{
-          display: "flex",
-          gap: 3,
-          overflowX: "auto",
-          overflowY: "hidden",
-          pb: 2,
-          px: 1,
-          // Smooth scrolling
-          scrollBehavior: "smooth",
-          // Custom scrollbar styling
-          "&::-webkit-scrollbar": {
-            height: "10px",
-          },
-          "&::-webkit-scrollbar-track": {
-            backgroundColor: "rgba(0,0,0,0.05)",
-            borderRadius: "10px",
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(33, 150, 243, 0.5)",
-            borderRadius: "10px",
-            "&:hover": {
-              backgroundColor: "rgba(33, 150, 243, 0.8)",
-            },
-          },
+          maxWidth: "1300px",
+          margin: "0 auto",
         }}
       >
-        {teamMembers.map((member, index) => (
-          <Box key={member.id} sx={{ flex: "0 0 auto" }}>
-            <Fade in={true} timeout={800 + index * 100}>
-              <StyledTeamCard>
+        <MotionBox
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <Paper
+            elevation={3}
+            sx={{
+              borderRadius: { xs: 3, md: 4 },
+              overflow: "hidden",
+              backgroundColor: "white",
+              border: "1px solid #e0e0e0",
+              py: { xs: 1.5, sm: 2, md: 2.5 },
+              px: { xs: 3, sm: 4, md: 5 },
+            }}
+          >
+            {/* Header Section */}
+            <Box
+              sx={{
+                textAlign: "center",
+                mb: 4,
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 2,
+                  mb: 2,
+                }}
+              >
+                <GroupsIcon
+                  sx={{ fontSize: "2.5rem", color: "primary.main" }}
+                />
+                <Typography
+                  variant="h2"
+                  sx={{
+                    fontWeight: 600,
+                    color: "primary.main",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Meet Our Team
+                </Typography>
+              </Box>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                sx={{ maxWidth: 600, mx: "auto", fontSize: "0.875rem" }}
+              >
+                Dedicated individuals working together to make a difference in our community
+              </Typography>
+            </Box>
+
+            {/* Team Members Cards */}
+            <Box
+              sx={{
+                display: "flex",
+                gap: { xs: 2, sm: 2.5, md: 3 },
+                overflowX: "auto",
+                overflowY: "hidden",
+                pb: 2,
+                px: 1,
+                scrollBehavior: "smooth",
+                WebkitOverflowScrolling: "touch", // Smooth scrolling on iOS
+                "&::-webkit-scrollbar": {
+                  height: "10px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  backgroundColor: "rgba(0,0,0,0.05)",
+                  borderRadius: "10px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "rgba(33, 150, 243, 0.5)",
+                  borderRadius: "10px",
+                  "&:hover": {
+                    backgroundColor: "rgba(33, 150, 243, 0.8)",
+                  },
+                },
+              }}
+            >
+              {teamMembers.map((member, index) => (
+                <Box key={member.id} sx={{ flex: "0 0 auto" }}>
+                  <StyledTeamCard>
                 <CardContent sx={{ p: 0, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
                   {/* Profile Picture - Full width, edge to edge */}
                   <Box 
                     sx={{ 
                       width: "100%",
-                      height: "280px",
+                      height: { xs: "200px", sm: "260px", md: "280px" },
                       overflow: "hidden",
                       cursor: "pointer",
                       transition: "transform 0.2s ease-in-out",
@@ -262,9 +329,11 @@ export default function TeamSection() {
                   </Box>
                 </CardContent>
               </StyledTeamCard>
-            </Fade>
-          </Box>
-        ))}
+                </Box>
+              ))}
+            </Box>
+          </Paper>
+        </MotionBox>
       </Box>
     </Box>
   );

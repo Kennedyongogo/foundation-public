@@ -10,6 +10,8 @@ import {
   Divider,
   Fade,
   Slide,
+  Card,
+  CardContent,
 } from "@mui/material";
 import { 
   Facebook, 
@@ -515,17 +517,67 @@ export default function Footer() {
                   >
                     © {new Date().getFullYear()} Mwalimu Hope Foundation. All rights reserved.
                   </Typography>
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
-                      color: "rgba(255,255,255,0.6)",
-                      mt: { xs: 0.5, sm: 1 },
-                      fontStyle: "italic",
-                      fontSize: { xs: "0.7rem", sm: "0.875rem" },
-                    }}
-                  >
-                    Empowering Minds, Restoring Hope, Building Kenya's Future
-          </Typography>
+                  <Box sx={{ display: "flex", justifyContent: "center", mt: { xs: 0.5, sm: 0.75 } }}>
+                    <Card
+                      sx={{
+                        width: { xs: "auto", sm: "30%" },
+                        minWidth: "fit-content",
+                        background: "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(25, 118, 210, 0.15) 100%)",
+                        backdropFilter: "blur(10px)",
+                        WebkitBackdropFilter: "blur(10px)",
+                        border: "1px solid rgba(33, 150, 243, 0.3)",
+                        borderRadius: "12px",
+                        boxShadow: "0 4px 20px rgba(33, 150, 243, 0.2)",
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-2px)",
+                          boxShadow: "0 6px 30px rgba(33, 150, 243, 0.3)",
+                          borderColor: "rgba(33, 150, 243, 0.5)",
+                          background: "linear-gradient(135deg, rgba(33, 150, 243, 0.25) 0%, rgba(25, 118, 210, 0.2) 100%)",
+                        },
+                      }}
+                    >
+                    <CardContent sx={{ p: { xs: 0.75, sm: 1 }, "&:last-child": { pb: { xs: 0.75, sm: 1 } } }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: { xs: 0.5, md: 1 },
+                          textAlign: "center",
+                          flexWrap: "nowrap",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            color: "white",
+                            fontWeight: 600,
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                            whiteSpace: "nowrap",
+                            display: "inline",
+                          }}
+                        >
+                          Developed by
+                        </Typography>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            color: "white",
+                            fontWeight: 600,
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                            whiteSpace: "nowrap",
+                            display: "inline",
+                          }}
+                        >
+                          Carlvyne Technologies Ltd
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                  </Box>
         </Box>
               </Box>
             </Fade>

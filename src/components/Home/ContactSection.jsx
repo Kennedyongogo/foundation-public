@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -11,18 +12,15 @@ import {
   Select,
   MenuItem,
   CircularProgress,
-  Card,
-  CardContent,
-  Fade,
-  Slide,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { Email, Phone, LocationOn, Send, VolunteerActivism, School, Psychology, Group } from "@mui/icons-material";
+import { Email, Phone, LocationOn, Send, VolunteerActivism, School, Psychology, Group, Person } from "@mui/icons-material";
 import Swal from "sweetalert2";
 
 const MotionBox = motion(Box);
 
 export default function ContactSection() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,7 +30,6 @@ export default function ContactSection() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
 
   const interestOptions = [
     { value: "volunteer", label: "Volunteer Opportunities", icon: <VolunteerActivism />, color: "#4caf50" },
@@ -42,10 +39,6 @@ export default function ContactSection() {
     { value: "donation", label: "Donations & Support", icon: <VolunteerActivism />, color: "#9c27b0" },
     { value: "partnership", label: "Partnership Opportunities", icon: <Group />, color: "#00bcd4" },
   ];
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
 
 
   const handleInputChange = (field, value) => {
@@ -133,117 +126,109 @@ export default function ContactSection() {
     <Box
       id="contact-section"
       sx={{
-        py: { xs: 4, md: 5 },
-        background: "linear-gradient(135deg, rgba(240, 248, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(248, 250, 252, 0.9) 100%)",
-        position: "relative",
-        overflow: "hidden",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "radial-gradient(circle at 20% 80%, rgba(33, 150, 243, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(233, 30, 99, 0.1) 0%, transparent 50%)",
-          zIndex: 0,
-        },
+        pt: 0,
+        pb: 3,
+        px: { xs: 1, sm: 1.5, md: 2 },
+        backgroundColor: "#f8f9fa",
       }}
     >
       <Box
         sx={{
-          maxWidth: "1200px",
+          maxWidth: "1300px",
           margin: "0 auto",
-          px: { xs: 2, sm: 3, md: 4 },
-          position: "relative",
-          zIndex: 1,
         }}
       >
-        <Fade in={isVisible} timeout={1000}>
-          <Box sx={{ textAlign: "center", mb: 3 }}>
-            <Typography
-              variant="h2"
+        <MotionBox
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <Paper
+            elevation={3}
+            sx={{
+              borderRadius: { xs: 3, md: 4 },
+              overflow: "hidden",
+              backgroundColor: "white",
+              border: "1px solid #e0e0e0",
+              py: { xs: 1.5, sm: 2, md: 2.5 },
+              px: { xs: 3, sm: 4, md: 5 },
+            }}
+          >
+            {/* Header Section */}
+            <Box
               sx={{
-                fontWeight: 700,
-                fontSize: { xs: "1.75rem", sm: "2rem", md: "2.25rem" },
-                background: "linear-gradient(45deg, #2196f3, #e91e63, #4caf50)",
-                backgroundClip: "text",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                mb: 1,
-                position: "relative",
-                "&::after": {
-                  content: '""',
-                  position: "absolute",
-                  bottom: "-6px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  width: { xs: "50px", sm: "60px", md: "70px" },
-                  height: "3px",
-                  background: "linear-gradient(45deg, #2196f3, #e91e63)",
-                  borderRadius: "2px",
-                },
+                textAlign: "center",
+                mb: 2,
               }}
             >
-              Get Involved
-            </Typography>
-            <Typography
-              variant="h6"
-              sx={{
-                color: "text.primary",
-                fontWeight: 500,
-                fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" },
-                maxWidth: "700px",
-                mx: "auto",
-                mb: 1,
-              }}
-            >
-              Join us in making a difference. Whether you want to volunteer, donate, or partner with us, 
-              we'd love to hear from you.
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ 
-                maxWidth: "600px", 
-                mx: "auto",
-                fontStyle: "italic",
-                fontSize: { xs: "0.85rem", md: "0.9rem" },
-              }}
-            >
-              "Together, we can build a brighter future for Kenya"
-            </Typography>
-          </Box>
-        </Fade>
-
-        {/* Contact Form */}
-        <Slide direction="up" in={isVisible} timeout={1000}>
-              <Paper
-                elevation={4}
+              <Box
                 sx={{
-                  borderRadius: "16px",
-                  overflow: "hidden",
-                  backgroundColor: "rgba(255, 255, 255, 0.95)",
-                  backdropFilter: "blur(10px)",
-                  boxShadow: "0 6px 24px rgba(0,0,0,0.1)",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 2,
+                  mb: 1,
                 }}
               >
-                <Box sx={{ p: { xs: 2.5, sm: 3, md: 3.5 } }}>
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      fontWeight: 700,
-                      mb: 2,
-                      textAlign: "center",
-                      background: "linear-gradient(45deg, #2196f3, #e91e63)",
-                      backgroundClip: "text",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      fontSize: { xs: "1.25rem", md: "1.5rem" },
-                    }}
-                  >
-                    Send us a Message
-                  </Typography>
+                <Email
+                  sx={{ fontSize: "2.5rem", color: "primary.main" }}
+                />
+                <Typography
+                  variant="h2"
+                  sx={{
+                    fontWeight: 600,
+                    color: "primary.main",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Get Involved
+                </Typography>
+              </Box>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                sx={{ maxWidth: 600, mx: "auto", fontSize: "0.875rem" }}
+              >
+                Join us in making a difference. Whether you want to volunteer, donate, or partner with us, 
+                we'd love to hear from you.
+              </Typography>
+            </Box>
+
+            {/* Contact Form */}
+            <Box>
+              <Box sx={{ textAlign: "center", mb: 3 }}>
+                <Button
+                  variant="contained"
+                  startIcon={<Person />}
+                  onClick={() => navigate("/member-registration")}
+                  sx={{
+                    backgroundColor: "#4caf50",
+                    color: "white",
+                    px: 3,
+                    py: 0.75,
+                    borderRadius: "25px",
+                    fontSize: "0.875rem",
+                    fontWeight: 600,
+                    textTransform: "none",
+                    boxShadow: "0 4px 12px rgba(76, 175, 80, 0.3)",
+                    "&:hover": {
+                      backgroundColor: "#45a049",
+                      boxShadow: "0 6px 16px rgba(76, 175, 80, 0.4)",
+                      transform: "translateY(-2px)",
+                    },
+                    "&:focus": {
+                      outline: "none",
+                    },
+                    "&:focus-visible": {
+                      outline: "none",
+                    },
+                    transition: "all 0.3s ease-in-out",
+                  }}
+                >
+                  Register as a Member
+                </Button>
+              </Box>
 
                   <Box
                     component="form"
@@ -361,15 +346,21 @@ export default function ContactSection() {
                             boxShadow: "0 8px 32px rgba(33, 150, 243, 0.4)",
                             background: "linear-gradient(45deg, #1976d2 30%, #1cb5e0 90%)",
                           },
+                          "&:focus": {
+                            outline: "none",
+                          },
+                          "&:focus-visible": {
+                            outline: "none",
+                          },
                         }}
                       >
                         {loading ? "Sending Message..." : "Send Message"}
                       </Button>
                     </Box>
                   </Box>
-                </Box>
-              </Paper>
-        </Slide>
+            </Box>
+          </Paper>
+        </MotionBox>
       </Box>
     </Box>
   );

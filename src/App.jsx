@@ -24,12 +24,16 @@ const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
 const TeamMemberDetail = lazy(() => import("./pages/TeamMemberDetail"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const CEOMessage = lazy(() => import("./pages/CEOMessage"));
+const MemberRegistration = lazy(() => import("./pages/MemberRegistration"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    });
   }, [pathname]);
 
   return null;
@@ -113,6 +117,16 @@ function App() {
                 <>
                   <PublicHeader />
                   <CEOMessage />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/member-registration"
+              element={
+                <>
+                  <PublicHeader />
+                  <MemberRegistration />
                   <Footer />
                 </>
               }

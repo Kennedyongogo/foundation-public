@@ -251,7 +251,7 @@ export default function PostsSection() {
       id="posts-section"
       sx={{
         pt: 0,
-        pb: 6,
+        pb: 3,
         px: { xs: 1, sm: 1.5, md: 2 },
         background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%)",
         position: "relative",
@@ -303,18 +303,18 @@ export default function PostsSection() {
                     mb: 2,
                   }}
                 >
-                  <NewsIcon sx={{ fontSize: "2.5rem", color: "primary.main" }} />
+                  <NewsIcon sx={{ fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" }, color: "primary.main" }} />
                   <Typography
                     variant="h2"
                     sx={{
                       fontWeight: 600,
                       color: "primary.main",
-                      fontSize: { xs: "1.3rem", sm: "1.6rem", md: "2rem" },
+                      fontSize: { xs: "1rem", sm: "1.2rem", md: "1.5rem" },
                     }}
                   >
                     News & Events
                   </Typography>
-                  <EventIcon sx={{ fontSize: "2.5rem", color: "primary.main" }} />
+                  <EventIcon sx={{ fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" }, color: "primary.main" }} />
                 </Box>
                 <Typography
                   variant="h6"
@@ -731,12 +731,13 @@ export default function PostsSection() {
       <Dialog
         open={dialogOpen}
         onClose={handleCloseDialog}
-        maxWidth="md"
+        maxWidth="sm"
         fullWidth
         PaperProps={{
           sx: {
             borderRadius: 3,
             maxHeight: "90vh",
+            maxWidth: { xs: "95%", sm: "600px" },
           },
         }}
       >

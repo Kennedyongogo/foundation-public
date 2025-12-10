@@ -10,13 +10,11 @@ import {
   Paper,
   useMediaQuery,
   useTheme,
-  Avatar,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import {
   Person,
   ArrowBack,
-  Share,
   Facebook,
   WhatsApp,
   Twitter,
@@ -70,17 +68,19 @@ export default function TeamMemberDetail() {
   };
 
   const handleBack = () => {
-    navigate("/");
+    navigate("/", { state: { scrollTo: "team-section" } });
     // Scroll to team section after navigation with multiple attempts
+    // Using longer delay to ensure ScrollToTop has finished
     const scrollToTeam = () => {
-      const teamSection = document.querySelector('[data-section="team"]');
+      const teamSection = document.getElementById("team-section");
       if (teamSection) {
         teamSection.scrollIntoView({ behavior: "smooth", block: "start" });
       } else {
         // Try again after a short delay if not found
-        setTimeout(scrollToTeam, 200);
+        setTimeout(scrollToTeam, 100);
       }
     };
+    // Start scrolling after ScrollToTop has finished (it runs on pathname change)
     setTimeout(scrollToTeam, 300);
   };
 
@@ -137,6 +137,7 @@ export default function TeamMemberDetail() {
           }
           html, body, #root {
             background: #f8f9fa !important;
+            background-attachment: fixed !important;
             margin: 0 !important;
             padding: 0 !important;
           }
@@ -146,6 +147,20 @@ export default function TeamMemberDetail() {
           }
           #root {
             min-height: 100vh;
+          }
+          body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"/><circle cx="800" cy="300" r="150" fill="url(%23a)"/><circle cx="400" cy="700" r="120" fill="url(%23a)"/></svg>');
+            opacity: 0.3;
+            z-index: 0;
+            pointer-events: none;
           }
         `}
       </style>
@@ -165,18 +180,26 @@ export default function TeamMemberDetail() {
             transition={{ duration: 0.5 }}
           >
             {/* Header Section */}
-            <Box sx={{ mb: 2 }}>
+            <Box sx={{ mb: { xs: 1, sm: 1.5, md: 2 } }}>
               <Button
                 variant="contained"
                 startIcon={<ArrowBack />}
                 onClick={handleBack}
-                sx={{ 
-                  mb: 1.5,
+                sx={{
+                  mb: 0,
                   background: "linear-gradient(135deg, #667eea, #764ba2)",
                   color: "white",
                   fontWeight: 600,
-                  px: 3,
-                  py: 1.5,
+                  px: 2,
+                  py: 0.75,
+                  fontSize: { xs: "0.75rem", md: "0.875rem" },
+                  minHeight: "auto",
+                  "& .MuiButton-startIcon": {
+                    marginRight: 0.5,
+                    "& > *:nth-of-type(1)": {
+                      fontSize: { xs: "0.875rem", md: "1rem" },
+                    },
+                  },
                   "&:hover": {
                     background: "linear-gradient(135deg, #5568d3, #653a8b)",
                     transform: "translateY(-2px)",
@@ -193,122 +216,125 @@ export default function TeamMemberDetail() {
               >
                 Back to Team
               </Button>
+            </Box>
 
-              {/* Profile Picture - Full Width */}
-              <Box sx={{ mb: 0 }}>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: { xs: 400, sm: 500, md: 600 },
-                    borderRadius: { xs: 3, md: 4 },
-                    overflow: "hidden",
-                    border: "6px solid rgba(255, 255, 255, 0.3)",
-                    boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
-                    position: "relative",
-                    "&::before": {
-                      content: '""',
-                      position: "absolute",
-                      inset: "-3px",
-                      borderRadius: { xs: 3, md: 4 },
-                      background: "linear-gradient(135deg, #667eea, #764ba2)",
-                      zIndex: -1,
-                    }
-                  }}
-                >
-                  {teamMember.profile_image ? (
-                    <Box
-                      component="img"
-                      src={buildImageUrl(teamMember.profile_image)}
-                      alt={teamMember.full_name}
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                        e.target.nextSibling.style.display = "flex";
-                      }}
-                    />
-                  ) : null}
+            {/* All Content in One Card */}
+            <Paper
+              elevation={3}
+              sx={{
+                p: { xs: 2, sm: 3, md: 4 },
+                borderRadius: { xs: 3, md: 4 },
+                background: "white",
+                border: "1px solid #e0e0e0",
+              }}
+            >
+              {/* Profile Picture */}
+              <Box
+                sx={{
+                  position: "relative",
+                  height: { xs: "200px", sm: "300px", md: "400px" },
+                  overflow: "hidden",
+                  borderRadius: { xs: 2, md: 3 },
+                  mb: { xs: 3, md: 4 },
+                }}
+              >
+                {teamMember.profile_image ? (
                   <Box
+                    component="img"
+                    src={buildImageUrl(teamMember.profile_image)}
+                    alt={teamMember.full_name}
                     sx={{
-                      display: teamMember.profile_image ? "none" : "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
                       width: "100%",
                       height: "100%",
-                      background: "linear-gradient(135deg, #667eea, #764ba2)",
-                      color: "white",
+                      objectFit: "cover",
                     }}
-                  >
-                    <Person sx={{ fontSize: { xs: "5rem", sm: "6.5rem", md: "8rem" }, mb: 1 }} />
-                    <Typography variant="h4" sx={{ fontWeight: 600, fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.7rem" } }}>
-                      No Photo Available
-                    </Typography>
-                  </Box>
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
+                    }}
+                  />
+                ) : null}
+                <Box
+                  sx={{
+                    display: teamMember.profile_image ? "none" : "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    height: "100%",
+                    background: "linear-gradient(135deg, #667eea, #764ba2)",
+                    color: "white",
+                  }}
+                >
+                  <Person sx={{ fontSize: { xs: "3rem", sm: "4rem", md: "5rem" }, mb: 1 }} />
+                  <Typography variant="h6" sx={{ fontWeight: 600, fontSize: { xs: "0.875rem", sm: "1rem", md: "1.125rem" } }}>
+                    No Photo Available
+                  </Typography>
                 </Box>
               </Box>
 
-              {/* Profile Information - No Card, Left Aligned */}
-              <Box>
-                {/* Name */}
-                <Typography
-                  variant="h3"
-                  component="h1"
-                  sx={{ 
-                    fontWeight: 700,
-                    background: "linear-gradient(135deg, #667eea, #764ba2)",
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.85rem" },
-                    textAlign: "left",
-                    mb: 0,
+              {/* Page Title */}
+              <Box sx={{ textAlign: "center", mb: { xs: 2, md: 3 } }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 2,
+                    mb: 2,
                   }}
                 >
-                  {teamMember.full_name}
-                </Typography>
-
-                {/* Position */}
+                  <Person
+                    sx={{
+                      fontSize: { xs: "1rem", md: "1.25rem" },
+                      color: "primary.main",
+                    }}
+                  />
+                  <Typography
+                    variant="h2"
+                    sx={{
+                      fontWeight: 700,
+                      color: "primary.main",
+                      fontSize: { xs: "0.875rem", sm: "1.125rem", md: "1.5rem" },
+                    }}
+                  >
+                    {teamMember.full_name}
+                  </Typography>
+                </Box>
                 <Typography
-                  variant="h5"
+                  variant="h6"
                   sx={{
                     color: "#4caf50",
                     fontSize: { xs: "0.75rem", sm: "0.85rem", md: "1rem" },
                     fontWeight: 600,
-                    textAlign: "left",
-                    mb: 1.5,
+                    mb: 2,
                   }}
                 >
                   {teamMember.position || "Team Member"}
                 </Typography>
-
-                {/* Description */}
                 {teamMember.description && (
                   <Typography
-                    variant="body1"
+                    variant="h6"
+                    color="text.secondary"
                     sx={{
-                      lineHeight: 1.8,
-                      color: "text.primary",
-                      fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" },
-                      textAlign: "left",
+                      maxWidth: 800,
+                      mx: "auto",
+                      fontSize: { xs: "0.875rem", md: "1rem" },
+                      lineHeight: 1.6,
                     }}
                   >
                     {teamMember.description}
                   </Typography>
                 )}
-
-                {/* No description message */}
                 {!teamMember.description && (
                   <Typography
-                    variant="body1"
+                    variant="h6"
+                    color="text.secondary"
                     sx={{
-                      lineHeight: 1.8,
-                      color: "text.secondary",
-                      fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" },
-                      textAlign: "left",
+                      maxWidth: 800,
+                      mx: "auto",
+                      fontSize: { xs: "0.875rem", md: "1rem" },
+                      lineHeight: 1.6,
                       fontStyle: "italic",
                     }}
                   >
@@ -316,103 +342,92 @@ export default function TeamMemberDetail() {
                   </Typography>
                 )}
               </Box>
-            </Box>
 
-            {/* Share Section */}
-            <Paper 
-              elevation={3} 
-              sx={{ 
-                p: { xs: 1.5, sm: 2 }, 
-                borderRadius: { xs: 3, md: 4 },
-                background: "#ffffff",
-                border: "1px solid #e0e0e0",
-                textAlign: "center",
-              }}
-            >
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: 600,
-                  color: "#667eea",
-                  mb: 1.5,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 1,
-                  fontSize: { xs: "1rem", sm: "1.2rem", md: "1.45rem" },
-                }}
-              >
-                <Share sx={{ fontSize: { xs: "1.2rem", md: "1.35rem" } }} />
-                Connect with {teamMember?.full_name}
-              </Typography>
-              
-              <Box sx={{ display: "flex", justifyContent: "center", gap: 1, flexWrap: "wrap" }}>
-                <Button
-                  variant="contained"
-                  startIcon={<Facebook />}
-                  onClick={() => handleSocialClick("facebook")}
+              {/* Share Section */}
+              <Box>
+                <Typography
+                  variant="h4"
                   sx={{
-                    backgroundColor: "#1877f2",
-                    "&:hover": { backgroundColor: "#166fe5" },
-                    px: 1.5,
-                    py: 0.75,
-                    minWidth: 100,
-                    fontSize: { xs: "0.7rem", md: "0.8rem" },
+                    fontWeight: 700,
+                    mb: { xs: 1.5, md: 2 },
+                    textAlign: "center",
+                    background: "linear-gradient(135deg, #667eea, #764ba2)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    fontSize: { xs: "1.2rem", md: "1.45rem" },
                   }}
                 >
-                  Facebook
-                </Button>
+                  Connect with {teamMember.full_name}
+                </Typography>
                 
-                <Button
-                  variant="contained"
-                  startIcon={<WhatsApp />}
-                  onClick={() => handleSocialClick("whatsapp")}
-                  sx={{
-                    backgroundColor: "#25d366",
-                    "&:hover": { backgroundColor: "#22c55e" },
-                    px: 1.5,
-                    py: 0.75,
-                    minWidth: 100,
-                    fontSize: { xs: "0.7rem", md: "0.8rem" },
-                  }}
-                >
-                  WhatsApp
-                </Button>
-                
-                <Button
-                  variant="contained"
-                  startIcon={<Twitter />}
-                  onClick={() => handleSocialClick("twitter")}
-                  sx={{
-                    backgroundColor: "#1da1f2",
-                    "&:hover": { backgroundColor: "#1a91da" },
-                    px: 1.5,
-                    py: 0.75,
-                    minWidth: 100,
-                    fontSize: { xs: "0.7rem", md: "0.8rem" },
-                  }}
-                >
-                  X
-                </Button>
-                
-                <Button
-                  variant="contained"
-                  startIcon={<Google />}
-                  onClick={() => handleSocialClick("google")}
-                  sx={{
-                    backgroundColor: "#db4437",
-                    "&:hover": { backgroundColor: "#c23321" },
-                    px: 1.5,
-                    py: 0.75,
-                    minWidth: 100,
-                    fontSize: { xs: "0.7rem", md: "0.8rem" },
-                  }}
-                >
-                  Google
-                </Button>
+                <Box sx={{ display: "flex", justifyContent: "center", gap: 1, flexWrap: "wrap" }}>
+                  <Button
+                    variant="contained"
+                    startIcon={<Facebook />}
+                    onClick={() => handleSocialClick("facebook")}
+                    sx={{
+                      backgroundColor: "#1877f2",
+                      "&:hover": { backgroundColor: "#166fe5" },
+                      px: 1.5,
+                      py: 0.75,
+                      minWidth: 100,
+                      fontSize: { xs: "0.7rem", md: "0.8rem" },
+                    }}
+                  >
+                    Facebook
+                  </Button>
+                  
+                  <Button
+                    variant="contained"
+                    startIcon={<WhatsApp />}
+                    onClick={() => handleSocialClick("whatsapp")}
+                    sx={{
+                      backgroundColor: "#25d366",
+                      "&:hover": { backgroundColor: "#22c55e" },
+                      px: 1.5,
+                      py: 0.75,
+                      minWidth: 100,
+                      fontSize: { xs: "0.7rem", md: "0.8rem" },
+                    }}
+                  >
+                    WhatsApp
+                  </Button>
+                  
+                  <Button
+                    variant="contained"
+                    startIcon={<Twitter />}
+                    onClick={() => handleSocialClick("twitter")}
+                    sx={{
+                      backgroundColor: "#1da1f2",
+                      "&:hover": { backgroundColor: "#1a91da" },
+                      px: 1.5,
+                      py: 0.75,
+                      minWidth: 100,
+                      fontSize: { xs: "0.7rem", md: "0.8rem" },
+                    }}
+                  >
+                    X
+                  </Button>
+                  
+                  <Button
+                    variant="contained"
+                    startIcon={<Google />}
+                    onClick={() => handleSocialClick("google")}
+                    sx={{
+                      backgroundColor: "#db4437",
+                      "&:hover": { backgroundColor: "#c23321" },
+                      px: 1.5,
+                      py: 0.75,
+                      minWidth: 100,
+                      fontSize: { xs: "0.7rem", md: "0.8rem" },
+                    }}
+                  >
+                    Google
+                  </Button>
+                </Box>
               </Box>
             </Paper>
-
           </MotionBox>
         </Container>
       </Box>
