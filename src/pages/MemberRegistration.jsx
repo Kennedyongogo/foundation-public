@@ -16,6 +16,10 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { Person, ArrowBack } from "@mui/icons-material";
 import Swal from "sweetalert2";
@@ -34,7 +38,6 @@ export default function MemberRegistration() {
     date_of_birth: "",
     gender: "",
     national_id: "",
-    passport_number: "",
     physical_address: "",
     emergency_contact_name: "",
     emergency_contact_phone: "",
@@ -45,6 +48,7 @@ export default function MemberRegistration() {
     skills_contribution: "",
     preferred_communication: "",
   });
+  const [dateOfBirth, setDateOfBirth] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -69,12 +73,18 @@ export default function MemberRegistration() {
     setLoading(true);
 
     try {
+      // Format date_of_birth for API if dateOfBirth is set
+      const submitData = {
+        ...formData,
+        date_of_birth: dateOfBirth ? dayjs(dateOfBirth).format("YYYY-MM-DD") : formData.date_of_birth,
+      };
+
       const response = await fetch("/api/members", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submitData),
       });
 
       const data = await response.json();
@@ -91,7 +101,6 @@ export default function MemberRegistration() {
         date_of_birth: "",
         gender: "",
         national_id: "",
-        passport_number: "",
         physical_address: "",
         emergency_contact_name: "",
         emergency_contact_phone: "",
@@ -102,13 +111,15 @@ export default function MemberRegistration() {
         skills_contribution: "",
         preferred_communication: "",
       });
+      setDateOfBirth(null);
 
       Swal.fire({
         icon: "success",
         title: "Registration Submitted!",
         text: data.message || "Your membership application has been submitted successfully. We'll review it and get back to you soon.",
-        timer: 4000,
+        timer: 5000,
         showConfirmButton: true,
+        confirmButtonText: "OK",
         customClass: {
           container: "swal-z-index-fix",
         },
@@ -119,9 +130,6 @@ export default function MemberRegistration() {
           }
         },
       });
-
-      // Navigate back to home
-      navigate("/", { state: { scrollTo: "contact-section" } });
     } catch (error) {
       console.error("Error submitting registration:", error);
       Swal.fire({
@@ -196,6 +204,21 @@ export default function MemberRegistration() {
             z-index: 0;
             pointer-events: none;
           }
+          /* Fix browser autofill styling - prevent grey background with white text */
+          input:-webkit-autofill,
+          input:-webkit-autofill:hover,
+          input:-webkit-autofill:focus,
+          textarea:-webkit-autofill,
+          textarea:-webkit-autofill:hover,
+          textarea:-webkit-autofill:focus,
+          select:-webkit-autofill,
+          select:-webkit-autofill:hover,
+          select:-webkit-autofill:focus {
+            -webkit-box-shadow: 0 0 0 1000px white inset !important;
+            -webkit-text-fill-color: #000 !important;
+            caret-color: #000 !important;
+            transition: background-color 5000s ease-in-out 0s;
+          }
         `}
       </style>
 
@@ -256,7 +279,7 @@ export default function MemberRegistration() {
                   transition: "all 0.3s ease",
                 }}
               >
-                Back to Home
+                Back to Contact
               </Button>
             </Box>
 
@@ -351,6 +374,19 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
+                          "& input:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
+                          "& input:-webkit-autofill:hover": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
+                          "& input:-webkit-autofill:focus": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
                         },
                       }}
                     />
@@ -367,6 +403,19 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
+                          "& input:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
+                          "& input:-webkit-autofill:hover": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
+                          "& input:-webkit-autofill:focus": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
                         },
                       }}
                     />
@@ -382,25 +431,87 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
+                          "& input:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
+                          "& input:-webkit-autofill:hover": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
+                          "& input:-webkit-autofill:focus": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
                         },
                       }}
                     />
                   </Grid>
 
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField
-                      fullWidth
-                      label="Date of Birth"
-                      type="date"
-                      InputLabelProps={{ shrink: true }}
-                      value={formData.date_of_birth}
-                      onChange={(e) => handleInputChange("date_of_birth", e.target.value)}
-                      sx={{
-                        "& .MuiOutlinedInput-root": {
-                          borderRadius: "12px",
-                        },
-                      }}
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Date of Birth"
+                        value={dateOfBirth}
+                        onChange={(newValue) => {
+                          setDateOfBirth(newValue);
+                          handleInputChange(
+                            "date_of_birth",
+                            newValue ? dayjs(newValue).format("YYYY-MM-DD") : ""
+                          );
+                        }}
+                        slotProps={{
+                          textField: {
+                            fullWidth: true,
+                            sx: {
+                              "& .MuiOutlinedInput-root": {
+                                borderRadius: "12px",
+                                "& input:-webkit-autofill": {
+                                  WebkitBoxShadow: "0 0 0 100px white inset",
+                                  WebkitTextFillColor: "#000",
+                                  caretColor: "#000",
+                                },
+                                "& input:-webkit-autofill:hover": {
+                                  WebkitBoxShadow: "0 0 0 100px white inset",
+                                  WebkitTextFillColor: "#000",
+                                },
+                                "& input:-webkit-autofill:focus": {
+                                  WebkitBoxShadow: "0 0 0 100px white inset",
+                                  WebkitTextFillColor: "#000",
+                                },
+                              },
+                              "& .MuiIconButton-root": {
+                                "&:focus": {
+                                  outline: "none",
+                                  backgroundColor: "transparent",
+                                },
+                                "&:focus-visible": {
+                                  outline: "none",
+                                  backgroundColor: "transparent",
+                                },
+                                "&:hover": {
+                                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                                },
+                              },
+                            },
+                          },
+                          openPickerIcon: {
+                            sx: {
+                              "&:focus": {
+                                outline: "none",
+                                color: "inherit",
+                              },
+                              "&:focus-visible": {
+                                outline: "none",
+                              },
+                            },
+                          },
+                        }}
+                        maxDate={dayjs()}
+                        format="DD/MM/YYYY"
+                      />
+                    </LocalizationProvider>
                   </Grid>
 
                   <Grid size={{ xs: 12, sm: 6 }}>
@@ -431,20 +542,19 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
-                        },
-                      }}
-                    />
-                  </Grid>
-
-                  <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField
-                      fullWidth
-                      label="Passport Number"
-                      value={formData.passport_number}
-                      onChange={(e) => handleInputChange("passport_number", e.target.value)}
-                      sx={{
-                        "& .MuiOutlinedInput-root": {
-                          borderRadius: "12px",
+                          "& input:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
+                          "& input:-webkit-autofill:hover": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
+                          "& input:-webkit-autofill:focus": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
                         },
                       }}
                     />
@@ -461,6 +571,11 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
+                          "& textarea:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
                         },
                       }}
                     />
@@ -475,6 +590,19 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
+                          "& input:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
+                          "& input:-webkit-autofill:hover": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
+                          "& input:-webkit-autofill:focus": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
                         },
                       }}
                     />
@@ -489,6 +617,19 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
+                          "& input:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
+                          "& input:-webkit-autofill:hover": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
+                          "& input:-webkit-autofill:focus": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
                         },
                       }}
                     />
@@ -557,6 +698,19 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
+                          "& input:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
+                          "& input:-webkit-autofill:hover": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
+                          "& input:-webkit-autofill:focus": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                          },
                         },
                       }}
                     />
@@ -574,6 +728,11 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
+                          "& textarea:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
                         },
                       }}
                     />
@@ -591,6 +750,11 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
+                          "& textarea:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
                         },
                       }}
                     />
@@ -608,6 +772,11 @@ export default function MemberRegistration() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
+                          "& textarea:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0 100px white inset",
+                            WebkitTextFillColor: "#000",
+                            caretColor: "#000",
+                          },
                         },
                       }}
                     />
@@ -636,6 +805,18 @@ export default function MemberRegistration() {
                         transform: "translateY(-2px) scale(1.03)",
                         boxShadow: "0 8px 32px rgba(76, 175, 80, 0.4)",
                         background: "linear-gradient(45deg, #388e3c 30%, #4caf50 90%)",
+                      },
+                      "&:focus": {
+                        outline: "none",
+                        boxShadow: "0 6px 24px rgba(76, 175, 80, 0.3)",
+                      },
+                      "&:focus-visible": {
+                        outline: "none",
+                        boxShadow: "0 6px 24px rgba(76, 175, 80, 0.3)",
+                      },
+                      "&:active": {
+                        outline: "none",
+                        boxShadow: "0 6px 24px rgba(76, 175, 80, 0.3)",
                       },
                     }}
                   >

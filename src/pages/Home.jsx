@@ -16,21 +16,41 @@ export default function Home() {
   const location = useLocation();
 
   useEffect(() => {
-    // Handle scroll to section from location state (after ScrollToTop has run)
-    if (location.state?.scrollTo) {
-      const scrollToSection = () => {
-        const section = document.getElementById(location.state.scrollTo);
+    // Handle scroll to section from location state or hash (after ScrollToTop has run)
+    const scrollToSection = (retryCount = 0) => {
+      // Check for hash in URL first (more direct)
+      const hash = window.location.hash.replace("#", "");
+      const sectionId = hash || location.state?.scrollTo;
+      
+      if (sectionId) {
+        const section = document.getElementById(sectionId);
         if (section) {
-          section.scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          // Retry if section not found yet
-          setTimeout(scrollToSection, 100);
+          // Calculate the exact position accounting for fixed header
+          const header = document.querySelector('header, [role="banner"], .MuiAppBar-root');
+          const headerHeight = header ? header.getBoundingClientRect().height : 80;
+          
+          // Get the section's position relative to the document
+          const sectionRect = section.getBoundingClientRect();
+          const sectionTop = sectionRect.top + window.pageYOffset;
+          
+          // Add extra padding (20px) to ensure section is fully visible
+          const offset = headerHeight + 20;
+          
+          // Scroll to exact position
+          window.scrollTo({
+            top: sectionTop - offset,
+            behavior: "smooth"
+          });
+        } else if (retryCount < 15) {
+          // Retry up to 15 times if section not found yet (1.5 seconds total)
+          setTimeout(() => scrollToSection(retryCount + 1), 100);
         }
-      };
-      // Wait for ScrollToTop to finish (it runs on pathname change)
-      setTimeout(scrollToSection, 300);
-    }
-  }, [location.state]);
+      }
+    };
+    
+    // Wait for ScrollToTop to finish and page to render (it runs on pathname change)
+    setTimeout(() => scrollToSection(), 400);
+  }, [location.state, location.hash]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>

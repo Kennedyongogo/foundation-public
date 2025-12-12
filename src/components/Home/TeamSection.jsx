@@ -19,8 +19,8 @@ import GroupsIcon from "@mui/icons-material/Groups";
 const MotionBox = motion(Box);
 
 const StyledTeamCard = styled(Card)(({ theme }) => ({
-  height: { xs: "280px", sm: "300px" },
-  width: { xs: "250px", sm: "280px", md: "300px" },
+  height: "380px", // Fixed height for consistency
+  width: "280px", // Fixed width for consistency
   borderRadius: "16px",
   overflow: "hidden",
   backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -31,6 +31,10 @@ const StyledTeamCard = styled(Card)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   margin: "0 auto", // Center the cards
+  [theme.breakpoints.down("sm")]: {
+    height: "360px",
+    width: "250px",
+  },
   "&:hover": {
     transform: "translateY(-8px)",
     boxShadow: "0 16px 40px rgba(0,0,0,0.18)",
@@ -229,12 +233,14 @@ export default function TeamSection() {
               {teamMembers.map((member, index) => (
                 <Box key={member.id} sx={{ flex: "0 0 auto" }}>
                   <StyledTeamCard>
-                <CardContent sx={{ p: 0, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
+                <CardContent sx={{ p: 0, textAlign: "center", display: "flex", flexDirection: "column", height: "100%", flex: "1 1 auto" }}>
                   {/* Profile Picture - Full width, edge to edge */}
                   <Box 
                     sx={{ 
                       width: "100%",
-                      height: { xs: "200px", sm: "260px", md: "280px" },
+                      height: "280px", // Fixed height - same for all cards
+                      minHeight: "280px", // Ensure minimum height
+                      flexShrink: 0, // Prevent shrinking
                       overflow: "hidden",
                       cursor: "pointer",
                       transition: "transform 0.2s ease-in-out",
@@ -293,7 +299,7 @@ export default function TeamSection() {
                   </Box>
 
                   {/* Text Content */}
-                  <Box sx={{ p: 2, pb: 1, flex: "1 1 auto", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+                  <Box sx={{ p: 2, pb: 1, flex: "0 0 auto", display: "flex", flexDirection: "column", justifyContent: "flex-start", minHeight: "100px" }}>
 
                     {/* Name */}
                     <Typography
