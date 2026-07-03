@@ -9,7 +9,6 @@ import {
   Alert,
   IconButton,
   Stack,
-  LinearProgress,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { motion } from "framer-motion";
@@ -17,23 +16,21 @@ import {
   ArrowBack,
   Favorite,
   Description as DescriptionIcon,
+  CalendarToday,
   LocationOn,
-  Schedule,
-  People,
-  Category as CategoryIcon,
-  TrendingUp,
   Image as ImageIcon,
   Close as CloseIcon,
-  CalendarToday,
+  Schedule,
 } from "@mui/icons-material";
 import {
   brand,
-  projectCategoryConfig,
-  getProjectCategoryLabel,
+  getPostTheme,
+  getPostImages,
+  getPostImage,
   getStatusLabel,
   getStatusColor,
-  getProjectImages,
-} from "../constants/projectConfig";
+  formatPostDate,
+} from "../constants/postConfig";
 import MissionImageGrid from "../components/Mission/MissionImageGrid";
 
 const MotionBox = motion(Box);
@@ -48,15 +45,6 @@ const sectionSx = {
 };
 
 const contentPad = { px: { xs: 2, sm: 4, md: 5 } };
-
-const formatDate = (dateString) => {
-  if (!dateString) return "N/A";
-  return new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};
 
 const DetailRow = ({ icon: Icon, label, value, color = brand.green }) => (
   <Box
@@ -85,7 +73,15 @@ const DetailRow = ({ icon: Icon, label, value, color = brand.green }) => (
       <Icon fontSize="small" />
     </Box>
     <Box>
-      <Typography variant="caption" sx={{ color: alpha(brand.navy, 0.55), fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+      <Typography
+        variant="caption"
+        sx={{
+          color: alpha(brand.navy, 0.55),
+          fontWeight: 600,
+          textTransform: "uppercase",
+          letterSpacing: "0.04em",
+        }}
+      >
         {label}
       </Typography>
       <Typography variant="body1" sx={{ color: brand.navy, fontWeight: 600, lineHeight: 1.5 }}>
@@ -95,39 +91,39 @@ const DetailRow = ({ icon: Icon, label, value, color = brand.green }) => (
   </Box>
 );
 
-export default function ProjectDetails() {
+export default function PostDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [project, setProject] = useState(null);
+  const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lightbox, setLightbox] = useState({ open: false, url: "", alt: "" });
 
   useEffect(() => {
-    fetchProjectDetails();
+    fetchPost();
   }, [id]);
 
-  const fetchProjectDetails = async () => {
+  const fetchPost = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`/api/public-projects/${id}`);
-      if (!response.ok) throw new Error("Failed to fetch project details");
-      const data = await response.json();
-      if (data.success && data.data) {
-        setProject(data.data);
+      const response = await fetch(`/api/posts/public/${id}`);
+      if (!response.ok) throw new Error("Failed to fetch post details");
+      const result = await response.json();
+      if (result.success && result.data) {
+        setPost(result.data);
       } else {
-        setError("Project not found");
+        setError(result.message || "Post not found");
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Failed to load post");
     } finally {
       setLoading(false);
     }
   };
 
   const handleBack = () => {
-    navigate("/", { state: { scrollTo: "projects-section" } });
+    navigate("/", { state: { scrollTo: "posts-section" } });
   };
 
   const handleGetInvolved = () => {
@@ -142,11 +138,11 @@ export default function ProjectDetails() {
     );
   }
 
-  if (error || !project) {
+  if (error || !post) {
     return (
       <Box sx={{ width: "100%", py: 6, px: { xs: 2, sm: 4 } }}>
         <Alert severity="error" sx={{ mb: 3 }}>
-          {error || "Project not found"}
+          {error || "Post not found"}
         </Alert>
         <Button
           variant="contained"
@@ -154,18 +150,17 @@ export default function ProjectDetails() {
           onClick={handleBack}
           sx={{ bgcolor: brand.navy, textTransform: "none", fontWeight: 600 }}
         >
-          Back to Projects
+          Back to News & Events
         </Button>
       </Box>
     );
   }
 
-  const config = projectCategoryConfig[project.category] || projectCategoryConfig.education;
-  const IconComponent = config.icon;
-  const images = getProjectImages(project);
-  const heroImage = images[0] || null;
-  const statusColor = getStatusColor(project.status);
-  const location = [project.subcounty, project.county].filter(Boolean).join(", ");
+  const theme = getPostTheme(post.type);
+  const IconComponent = theme.Icon;
+  const images = getPostImages(post);
+  const heroImage = getPostImage(post);
+  const statusColor = getStatusColor(post.status, post.type);
 
   return (
     <Box
@@ -176,7 +171,6 @@ export default function ProjectDetails() {
         mt: { xs: "-80px", sm: "-80px", md: 0 },
       }}
     >
-      {/* Hero */}
       <Box
         sx={{
           position: "relative",
@@ -187,19 +181,15 @@ export default function ProjectDetails() {
           overflow: "hidden",
         }}
       >
-        {heroImage ? (
-          <Box
-            component="img"
-            src={heroImage}
-            alt={project.name}
-            sx={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-            onError={(e) => {
-              e.target.src = "/foundation-logo-removebg-preview.png";
-            }}
-          />
-        ) : (
-          <Box sx={{ position: "absolute", inset: 0, background: config.gradient }} />
-        )}
+        <Box
+          component="img"
+          src={heroImage}
+          alt={post.title}
+          sx={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          onError={(e) => {
+            e.target.src = "/foundation-logo-removebg-preview.png";
+          }}
+        />
         <Box
           sx={{
             position: "absolute",
@@ -251,12 +241,12 @@ export default function ProjectDetails() {
               "&:hover": { bgcolor: alpha(brand.gold, 0.28) },
             }}
           >
-            Back to Projects
+            Back to News & Events
           </Button>
 
           <Stack direction="row" alignItems="center" spacing={1} sx={{ alignSelf: { xs: "flex-start", sm: "center" }, flexWrap: "wrap" }}>
             <Chip
-              label={getStatusLabel(project.status)}
+              label={getStatusLabel(post.status, post.type)}
               sx={{
                 bgcolor: alpha("#fff", 0.14),
                 color: "#fff",
@@ -281,7 +271,7 @@ export default function ProjectDetails() {
               <IconComponent sx={{ color: brand.gold, fontSize: 24 }} />
             </Box>
             <Chip
-              label={getProjectCategoryLabel(project.category)}
+              label={theme.label}
               sx={{
                 bgcolor: alpha("#fff", 0.14),
                 color: "#fff",
@@ -314,12 +304,11 @@ export default function ProjectDetails() {
               textShadow: `0 2px 16px ${alpha("#000", 0.35)}`,
             }}
           >
-            {project.name}
+            {post.title}
           </Typography>
         </Box>
       </Box>
 
-      {/* Body */}
       <Box sx={{ width: "100%" }}>
         <MotionBox initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <Box sx={sectionSx}>
@@ -332,14 +321,14 @@ export default function ProjectDetails() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  bgcolor: alpha(config.color, 0.12),
-                  color: config.color,
+                  bgcolor: alpha(theme.color, 0.12),
+                  color: theme.color,
                 }}
               >
                 <DescriptionIcon fontSize="small" />
               </Box>
               <Typography variant="h5" fontWeight={800} color={brand.navy}>
-                About This Project
+                {post.type === "news" ? "Full Story" : "About This Event"}
               </Typography>
             </Stack>
             <Typography
@@ -349,22 +338,15 @@ export default function ProjectDetails() {
                 lineHeight: 1.85,
                 fontSize: { xs: "0.95rem", md: "1.05rem" },
                 whiteSpace: "pre-wrap",
-                mb: 3,
               }}
             >
-              {project.description}
+              {post.content}
             </Typography>
+          </Box>
 
-            <Stack spacing={1.5}>
-              <DetailRow icon={CategoryIcon} label="Category" value={getProjectCategoryLabel(project.category)} color={config.color} />
-              {location && <DetailRow icon={LocationOn} label="Location" value={location} />}
-              {project.target_individual && <DetailRow icon={People} label="Target Audience" value={project.target_individual} />}
-              <DetailRow icon={Schedule} label="Start Date" value={formatDate(project.start_date)} />
-              <DetailRow icon={CalendarToday} label="End Date" value={formatDate(project.end_date)} />
-            </Stack>
-
-            <Box sx={{ mt: 3 }}>
-              <Stack direction="row" alignItems="center" spacing={1.5} mb={2}>
+          {post.type === "event" && (
+            <Box sx={sectionSx}>
+              <Stack direction="row" alignItems="center" spacing={1.5} mb={2.5}>
                 <Box
                   sx={{
                     width: 40,
@@ -377,73 +359,32 @@ export default function ProjectDetails() {
                     color: brand.gold,
                   }}
                 >
-                  <TrendingUp fontSize="small" />
+                  <Schedule fontSize="small" />
                 </Box>
                 <Typography variant="h5" fontWeight={800} color={brand.navy}>
-                  Overall Progress — {project.progress}%
-                </Typography>
-              </Stack>
-              <LinearProgress
-                variant="determinate"
-                value={project.progress || 0}
-                sx={{
-                  height: 10,
-                  borderRadius: 5,
-                  bgcolor: alpha(brand.navy, 0.08),
-                  "& .MuiLinearProgress-bar": {
-                    borderRadius: 5,
-                    bgcolor: project.status === "completed" ? brand.green : config.color,
-                  },
-                }}
-              />
-            </Box>
-          </Box>
-
-          {project.progress_descriptions?.length > 0 && (
-            <Box sx={sectionSx}>
-              <Stack direction="row" alignItems="center" spacing={1.5} mb={2.5}>
-                <Box
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 1.5,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    bgcolor: alpha(brand.blue, 0.12),
-                    color: brand.blue,
-                  }}
-                >
-                  <TrendingUp fontSize="small" />
-                </Box>
-                <Typography variant="h5" fontWeight={800} color={brand.navy}>
-                  Progress Updates
+                  Event Details
                 </Typography>
               </Stack>
               <Stack spacing={1.5}>
-                {project.progress_descriptions.map((update, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      p: 2,
-                      borderRadius: 2,
-                      bgcolor: alpha(brand.navy, 0.03),
-                      border: `1px solid ${alpha(brand.navy, 0.08)}`,
-                    }}
-                  >
-                    <Typography variant="subtitle2" sx={{ color: config.color, fontWeight: 700, mb: 0.5 }}>
-                      Update #{project.progress_descriptions.length - index}
-                      {update.timestamp && (
-                        <Typography component="span" variant="caption" sx={{ color: alpha(brand.navy, 0.5), ml: 1 }}>
-                          {formatDate(update.timestamp)}
-                        </Typography>
-                      )}
-                    </Typography>
-                    <Typography variant="body1" sx={{ color: alpha(brand.navy, 0.8), lineHeight: 1.7 }}>
-                      {update.description}
-                    </Typography>
-                  </Box>
-                ))}
+                {post.start_date && (
+                  <DetailRow
+                    icon={CalendarToday}
+                    label="Start Date"
+                    value={formatPostDate(post.start_date)}
+                    color={theme.color}
+                  />
+                )}
+                {post.end_date && (
+                  <DetailRow
+                    icon={CalendarToday}
+                    label="End Date"
+                    value={formatPostDate(post.end_date)}
+                    color={theme.color}
+                  />
+                )}
+                {post.location && (
+                  <DetailRow icon={LocationOn} label="Location" value={post.location} color={brand.green} />
+                )}
               </Stack>
             </Box>
           )}
@@ -466,7 +407,7 @@ export default function ProjectDetails() {
                   <ImageIcon fontSize="small" />
                 </Box>
                 <Typography variant="h5" fontWeight={800} color={brand.navy}>
-                  Project Gallery
+                  {post.type === "news" ? "Photo Gallery" : "Event Banner"}
                   <Typography component="span" variant="body2" color="text.secondary" sx={{ ml: 1 }}>
                     ({images.length} {images.length === 1 ? "photo" : "photos"})
                   </Typography>
@@ -477,7 +418,7 @@ export default function ProjectDetails() {
                 renderItem={(url, index) => (
                   <Box
                     key={index}
-                    onClick={() => setLightbox({ open: true, url, alt: `${project.name} ${index + 1}` })}
+                    onClick={() => setLightbox({ open: true, url, alt: `${post.title} ${index + 1}` })}
                     sx={{
                       borderRadius: 2,
                       overflow: "hidden",
@@ -493,15 +434,20 @@ export default function ProjectDetails() {
                     <Box
                       component="img"
                       src={url}
-                      alt={`${project.name} ${index + 1}`}
+                      alt={`${post.title} ${index + 1}`}
                       sx={{ width: "100%", height: { xs: 160, sm: 200 }, objectFit: "cover", display: "block" }}
-                      onError={(e) => {
-                        e.target.src = "/foundation-logo-removebg-preview.png";
-                      }}
                     />
                   </Box>
                 )}
               />
+            </Box>
+          )}
+
+          {post.createdAt && (
+            <Box sx={{ ...sectionSx, py: { xs: 2, md: 3 } }}>
+              <Typography variant="body2" sx={{ color: alpha(brand.navy, 0.55), fontWeight: 500 }}>
+                Published: {formatPostDate(post.createdAt)}
+              </Typography>
             </Box>
           )}
 
@@ -515,11 +461,10 @@ export default function ProjectDetails() {
           >
             <Favorite sx={{ fontSize: 40, color: brand.gold, mb: 1 }} />
             <Typography variant="h5" fontWeight={800} color="#fff" mb={1}>
-              Want to Support This Project?
+              {post.type === "event" ? "Interested in This Event?" : "Stay Connected With Us"}
             </Typography>
             <Typography variant="body1" sx={{ color: alpha("#fff", 0.85), mb: 3, maxWidth: 520, mx: "auto" }}>
-              Join Mwalimu Hope Foundation in making a lasting difference. Every contribution helps us reach more
-              communities across Kenya.
+              Join Mwalimu Hope Foundation and be part of the change we create across Kenya.
             </Typography>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
               <Button
@@ -552,7 +497,7 @@ export default function ProjectDetails() {
                   "&:hover": { borderColor: "#fff", bgcolor: alpha("#fff", 0.08) },
                 }}
               >
-                View All Projects
+                View All News & Events
               </Button>
             </Stack>
           </Box>

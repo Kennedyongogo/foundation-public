@@ -1,17 +1,12 @@
 import React from "react";
 import {
   Box,
-  Container,
-  Grid,
   Typography,
-  Link,
   IconButton,
   Chip,
   Divider,
   Fade,
   Slide,
-  Card,
-  CardContent,
 } from "@mui/material";
 import { 
   Facebook, 
@@ -55,10 +50,11 @@ export default function Footer() {
     <Box
       component="footer"
       sx={{
+        width: "100%",
         background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%)",
         color: "white",
         pt: { xs: 2, sm: 3, md: 4 },
-        pb: 1,
+        pb: 0,
         mt: "auto",
         position: "relative",
         overflow: "hidden",
@@ -77,11 +73,21 @@ export default function Footer() {
         }}
       />
       
-      <Container maxWidth={false} sx={{ position: "relative", zIndex: 1, px: { xs: 3, sm: 4, md: 5 } }}>
+      <Box sx={{ position: "relative", zIndex: 1, width: "100%", px: { xs: 3, sm: 4, md: 5 } }}>
         <Fade in timeout={1000}>
           <Box>
-            <Grid container spacing={{ xs: 2, sm: 3, md: 5 }}>
-              <Grid item xs={12} md={4}>
+            <Box
+              sx={{
+                display: { xs: "flex", md: "grid" },
+                flexDirection: { xs: "column", md: "unset" },
+                gridTemplateColumns: { md: "1fr auto 1fr" },
+                gap: { xs: 3, sm: 4, md: 5 },
+                width: "100%",
+                alignItems: { md: "start" },
+              }}
+            >
+              {/* Section 1 — Foundation */}
+              <Box sx={{ justifySelf: { md: "start" }, width: { xs: "100%", md: "auto" } }}>
                 <Slide direction="up" in timeout={1200}>
                   <Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 2 }, mb: { xs: 1, sm: 1.5 } }}>
@@ -247,97 +253,131 @@ export default function Footer() {
                     </Box>
             </Box>
                 </Slide>
-          </Grid>
-              
-              <Grid item xs={12} md={8}>
-                <Box sx={{ display: "flex", width: "100%", gap: { xs: 1, sm: 1.5, md: 2 }, flexDirection: { xs: "column", md: "row" } }}>
-                  {/* Quick Links Column */}
-                  <Box sx={{ flex: 1 }}>
-                    <Slide direction="up" in timeout={1400}>
-                      <Box>
-                        <Typography 
-                          variant="h5" 
-                          sx={{ 
-                            mb: { xs: 1, sm: 1.5 },
-                            fontWeight: 700,
-                            background: "linear-gradient(45deg, #ffffff, #e3f2fd)",
-                            backgroundClip: "text",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                            textShadow: "0 2px 4px rgba(0,0,0,0.3)",
-                            fontSize: { xs: "1.3rem", sm: "1.5rem" },
+              </Box>
+
+              {/* Section 2 — Quick Links */}
+              <Box
+                sx={{
+                  justifySelf: { md: "center" },
+                  width: { xs: "100%", md: "auto" },
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: { xs: "flex-start", md: "center" },
+                  textAlign: { xs: "left", md: "center" },
+                }}
+              >
+                <Slide direction="up" in timeout={1400}>
+                  <Box sx={{ width: { xs: "100%", md: "auto" } }}>
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        mb: { xs: 1, sm: 1.5 },
+                        fontWeight: 700,
+                        background: "linear-gradient(45deg, #ffffff, #e3f2fd)",
+                        backgroundClip: "text",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                        fontSize: { xs: "1.3rem", sm: "1.5rem" },
+                      }}
+                    >
+                      Quick Links
+                    </Typography>
+
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: { xs: 0.5, sm: 0.75 },
+                        alignItems: { xs: "stretch", md: "center" },
+                        width: { xs: "100%", md: "auto" },
+                      }}
+                    >
+                      {[
+                        { label: "Home", icon: <Home />, section: "hero-section", color: "#2196f3" },
+                        { label: "Our Mission", icon: <Favorite />, section: "mission-section", color: "#e91e63" },
+                        { label: "Projects", icon: <School />, section: "projects-section", color: "#4caf50" },
+                        { label: "Contact", icon: <LocalHospital />, section: "contact-section", color: "#ff9800" },
+                      ].map((link, index) => (
+                        <Box
+                          key={index}
+                          component="button"
+                          onClick={() => handleNavigation(link.section)}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: { xs: "flex-start", md: "center" },
+                            gap: { xs: 1, sm: 1.5 },
+                            p: { xs: 0.75, sm: 1 },
+                            px: { md: 2 },
+                            width: { xs: "100%", md: 220 },
+                            background: "rgba(255,255,255,0.05)",
+                            backdropFilter: "blur(10px)",
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            borderRadius: "10px",
+                            color: "white",
+                            textAlign: "center",
+                            cursor: "pointer",
+                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                            "&:hover": {
+                              background: "rgba(255,255,255,0.1)",
+                              transform: { xs: "translateX(6px)", md: "translateY(-2px)" },
+                              borderColor: link.color,
+                              boxShadow: `0 6px 20px ${link.color}30`,
+                            },
                           }}
                         >
-                          Quick Links
-                        </Typography>
-                        
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 0.5, sm: 0.75 } }}>
-                          {[
-                            { label: "Home", icon: <Home />, section: "hero-section", color: "#2196f3" },
-                            { label: "Our Mission", icon: <Favorite />, section: "mission-section", color: "#e91e63" },
-                            { label: "Projects", icon: <School />, section: "projects-section", color: "#4caf50" },
-                            { label: "Contact", icon: <LocalHospital />, section: "contact-section", color: "#ff9800" },
-                          ].map((link, index) => (
-                            <Box
-                              key={index}
-              component="button"
-                              onClick={() => handleNavigation(link.section)}
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: { xs: 1, sm: 1.5 },
-                                p: { xs: 0.75, sm: 1 },
-                                background: "rgba(255,255,255,0.05)",
-                                backdropFilter: "blur(10px)",
-                                border: "1px solid rgba(255,255,255,0.1)",
-                                borderRadius: "10px",
-                                color: "white",
-                                textAlign: "left",
-                                cursor: "pointer",
-                                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                                "&:hover": {
-                                  background: "rgba(255,255,255,0.1)",
-                                  transform: "translateX(6px)",
-                                  borderColor: link.color,
-                                  boxShadow: `0 6px 20px ${link.color}30`,
-                                },
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  color: link.color,
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  width: { xs: 28, sm: 32 },
-                                  height: { xs: 28, sm: 32 },
-                                  borderRadius: "50%",
-                                  background: "rgba(255,255,255,0.1)",
-                                  transition: "all 0.3s ease",
-                                }}
-                              >
-                                {link.icon}
-                              </Box>
-                              <Typography 
-                                variant="body2" 
-                                sx={{ 
-                                  fontWeight: 500,
-                                  fontSize: { xs: "0.8rem", sm: "0.9rem" },
-                                }}
-                              >
-                                {link.label}
-                              </Typography>
-                            </Box>
-                          ))}
+                          <Box
+                            sx={{
+                              color: link.color,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              width: { xs: 28, sm: 32 },
+                              height: { xs: 28, sm: 32 },
+                              borderRadius: "50%",
+                              background: "rgba(255,255,255,0.1)",
+                              transition: "all 0.3s ease",
+                            }}
+                          >
+                            {link.icon}
+                          </Box>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: 500,
+                              fontSize: { xs: "0.8rem", sm: "0.9rem" },
+                            }}
+                          >
+                            {link.label}
+                          </Typography>
                         </Box>
-                      </Box>
-                    </Slide>
+                      ))}
+                    </Box>
                   </Box>
+                </Slide>
+              </Box>
 
-                  {/* Contact Us Column */}
-                  <Box sx={{ flex: 1 }}>
-                    <Slide direction="up" in timeout={1600}>
-                      <Box>
+              {/* Section 3 — Contact Us */}
+              <Box
+                sx={{
+                  justifySelf: { md: "end" },
+                  width: { xs: "100%", md: "auto" },
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: { xs: "flex-start", md: "flex-end" },
+                  textAlign: { xs: "left", md: "right" },
+                }}
+              >
+                <Slide direction="up" in timeout={1600}>
+                  <Box
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: { xs: "flex-start", md: "flex-end" },
+                    }}
+                  >
                         <Typography 
                           variant="h5" 
                           sx={{ 
@@ -354,7 +394,16 @@ export default function Footer() {
                           Contact Us
                         </Typography>
                         
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 0.5, sm: 0.75 } }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: { xs: 0.5, sm: 0.75 },
+                            width: "100%",
+                            maxWidth: { md: 300 },
+                            alignItems: { xs: "stretch", md: "flex-end" },
+                          }}
+                        >
                           {/* Physical Address */}
                           <Box
                             sx={{
@@ -364,13 +413,22 @@ export default function Footer() {
                               border: "1px solid rgba(255,255,255,0.1)",
                               borderRadius: "10px",
                               transition: "all 0.3s ease",
+                              width: "100%",
                               "&:hover": {
                                 background: "rgba(255,255,255,0.08)",
                                 transform: "translateY(-1px)",
                               },
                             }}
                           >
-                            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 }, mb: { xs: 0.25, sm: 0.5 } }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: { md: "flex-end" },
+                                gap: { xs: 0.5, sm: 1 },
+                                mb: { xs: 0.25, sm: 0.5 },
+                              }}
+                            >
                               <Box
                                 sx={{
                                   color: "#4caf50",
@@ -389,10 +447,18 @@ export default function Footer() {
                                 Physical Address
                               </Typography>
                             </Box>
-                            <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", lineHeight: 1.4, fontSize: { xs: "0.7rem", sm: "0.75rem" } }}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "rgba(255,255,255,0.9)",
+                                lineHeight: 1.4,
+                                fontSize: { xs: "0.7rem", sm: "0.75rem" },
+                                textAlign: { md: "right" },
+                              }}
+                            >
                               Meghon Plaza, Bungoma Town,<br />
                               along Moi Avenue
-            </Typography>
+                            </Typography>
                           </Box>
 
                           {/* Postal Address */}
@@ -404,13 +470,22 @@ export default function Footer() {
                               border: "1px solid rgba(255,255,255,0.1)",
                               borderRadius: "10px",
                               transition: "all 0.3s ease",
+                              width: "100%",
                               "&:hover": {
                                 background: "rgba(255,255,255,0.08)",
                                 transform: "translateY(-1px)",
                               },
                             }}
                           >
-                            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 }, mb: { xs: 0.25, sm: 0.5 } }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: { md: "flex-end" },
+                                gap: { xs: 0.5, sm: 1 },
+                                mb: { xs: 0.25, sm: 0.5 },
+                              }}
+                            >
                               <Box
                                 sx={{
                                   color: "#ff9800",
@@ -429,13 +504,29 @@ export default function Footer() {
                                 Postal Address
             </Typography>
                             </Box>
-                            <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", lineHeight: 1.4, fontSize: { xs: "0.7rem", sm: "0.75rem" } }}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "rgba(255,255,255,0.9)",
+                                lineHeight: 1.4,
+                                fontSize: { xs: "0.7rem", sm: "0.75rem" },
+                                textAlign: { md: "right" },
+                              }}
+                            >
                               P.O. Box 2072-50200
-            </Typography>
+                            </Typography>
                           </Box>
 
                           {/* Contact Info */}
-                          <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 0.5, sm: 1 } }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: { xs: 0.5, sm: 1 },
+                              width: "100%",
+                              alignItems: { xs: "flex-start", md: "flex-end" },
+                            }}
+                          >
                             <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 } }}>
                               <Box
                                 sx={{
@@ -477,113 +568,77 @@ export default function Footer() {
                             </Box>
                           </Box>
                         </Box>
-                      </Box>
-                    </Slide>
                   </Box>
-                </Box>
-              </Grid>
-        </Grid>
-            
+                </Slide>
+              </Box>
+            </Box>
+
             {/* Copyright Section */}
             <Fade in timeout={2000}>
-              <Box>
-                <Divider 
-                  sx={{ 
-                    my: 1, 
+              <Box sx={{ width: "100%", mx: { xs: -3, sm: -4, md: -5 } }}>
+                <Divider
+                  sx={{
+                    my: { xs: 2, md: 3 },
                     borderColor: "rgba(255,255,255,0.2)",
-                    "&::before, &::after": {
-                      borderColor: "rgba(255,255,255,0.1)",
-                    },
-                  }} 
+                  }}
                 />
                 <Box
                   sx={{
                     textAlign: "center",
-                    py: 1,
-                    background: "rgba(255,255,255,0.03)",
-                    borderRadius: "12px",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    mb: 0,
+                    py: { xs: 1.5, md: 2 },
+                    px: { xs: 3, sm: 4, md: 5 },
+                    background: "rgba(0,0,0,0.15)",
+                    borderTop: "1px solid rgba(255,255,255,0.12)",
                   }}
                 >
-                  <Typography 
-                    variant="body1" 
-                    sx={{ 
-                      color: "rgba(255,255,255,0.8)",
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "rgba(255,255,255,0.85)",
                       fontWeight: 500,
-                      fontSize: { xs: "0.75rem", sm: "1rem" },
+                      fontSize: { xs: "0.75rem", sm: "0.95rem" },
                     }}
                   >
                     © {new Date().getFullYear()} Mwalimu Hope Foundation. All rights reserved.
                   </Typography>
-                  <Box sx={{ display: "flex", justifyContent: "center", mt: { xs: 0.5, sm: 0.75 } }}>
-                    <Card
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                      gap: 0.5,
+                      mt: { xs: 0.75, sm: 1 },
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
                       sx={{
-                        width: { xs: "auto", sm: "30%" },
-                        minWidth: "fit-content",
-                        background: "linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(25, 118, 210, 0.15) 100%)",
-                        backdropFilter: "blur(10px)",
-                        WebkitBackdropFilter: "blur(10px)",
-                        border: "1px solid rgba(33, 150, 243, 0.3)",
-                        borderRadius: "12px",
-                        boxShadow: "0 4px 20px rgba(33, 150, 243, 0.2)",
-                        transition: "all 0.3s ease",
-                        "&:hover": {
-                          transform: "translateY(-2px)",
-                          boxShadow: "0 6px 30px rgba(33, 150, 243, 0.3)",
-                          borderColor: "rgba(33, 150, 243, 0.5)",
-                          background: "linear-gradient(135deg, rgba(33, 150, 243, 0.25) 0%, rgba(25, 118, 210, 0.2) 100%)",
-                        },
+                        color: "rgba(255,255,255,0.9)",
+                        fontWeight: 600,
+                        fontSize: { xs: "0.75rem", sm: "0.875rem" },
                       }}
                     >
-                    <CardContent sx={{ p: { xs: 0.75, sm: 1 }, "&:last-child": { pb: { xs: 0.75, sm: 1 } } }}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: { xs: 0.5, md: 1 },
-                          textAlign: "center",
-                          flexWrap: "nowrap",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        <Typography 
-                          variant="body2" 
-                          sx={{ 
-                            color: "white",
-                            fontWeight: 600,
-                            fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                            whiteSpace: "nowrap",
-                            display: "inline",
-                          }}
-                        >
-                          Developed by
-                        </Typography>
-                        <Typography 
-                          variant="body2" 
-                          sx={{ 
-                            color: "white",
-                            fontWeight: 600,
-                            fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                            whiteSpace: "nowrap",
-                            display: "inline",
-                          }}
-                        >
-                          Carlvyne Technologies Ltd
-                        </Typography>
-                      </Box>
-                    </CardContent>
-                  </Card>
+                      Developed by
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      component="span"
+                      sx={{
+                        color: "#90caf9",
+                        fontWeight: 700,
+                        fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                      }}
+                    >
+                      Carlvyne Technologies Ltd
+                    </Typography>
                   </Box>
-        </Box>
+                </Box>
               </Box>
             </Fade>
           </Box>
         </Fade>
-      </Container>
+      </Box>
     </Box>
   );
 }

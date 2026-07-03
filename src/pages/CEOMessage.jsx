@@ -1,341 +1,358 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  Container,
-  Button,
-  Paper,
-  useMediaQuery,
-  useTheme,
-  Tooltip,
-} from "@mui/material";
+import { Box, Typography, Button, Stack, Chip } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { motion } from "framer-motion";
 import {
-  RecordVoiceOver,
   ArrowBack,
-  Person,
-  ArrowForward,
+  Favorite,
+  FormatQuote,
+  RecordVoiceOver,
 } from "@mui/icons-material";
+import {
+  brand,
+  ceoMessageParagraphs,
+  impactStats,
+  sectionIcons,
+} from "../constants/aboutConfig";
 
 const MotionBox = motion(Box);
 
+const sectionSx = {
+  width: "100%",
+  p: { xs: 3, sm: 4, md: 5 },
+  bgcolor: "#fff",
+  borderTop: `1px solid ${alpha(brand.navy, 0.08)}`,
+  borderRadius: 0,
+  boxShadow: "none",
+};
+
+const CEO_IMAGE = "/FB_IMG_1765129599101.jpg";
+
 export default function CEOMessage() {
   const navigate = useNavigate();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  
-  // CEO image URL - can be updated when image is available
-  const ceoImageUrl = "/FB_IMG_1765129599101.jpg"; // Set this to the CEO image path when available
-  
-  const buildImageUrl = (imageUrl) => {
-    if (!imageUrl) return "";
-    if (imageUrl.startsWith("http")) return imageUrl;
-    if (imageUrl.startsWith("uploads/")) return `/${imageUrl}`;
-    if (imageUrl.startsWith("/uploads/")) return imageUrl;
-    return imageUrl;
-  };
 
-  const handleBack = () => {
-    navigate("/");
-    setTimeout(() => {
-      const heroSection = document.getElementById("hero-section");
-      if (heroSection) {
-        heroSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, 100);
-  };
+  const handleBack = () => navigate("/");
+  const handleAbout = () => navigate("/about-us");
+  const handleGetInvolved = () => navigate("/", { state: { scrollTo: "contact-section" } });
+
+  const CeoIcon = sectionIcons.ceo;
 
   return (
-    <>
-      {/* Global background styles */}
-      <style>
-        {`
-          * {
-            box-sizing: border-box;
-          }
-          html {
-            height: 100%;
-            overflow-y: scroll;
-            scroll-behavior: smooth;
-          }
-          html, body, #root {
-            background: #f8f9fa !important;
-            background-attachment: fixed !important;
-            margin: 0 !important;
-            padding: 0 !important;
-          }
-          body {
-            min-height: 100%;
-            overflow-x: hidden;
-          }
-          #root {
-            min-height: 100vh;
-          }
-        `}
-      </style>
-
+    <Box
+      sx={{
+        minHeight: "100vh",
+        width: "100%",
+        bgcolor: "#fff",
+        mt: { xs: "-80px", sm: "-80px", md: 0 },
+      }}
+    >
       <Box
         sx={{
           position: "relative",
-          zIndex: 1,
-          background: "transparent",
+          minHeight: { xs: "auto", md: 480 },
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          overflow: "hidden",
         }}
       >
-        <Container
-          maxWidth="xl"
+        <Box
           sx={{
-            pt: { xs: 1, sm: 1.5, md: 2 },
-            pb: { xs: 1, sm: 1.5, md: 2 },
-            px: { xs: 2, sm: 3, md: 4 },
-            position: "relative",
-            zIndex: 1,
+            position: { xs: "relative", md: "absolute" },
+            inset: { md: 0 },
+            width: { xs: "100%", md: "42%" },
+            minHeight: { xs: 380, sm: 420, md: "100%" },
+            flexShrink: 0,
           }}
         >
-          <MotionBox
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+          <Box
+            sx={{
+              position: "absolute",
+              top: { xs: 96, sm: 96, md: 24 },
+              left: 0,
+              zIndex: 20,
+              px: { xs: 2, sm: 4, md: 5 },
+            }}
           >
-            {/* Navigation Button */}
-            <Tooltip title="Back to Home" arrow placement="right">
-              <Button
-                onClick={handleBack}
-                sx={{
-                  mb: { xs: 1, sm: 1.5, md: 2 },
-                  minWidth: "auto",
-                  width: { xs: 28, md: 32 },
-                  height: { xs: 28, md: 32 },
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #667eea, #764ba2)",
-                  color: "white",
-                  minHeight: "auto",
-                  "&:hover": {
-                    background: "linear-gradient(135deg, #5568d3, #653a8b)",
-                    transform: "translateY(-2px) scale(1.05)",
-                    boxShadow: "0 8px 25px rgba(102, 126, 234, 0.4)",
-                  },
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                  "& .MuiSvgIcon-root": {
-                    fontSize: { xs: "1rem", md: "1.2rem" },
-                    transition: "transform 0.3s ease",
-                  },
-                  "&:hover .MuiSvgIcon-root": {
-                    transform: "translateX(-2px)",
-                  },
-                  "&:focus": {
-                    outline: "none",
-                  },
-                  "&:focus-visible": {
-                    outline: "none",
-                  },
-                }}
-              >
-                <ArrowBack />
-              </Button>
-            </Tooltip>
-            {/* Split Layout Container */}
-            <Paper
-              elevation={0}
+            <Button
+              startIcon={<ArrowBack />}
+              onClick={handleBack}
               sx={{
-                display: "flex",
-                flexDirection: { xs: "column", md: "row" },
-                borderRadius: { xs: 2, md: 4 },
-                overflow: "hidden",
-                background: "#ffffff",
-                border: "1px solid #e0e0e0",
-                minHeight: { xs: "auto", md: "300px" },
+                color: "#fff",
+                bgcolor: alpha("#fff", 0.14),
+                border: `1px solid ${alpha("#fff", 0.28)}`,
+                textTransform: "none",
+                fontWeight: 600,
+                borderRadius: 2,
+                backdropFilter: "blur(10px)",
+                boxShadow: `0 4px 20px ${alpha("#000", 0.2)}`,
+                "&:hover": { bgcolor: alpha(brand.gold, 0.28) },
               }}
             >
-              {/* Left Side - CEO Image */}
-              <Box
-                sx={{
-                  width: { xs: "100%", md: "40%" },
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  p: { xs: 1.5, md: 2 },
-                  position: "relative",
-                  background: "transparent",
-                }}
-              >
-                <Box
-                  sx={{
-                    position: "relative",
-                    width: { xs: 150, sm: 180, md: 200 },
-                    height: { xs: 150, sm: 180, md: 200 },
-                  }}
-                >
-                  {/* Circular Image Frame */}
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: "50%",
-                      overflow: "hidden",
-                      border: "6px solid white",
-                      boxShadow: "0 12px 40px rgba(0,0,0,0.2)",
-                      position: "relative",
-                      background: "linear-gradient(135deg, #667eea, #764ba2)",
-                    }}
-                  >
-                    {ceoImageUrl ? (
-                      <Box
-                        component="img"
-                        src={buildImageUrl(ceoImageUrl)}
-                        alt="Simiyu Leviticus - CEO"
-                        sx={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          objectPosition: "center center",
-                        }}
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                          e.target.nextSibling.style.display = "flex";
-                        }}
-                      />
-                    ) : null}
-                    <Box
-                      sx={{
-                        display: ceoImageUrl ? "none" : "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "100%",
-                        height: "100%",
-                        color: "white",
-                      }}
-                    >
-                      <Person
-                        sx={{
-                          fontSize: { xs: "5rem", sm: "6rem", md: "8rem" },
-                        }}
-                      />
-                    </Box>
-                  </Box>
+              Back to Home
+            </Button>
+          </Box>
 
-                  {/* CEO Name Overlay at Bottom Left */}
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      bottom: { xs: -10, md: -15 },
-                      left: { xs: 10, md: 20 },
-                      background: "rgba(255, 255, 255, 0.95)",
-                      backdropFilter: "blur(10px)",
-                      px: { xs: 1.5, md: 2 },
-                      py: { xs: 0.75, md: 1 },
-                      borderRadius: { xs: 1, md: 1.5 },
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.9rem" },
-                        color: "#333",
-                        lineHeight: 1.2,
-                      }}
-                    >
-                      Simiyu Leviticus
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontWeight: 500,
-                        fontSize: { xs: "0.6rem", sm: "0.65rem", md: "0.75rem" },
-                        color: "#666",
-                        lineHeight: 1.2,
-                        mt: 0.25,
-                      }}
-                    >
-                      CEO & Founder
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
+          <Box
+            component="img"
+            src={CEO_IMAGE}
+            alt="Simiyu Leviticus - CEO & Founder"
+            sx={{
+              width: "100%",
+              height: "100%",
+              mt: { xs: "80px", sm: "80px", md: 0 },
+              minHeight: { xs: 300, sm: 340, md: 480 },
+              objectFit: "cover",
+              objectPosition: "center top",
+              display: "block",
+            }}
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
+          />
+          <Box
+            sx={{
+              position: "absolute",
+              top: { xs: 80, md: 0 },
+              left: 0,
+              right: 0,
+              height: 100,
+              background: `linear-gradient(180deg, ${alpha(brand.navy, 0.55)} 0%, transparent 100%)`,
+              pointerEvents: "none",
+            }}
+          />
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              background: {
+                xs: `linear-gradient(180deg, transparent 35%, ${alpha(brand.navy, 0.88)} 100%)`,
+                md: "none",
+              },
+              pointerEvents: "none",
+            }}
+          />
+        </Box>
 
-              {/* Right Side - Message Content */}
-              <Box
-                sx={{
-                  width: { xs: "100%", md: "60%" },
-                  p: { xs: 1.25, sm: 1.5, md: 2 },
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                {/* Main Title */}
-                <Typography
-                  sx={{
-                    fontSize: { xs: "0.875rem", sm: "1rem", md: "1.2rem" },
-                    fontWeight: 700,
-                    background: "linear-gradient(135deg, #667eea, #764ba2)",
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    mb: 1,
-                    lineHeight: 1.2,
-                    fontFamily: "sans-serif",
-                  }}
-                >
-                  MESSAGE FROM CEO
-                </Typography>
+        <Box
+          sx={{
+            position: "relative",
+            width: { xs: "100%", md: "auto" },
+            flex: { md: 1 },
+            background: {
+              xs: brand.navy,
+              md: `linear-gradient(90deg, ${alpha(brand.navy, 0.92)} 0%, ${alpha(brand.navy, 0.78)} 45%, ${alpha(brand.navy, 0.55)} 100%)`,
+            },
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            ml: { md: "38%" },
+            minHeight: { md: 480 },
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 4,
+              background: `linear-gradient(90deg, ${brand.green}, ${brand.gold})`,
+              zIndex: 2,
+            }}
+          />
 
-                {/* Horizontal Line Separator */}
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "2px",
-                    background: "linear-gradient(90deg, #ddd 0%, transparent 100%)",
-                    mb: 1.5,
-                  }}
-                />
-
-                {/* Message Content */}
-                <Typography
-                  variant="body1"
-                  sx={{
-                    lineHeight: 1.8,
-                    fontSize: { xs: "0.85rem", sm: "0.95rem", md: "1rem" },
-                    color: "#666",
-                    mb: 1,
-                    fontFamily: "sans-serif",
-                  }}
-                >
-                  Welcome to Mwalimu Hope Foundation. Since our founding in 2025 in Bungoma, our mission has been to transform lives across Kenya by expanding access to education, mental health support, healthcare, and sustainable livelihoods. Education remains central to our work because we believe it is the key to breaking the cycle of poverty.
-                </Typography>
-
-                <Typography
-                  variant="body1"
-                  sx={{
-                    lineHeight: 1.8,
-                    fontSize: { xs: "0.85rem", sm: "0.95rem", md: "1rem" },
-                    color: "#666",
-                    mb: 1,
-                    fontFamily: "sans-serif",
-                  }}
-                >
-                  With over 500 lives impacted, more than 50 communities reached, and 1,000 volunteers engaged, our progress reflects real stories of hope—children back in school, families becoming economically stable, and individuals receiving much-needed support.
-                </Typography>
-
-                <Typography
-                  variant="body1"
-                  sx={{
-                    lineHeight: 1.8,
-                    fontSize: { xs: "0.85rem", sm: "0.95rem", md: "1rem" },
-                    color: "#666",
-                    fontFamily: "sans-serif",
-                  }}
-                >
-                  I invite you to join us on this journey. Whether through partnerships, donations, or volunteering, your contribution helps us build a brighter, more resilient future for all.
-                </Typography>
-              </Box>
-            </Paper>
-          </MotionBox>
-        </Container>
+          <Box
+            sx={{
+              position: "relative",
+              zIndex: 2,
+              p: { xs: 3, sm: 4, md: 5 },
+              pt: { xs: 2.5, md: 5 },
+            }}
+          >
+            <Chip
+              icon={<RecordVoiceOver sx={{ color: `${brand.gold} !important` }} />}
+              label="Leadership"
+              sx={{
+                mb: 2,
+                bgcolor: alpha("#fff", 0.12),
+                color: "#fff",
+                fontWeight: 700,
+                border: `1px solid ${alpha(brand.gold, 0.4)}`,
+              }}
+            />
+            <Typography
+              variant="overline"
+              sx={{ color: brand.gold, fontWeight: 700, letterSpacing: "0.2em", fontSize: "0.75rem", display: "block" }}
+            >
+              A Word From Our Founder
+            </Typography>
+            <Typography
+              variant="h1"
+              sx={{
+                color: "#fff",
+                fontWeight: 900,
+                fontSize: { xs: "1.75rem", sm: "2.25rem", md: "2.75rem" },
+                lineHeight: 1.15,
+                letterSpacing: "-0.02em",
+                mt: 1,
+                textShadow: `0 2px 16px ${alpha("#000", 0.35)}`,
+              }}
+            >
+              Message From the CEO
+            </Typography>
+            <Typography variant="h6" sx={{ color: alpha("#fff", 0.9), fontWeight: 700, mt: 1.5 }}>
+              Simiyu Leviticus
+            </Typography>
+            <Typography variant="body2" sx={{ color: alpha("#fff", 0.7), fontWeight: 500 }}>
+              CEO & Founder, Mwalimu Hope Foundation
+            </Typography>
+          </Box>
+        </Box>
       </Box>
-    </>
+
+      <MotionBox initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <Box sx={sectionSx}>
+          <Stack direction="row" alignItems="center" spacing={1.5} mb={2.5}>
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: 1.5,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                bgcolor: alpha(brand.gold, 0.15),
+                color: brand.gold,
+              }}
+            >
+              <CeoIcon fontSize="small" />
+            </Box>
+            <Typography variant="h5" fontWeight={800} color={brand.navy}>
+              Our Commitment
+            </Typography>
+          </Stack>
+
+          <FormatQuote
+            sx={{
+              fontSize: 48,
+              color: alpha(brand.gold, 0.25),
+              mb: 1,
+              transform: "rotate(180deg)",
+            }}
+          />
+
+          <Stack spacing={2.5}>
+            {ceoMessageParagraphs.map((paragraph, index) => (
+              <Typography
+                key={index}
+                variant="body1"
+                sx={{
+                  color: alpha(brand.navy, 0.82),
+                  lineHeight: 1.9,
+                  fontSize: { xs: "0.95rem", md: "1.08rem" },
+                  pl: { md: 2 },
+                  borderLeft: index === 0 ? `3px solid ${brand.gold}` : "none",
+                }}
+              >
+                {paragraph}
+              </Typography>
+            ))}
+          </Stack>
+
+          <Typography
+            variant="subtitle1"
+            sx={{ mt: 3, fontWeight: 700, color: brand.navy, fontStyle: "italic" }}
+          >
+            — Simiyu Leviticus
+          </Typography>
+        </Box>
+
+        <Box sx={{ ...sectionSx, bgcolor: alpha(brand.navy, 0.03) }}>
+          <Typography variant="h5" fontWeight={800} color={brand.navy} textAlign="center" mb={3}>
+            Our Impact So Far
+          </Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
+              gap: 2,
+            }}
+          >
+            {impactStats.map((stat) => (
+              <Box
+                key={stat.label}
+                sx={{
+                  p: 3,
+                  borderRadius: 2,
+                  textAlign: "center",
+                  bgcolor: "#fff",
+                  border: `1px solid ${alpha(brand.navy, 0.1)}`,
+                  boxShadow: `0 4px 20px ${alpha(brand.navy, 0.06)}`,
+                }}
+              >
+                <Typography variant="h3" fontWeight={900} color={brand.green} sx={{ fontSize: { xs: "2rem", md: "2.5rem" } }}>
+                  {stat.value}
+                </Typography>
+                <Typography variant="body2" fontWeight={600} color={alpha(brand.navy, 0.65)} sx={{ mt: 0.5 }}>
+                  {stat.label}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        <Box
+          sx={{
+            ...sectionSx,
+            background: `linear-gradient(135deg, ${brand.navy} 0%, ${brand.navyLight} 100%)`,
+            borderTop: "none",
+            textAlign: "center",
+          }}
+        >
+          <Favorite sx={{ fontSize: 40, color: brand.gold, mb: 1 }} />
+          <Typography variant="h5" fontWeight={800} color="#fff" mb={1}>
+            Join Us on This Journey
+          </Typography>
+          <Typography variant="body1" sx={{ color: alpha("#fff", 0.85), mb: 3, maxWidth: 520, mx: "auto" }}>
+            Your partnership, donation, or volunteer time helps us reach more communities across Kenya.
+          </Typography>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
+            <Button
+              variant="contained"
+              size="large"
+              onClick={handleGetInvolved}
+              sx={{
+                bgcolor: brand.green,
+                fontWeight: 700,
+                textTransform: "none",
+                borderRadius: 2,
+                px: 4,
+                boxShadow: `0 8px 24px ${alpha(brand.green, 0.45)}`,
+                "&:hover": { bgcolor: brand.greenLight },
+              }}
+            >
+              Get Involved
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              onClick={handleAbout}
+              sx={{
+                color: "#fff",
+                borderColor: alpha("#fff", 0.4),
+                fontWeight: 600,
+                textTransform: "none",
+                borderRadius: 2,
+                px: 4,
+                "&:hover": { borderColor: "#fff", bgcolor: alpha("#fff", 0.08) },
+              }}
+            >
+              About Us
+            </Button>
+          </Stack>
+        </Box>
+      </MotionBox>
+    </Box>
   );
 }
-

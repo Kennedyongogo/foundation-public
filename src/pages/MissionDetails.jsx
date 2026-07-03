@@ -75,17 +75,11 @@ export default function MissionDetails() {
   };
 
   const handleBack = () => {
-    navigate("/");
-    setTimeout(() => {
-      document.getElementById("mission-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 150);
+    navigate("/", { state: { scrollTo: "mission-section" } });
   };
 
   const handleGetInvolved = () => {
-    navigate("/");
-    setTimeout(() => {
-      document.getElementById("contact-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 150);
+    navigate("/", { state: { scrollTo: "contact-section" } });
   };
 
   if (loading) {

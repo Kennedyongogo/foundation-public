@@ -1,696 +1,611 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
-  Container,
-  Grid,
   Card,
   CardContent,
-  CardMedia,
+  Fade,
   Chip,
   CircularProgress,
-  Alert,
-  Button,
-  Paper,
   IconButton,
-  useMediaQuery,
-  useTheme,
+  Button,
+  LinearProgress,
 } from "@mui/material";
-import { motion } from "framer-motion";
+import { alpha, useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import {
-  VolunteerActivism,
-  LocationOn,
-  Schedule,
-  People,
   ChevronLeft,
   ChevronRight,
-  Category,
+  ArrowForward,
 } from "@mui/icons-material";
+import {
+  brand,
+  projectCategoryConfig,
+  getProjectCategoryLabel,
+  getStatusLabel,
+  getStatusColor,
+  mapPublicProject,
+} from "../../constants/projectConfig";
 
-const MotionBox = motion(Box);
+const carouselArrowSx = (disabled) => ({
+  flexShrink: 0,
+  width: { xs: 44, sm: 52 },
+  height: { xs: 44, sm: 52 },
+  bgcolor: disabled ? alpha(brand.navy, 0.08) : brand.navy,
+  color: disabled ? alpha(brand.navy, 0.35) : "#fff",
+  border: `2px solid ${disabled ? alpha(brand.navy, 0.15) : brand.gold}`,
+  boxShadow: disabled ? "none" : `0 8px 24px ${alpha(brand.navy, 0.25)}`,
+  transition: "all 0.25s ease",
+  "&:hover": disabled
+    ? {}
+    : {
+        bgcolor: brand.navyLight,
+        transform: "scale(1.06)",
+        boxShadow: `0 12px 28px ${alpha(brand.navy, 0.35)}`,
+      },
+});
 
-const getStatusColor = (status) => {
-  const colors = {
-    in_progress: "primary",
-    completed: "success",
-    planning: "warning",
-    on_hold: "error",
-  };
-  return colors[status] || "default";
+const CARD_GAP_PX = 24;
+const VISIBLE_CARDS_LG = 4;
+const VISIBLE_CARDS_MD = 3;
+
+const projectCardWrapSx = {
+  flexShrink: 0,
+  display: "flex",
+  scrollSnapAlign: "start",
+  minHeight: 460,
+  height: 460,
+  width: {
+    md: `calc((100% - ${CARD_GAP_PX * (VISIBLE_CARDS_MD - 1)}px) / ${VISIBLE_CARDS_MD})`,
+    lg: `calc((100% - ${CARD_GAP_PX * (VISIBLE_CARDS_LG - 1)}px) / ${VISIBLE_CARDS_LG})`,
+  },
+  flex: {
+    md: `0 0 calc((100% - ${CARD_GAP_PX * (VISIBLE_CARDS_MD - 1)}px) / ${VISIBLE_CARDS_MD})`,
+    lg: `0 0 calc((100% - ${CARD_GAP_PX * (VISIBLE_CARDS_LG - 1)}px) / ${VISIBLE_CARDS_LG})`,
+  },
 };
 
-const getStatusLabel = (status) => {
-  const labels = {
-    in_progress: "In Progress",
-    completed: "Completed",
-    planning: "Planning",
-    on_hold: "On Hold",
-  };
-  return labels[status] || status;
-};
+const edgeArrowSx = (disabled) => ({
+  ...carouselArrowSx(disabled),
+  width: { xs: 40, sm: 44 },
+  height: { xs: 40, sm: 44 },
+  alignSelf: "center",
+});
 
-const getCategoryLabel = (category) => {
-  const labels = {
-    volunteer: "Volunteer Program",
-    education: "Education",
-    health: "Healthcare",
-    empowerment: "Empowerment",
-    poverty: "Poverty Alleviation",
-    mental_health: "Mental Health",
-  };
-  return labels[category] || category;
+const ProjectCard = ({ project, onViewMore }) => {
+  const [imageError, setImageError] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const config = projectCategoryConfig[project.category] || projectCategoryConfig.education;
+  const IconComponent = config.icon;
+  const images = project.images || [];
+  const hasMultipleImages = images.length > 1;
+  const currentImageUrl = images[currentImageIndex] || null;
+  const statusColor = getStatusColor(project.status);
+
+  useEffect(() => {
+    if (!hasMultipleImages) return;
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [hasMultipleImages, images.length]);
+
+  return (
+    <Card
+      data-project-card
+      elevation={0}
+      sx={{
+        width: "100%",
+        height: "100%",
+        minHeight: 460,
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: 3,
+        overflow: "hidden",
+        border: `1px solid ${alpha(brand.navy, 0.1)}`,
+        bgcolor: "#fff",
+        boxShadow: `0 4px 24px ${alpha(brand.navy, 0.08)}`,
+        transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease",
+        cursor: "pointer",
+        scrollSnapAlign: "start",
+        "&:hover": {
+          transform: "translateY(-10px)",
+          boxShadow: `0 20px 48px ${alpha(brand.navy, 0.16)}`,
+          borderColor: alpha(config.color, 0.35),
+        },
+      }}
+      onClick={() => onViewMore(project)}
+    >
+      <Box sx={{ position: "relative", height: 220, flexShrink: 0, overflow: "hidden" }}>
+        {currentImageUrl && !imageError ? (
+          <>
+            <Box
+              component="img"
+              src={currentImageUrl}
+              alt={project.title}
+              onError={() => setImageError(true)}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                transition: "transform 0.6s ease",
+                ".MuiCard-root:hover &": { transform: "scale(1.05)" },
+              }}
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                background: `linear-gradient(180deg, transparent 40%, ${alpha(brand.navy, 0.75)} 100%)`,
+              }}
+            />
+          </>
+        ) : (
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: `linear-gradient(145deg, ${alpha(config.color, 0.12)}, ${alpha(brand.navy, 0.06)})`,
+            }}
+          >
+            <IconComponent sx={{ fontSize: 72, color: config.color, opacity: 0.85 }} />
+          </Box>
+        )}
+
+        <Chip
+          icon={<IconComponent sx={{ fontSize: "16px !important", color: `${config.color} !important` }} />}
+          label={getProjectCategoryLabel(project.category)}
+          size="small"
+          sx={{
+            position: "absolute",
+            top: 14,
+            left: 14,
+            maxWidth: "calc(100% - 28px)",
+            fontWeight: 700,
+            fontSize: "0.7rem",
+            bgcolor: alpha("#fff", 0.92),
+            color: config.color,
+            border: `1px solid ${alpha(config.color, 0.25)}`,
+            backdropFilter: "blur(8px)",
+            "& .MuiChip-label": { overflow: "hidden", textOverflow: "ellipsis" },
+            "& .MuiChip-icon": { color: config.color },
+          }}
+        />
+
+        <Chip
+          label={getStatusLabel(project.status)}
+          size="small"
+          sx={{
+            position: "absolute",
+            top: 14,
+            right: 14,
+            fontWeight: 700,
+            fontSize: "0.7rem",
+            bgcolor: alpha("#fff", 0.92),
+            color: statusColor,
+            border: `1px solid ${alpha(statusColor, 0.25)}`,
+            backdropFilter: "blur(8px)",
+          }}
+        />
+
+        {hasMultipleImages && (
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 12,
+              left: "50%",
+              transform: "translateX(-50%)",
+              display: "flex",
+              gap: 0.75,
+              zIndex: 2,
+            }}
+          >
+            {images.map((_, idx) => (
+              <Box
+                key={idx}
+                sx={{
+                  width: currentImageIndex === idx ? 22 : 7,
+                  height: 7,
+                  borderRadius: 4,
+                  bgcolor: currentImageIndex === idx ? brand.gold : alpha("#fff", 0.55),
+                  transition: "all 0.3s ease",
+                }}
+              />
+            ))}
+          </Box>
+        )}
+      </Box>
+
+      <CardContent
+        sx={{
+          flex: "1 1 auto",
+          width: "100%",
+          minWidth: 0,
+          minHeight: 0,
+          overflow: "hidden",
+          boxSizing: "border-box",
+          p: { xs: 2, sm: 3 },
+          "&:last-child": { pb: { xs: 2, sm: 3 } },
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+        }}
+      >
+        <Typography
+          variant="h6"
+          component="h3"
+          sx={{
+            fontWeight: 800,
+            color: brand.navy,
+            fontSize: { xs: "1.05rem", sm: "1.15rem" },
+            lineHeight: 1.35,
+            width: "100%",
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            flexShrink: 0,
+          }}
+        >
+          {project.title}
+        </Typography>
+
+        <Typography
+          variant="body2"
+          sx={{
+            color: alpha(brand.navy, 0.65),
+            width: "100%",
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            lineHeight: 1.65,
+            flex: "1 1 auto",
+            minHeight: 0,
+            fontSize: { xs: "0.85rem", sm: "0.9rem" },
+          }}
+        >
+          {project.description}
+        </Typography>
+
+        <Box sx={{ flexShrink: 0, pt: 0.25 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: alpha(brand.navy, 0.55), fontWeight: 600 }}>
+              Progress
+            </Typography>
+            <Typography variant="caption" sx={{ color: brand.navy, fontWeight: 700 }}>
+              {project.progress}%
+            </Typography>
+          </Box>
+          <LinearProgress
+            variant="determinate"
+            value={project.progress}
+            sx={{
+              height: 6,
+              borderRadius: 3,
+              bgcolor: alpha(brand.navy, 0.08),
+              "& .MuiLinearProgress-bar": {
+                borderRadius: 3,
+                bgcolor: project.status === "completed" ? brand.green : config.color,
+              },
+            }}
+          />
+        </Box>
+
+        <Button
+          variant="contained"
+          size="medium"
+          endIcon={<ArrowForward />}
+          fullWidth
+          onClick={(e) => {
+            e.stopPropagation();
+            onViewMore(project);
+          }}
+          sx={{
+            mt: "auto",
+            flexShrink: 0,
+            py: 1.25,
+            fontWeight: 700,
+            textTransform: "none",
+            borderRadius: 2,
+            background: config.gradient,
+            boxShadow: `0 6px 20px ${alpha(config.color, 0.35)}`,
+            "&:hover": {
+              background: config.gradient,
+              filter: "brightness(1.08)",
+              boxShadow: `0 10px 28px ${alpha(config.color, 0.45)}`,
+            },
+          }}
+        >
+          View Project
+        </Button>
+      </CardContent>
+    </Card>
+  );
 };
 
 export default function ProjectsSection() {
   const navigate = useNavigate();
+  const [isVisible, setIsVisible] = useState(false);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [imageIndices, setImageIndices] = useState({}); // Track current image index for each project
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const [slideIndex, setSlideIndex] = useState(0);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const scrollRef = useRef(null);
 
-  // Determine how many cards to show based on screen size
-  const cardsToShow = isMobile ? 1 : isTablet ? 2 : 3;
-  const maxIndex = Math.max(0, projects.length - cardsToShow);
+  const updateScrollButtons = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  }, []);
 
   useEffect(() => {
+    setIsVisible(true);
     fetchProjects();
   }, []);
 
-  // Auto-transition images for projects with multiple images
   useEffect(() => {
-    const interval = setInterval(() => {
-      setImageIndices((prev) => {
-        const newIndices = { ...prev };
-        projects.forEach((project) => {
-          if (project.updateImages && project.updateImages.length > 1) {
-            const currentIdx = newIndices[project.id] || 0;
-            const nextIdx = (currentIdx + 1) % project.updateImages.length;
-            newIndices[project.id] = nextIdx;
-          }
-        });
-        return newIndices;
-      });
-    }, 4000); // Change image every 4 seconds
+    setSlideIndex(0);
+  }, [projects.length]);
 
-    return () => clearInterval(interval);
-  }, [projects]);
+  useEffect(() => {
+    if (isSmallScreen) return undefined;
+    updateScrollButtons();
+    const el = scrollRef.current;
+    if (!el) return undefined;
+    el.addEventListener("scroll", updateScrollButtons, { passive: true });
+    window.addEventListener("resize", updateScrollButtons);
+    return () => {
+      el.removeEventListener("scroll", updateScrollButtons);
+      window.removeEventListener("resize", updateScrollButtons);
+    };
+  }, [projects, loading, updateScrollButtons, isSmallScreen]);
 
   const fetchProjects = async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await fetch("/api/public-projects");
-      if (!response.ok) {
-        throw new Error("Failed to fetch projects");
-      }
+      if (!response.ok) throw new Error("Failed to fetch projects");
       const data = await response.json();
-
       if (data.success && data.data) {
-        // Map API data to component format
-        const mappedProjects = data.data.map((project) => {
-          // Determine project image with robust fallback logic
-          let projectImage = "/foundation-logo.png"; // Default foundation logo
-          
-          if (project.update_images && Array.isArray(project.update_images) && project.update_images.length > 0) {
-            // Find the first valid image path
-            const validImage = project.update_images.find(img => 
-              img && img.path && typeof img.path === 'string' && img.path.trim() !== ''
-            );
-            if (validImage) {
-              projectImage = `/${validImage.path}`;
-            }
-          }
-          
-          // Get all valid images for the project
-          const allImages = [];
-          if (project.update_images && Array.isArray(project.update_images) && project.update_images.length > 0) {
-            project.update_images.forEach(img => {
-              if (img && img.path && typeof img.path === 'string' && img.path.trim() !== '') {
-                allImages.push(`/${img.path}`);
-              }
-            });
-          }
-          // If no images found, use default
-          if (allImages.length === 0) {
-            allImages.push("/foundation-logo.png");
-          }
-          
-          return {
-            id: project.id,
-            title: project.name,
-            description: project.description,
-            image: allImages[0], // First image as default
-            images: allImages, // All images for transitions
-            location: `${project.subcounty}, ${project.county}`,
-            category: project.category,
-            status: project.status,
-            startDate: project.start_date,
-            endDate: project.end_date,
-            progress: project.progress || 0,
-            targetIndividual: project.target_individual,
-            creatorName: project.creator?.full_name,
-            assigneeName: project.assignee?.full_name,
-            updateImages: project.update_images || [],
-          };
-        });
-        setProjects(mappedProjects);
+        setProjects(data.data.map(mapPublicProject));
       } else {
         setProjects([]);
       }
-      setLoading(false);
     } catch (err) {
       setError(err.message);
-      console.error("Error fetching projects:", err);
+      setProjects([]);
+    } finally {
       setLoading(false);
     }
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+  const scrollCarousel = (direction) => {
+    if (isSmallScreen) {
+      setSlideIndex((prev) => Math.max(0, Math.min(projects.length - 1, prev + direction)));
+      return;
+    }
+    const el = scrollRef.current;
+    if (!el) return;
+    const firstWrap = el.querySelector("[data-project-card-wrap]");
+    const gap = CARD_GAP_PX;
+    const step = firstWrap ? firstWrap.offsetWidth + gap : el.clientWidth * 0.85;
+    el.scrollBy({ left: direction * step, behavior: "smooth" });
   };
 
-  const handlePrevious = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
+  const handleViewMore = (project) => {
+    navigate(`/project/${project.id}`);
   };
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
-  };
-
-  const getVisibleProjects = () => {
-    return projects.slice(currentIndex, currentIndex + cardsToShow);
-  };
-
-  const handleViewDetails = (projectId) => {
-    navigate(`/project/${projectId}`);
-  };
+  const showArrows = projects.length > 0;
 
   return (
     <Box
       id="projects-section"
       sx={{
-        pt: 0,
-        pb: 3,
-        px: 0,
+        pt: { xs: 4, md: 6 },
+        pb: { xs: 2, md: 3 },
         width: "100%",
-        backgroundColor: "#f8f9fa",
+        position: "relative",
+        overflow: "hidden",
+        background: `linear-gradient(180deg, ${alpha(brand.green, 0.04)} 0%, #fff 45%, ${alpha(brand.navy, 0.03)} 100%)`,
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: "-20%",
+          left: "-10%",
+          width: "45%",
+          height: "60%",
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${alpha(brand.green, 0.1)} 0%, transparent 70%)`,
+          pointerEvents: "none",
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          bottom: "-15%",
+          right: "-8%",
+          width: "40%",
+          height: "50%",
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${alpha(brand.gold, 0.1)} 0%, transparent 70%)`,
+          pointerEvents: "none",
+        },
       }}
     >
-      <Box
-        sx={{
-          width: "100%",
-        }}
-      >
-        <MotionBox
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
-          <Paper
-            elevation={0}
+      <Box sx={{ width: "100%", position: "relative", zIndex: 1 }}>
+        <Fade in={isVisible} timeout={900}>
+          <Box sx={{ textAlign: "center", mb: { xs: 2, md: 2.5 }, px: { xs: 2, sm: 4 } }}>
+            <Typography
+              variant="overline"
+              sx={{ letterSpacing: "0.2em", fontWeight: 700, color: brand.green, fontSize: "0.75rem" }}
+            >
+              Community Impact
+            </Typography>
+            <Typography
+              variant="h2"
+              sx={{
+                mt: 1,
+                mb: 2,
+                fontWeight: 900,
+                fontSize: { xs: "1.75rem", sm: "2.25rem", md: "2.75rem" },
+                color: brand.navy,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Our Projects
+            </Typography>
+            <Box
+              sx={{
+                width: 72,
+                height: 4,
+                mx: "auto",
+                mb: 2.5,
+                borderRadius: 2,
+                background: `linear-gradient(90deg, ${brand.green}, ${brand.gold})`,
+              }}
+            />
+            <Typography
+              variant="body1"
+              sx={{
+                maxWidth: 820,
+                mx: "auto",
+                px: { xs: 2, sm: 0 },
+                fontSize: { xs: "0.95rem", md: "1.05rem" },
+                lineHeight: 1.75,
+                color: alpha(brand.navy, 0.75),
+              }}
+            >
+              Discover our ongoing and completed community empowerment initiatives across Kenya.
+            </Typography>
+          </Box>
+        </Fade>
+
+        {loading ? (
+          <Box display="flex" justifyContent="center" py={8}>
+            <CircularProgress sx={{ color: brand.green }} />
+          </Box>
+        ) : error ? (
+          <Box textAlign="center" py={4} px={2}>
+            <Typography color="error">{error}</Typography>
+          </Box>
+        ) : projects.length === 0 ? (
+          <Box textAlign="center" py={4} px={2}>
+            <Typography color="text.secondary">No projects available at the moment.</Typography>
+          </Box>
+        ) : isSmallScreen ? (
+          <Box
             sx={{
-              borderRadius: 0,
-              overflow: "hidden",
-              backgroundColor: "white",
-              border: "none",
-              borderTop: "1px solid #e0e0e0",
-              borderBottom: "1px solid #e0e0e0",
-              py: { xs: 1.5, sm: 2, md: 2.5 },
-              px: { xs: 3, sm: 4, md: 5 },
+              display: "flex",
+              alignItems: "stretch",
+              width: "100%",
+              gap: { xs: 0.75, sm: 1 },
+              px: { xs: 0.5, sm: 1 },
             }}
           >
-            <Box>
-              <Box
-                sx={{
-                  textAlign: "center",
-                  mb: 6,
-                }}
+            {showArrows && (
+              <IconButton
+                onClick={() => scrollCarousel(-1)}
+                disabled={slideIndex === 0}
+                aria-label="Previous project"
+                sx={edgeArrowSx(slideIndex === 0)}
               >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 2,
-                    mb: 2,
-                  }}
-                >
-                  <VolunteerActivism
-                    sx={{ fontSize: "2.5rem", color: "primary.main" }}
-                  />
-                  <Typography
-                    variant="h2"
-                    sx={{
-                      fontWeight: 600,
-                      color: "primary.main",
-                      fontSize: "1.5rem",
-                    }}
-                  >
-                    Our Projects
-                  </Typography>
-                </Box>
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  sx={{ maxWidth: 600, mx: "auto", fontSize: "0.875rem" }}
-                >
-                  Discover our ongoing and completed community empowerment initiatives across Kenya
-                </Typography>
-              </Box>
-
-              {loading ? (
-                <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-                  <CircularProgress />
-                </Box>
-              ) : error ? (
-                <Alert severity="error" sx={{ mb: 3 }}>
-                  {error}
-                </Alert>
-              ) : projects.length === 0 ? (
-                <Alert severity="info" sx={{ mb: 3 }}>
-                  No projects available at the moment.
-                </Alert>
-              ) : (
-                <Box>
-                  {/* Navigation Controls */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      mb: 3,
-                    }}
-                  >
-                    <IconButton
-                      onClick={handlePrevious}
-                      disabled={currentIndex === 0}
-                      sx={{
-                        backgroundColor: "primary.main",
-                        color: "white",
-                        "&:hover": {
-                          backgroundColor: "primary.dark",
-                        },
-                        "&:disabled": {
-                          backgroundColor: "grey.300",
-                          color: "grey.500",
-                        },
-                      }}
-                    >
-                      <ChevronLeft />
-                    </IconButton>
-
-                    <Typography variant="body1" color="text.secondary">
-                      Showing {currentIndex + 1}-
-                      {Math.min(currentIndex + cardsToShow, projects.length)} of{" "}
-                      {projects.length} projects
-                    </Typography>
-
-                    <IconButton
-                      onClick={handleNext}
-                      disabled={currentIndex >= maxIndex}
-                      sx={{
-                        backgroundColor: "primary.main",
-                        color: "white",
-                        "&:hover": {
-                          backgroundColor: "primary.dark",
-                        },
-                        "&:disabled": {
-                          backgroundColor: "grey.300",
-                          color: "grey.500",
-                        },
-                      }}
-                    >
-                      <ChevronRight />
-                    </IconButton>
-                  </Box>
-
-                  {/* Projects Gallery */}
-                  <Grid container spacing={3} justifyContent="center">
-                    {getVisibleProjects().map((project, index) => (
-                      <Grid
-                        size={{
-                          xs: 12,
-                          sm: 6,
-                          md: 4,
-                        }}
-                        key={project.id}
-                      >
-                        <MotionBox
-                          initial={{ opacity: 0, y: 20 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: index * 0.1 }}
-                          viewport={{ once: true }}
-                        >
-                          <Card
-                            sx={{
-                              height: { xs: "480px", sm: "520px" },
-                              width: "100%",
-                              display: "flex",
-                              flexDirection: "column",
-                              transition:
-                                "transform 0.3s ease, box-shadow 0.3s ease",
-                              "&:hover": {
-                                transform: "translateY(-8px)",
-                                boxShadow: "0 12px 40px rgba(0,0,0,0.15)",
-                              },
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                position: "relative",
-                                height: isMobile ? "140px" : "180px",
-                                width: "100%",
-                                overflow: "hidden",
-                                backgroundColor: "#f5f5f5",
-                              }}
-                            >
-                              {project.images && project.images.length > 0 ? (
-                                <>
-                                  {project.images.map((img, imgIndex) => {
-                                    const currentImgIndex = imageIndices[project.id] || 0;
-                                    const isActive = imgIndex === currentImgIndex;
-                                    return (
-                                      <Box
-                                        key={imgIndex}
-                                        sx={{
-                                          position: "absolute",
-                                          top: 0,
-                                          left: 0,
-                                          width: "100%",
-                                          height: "100%",
-                                          opacity: isActive ? 1 : 0,
-                                          transition: "opacity 0.8s ease-in-out",
-                                          zIndex: isActive ? 1 : 0,
-                                        }}
-                                      >
-                                        <Box
-                                          component="img"
-                                          src={img}
-                                          alt={`${project.title} - Image ${imgIndex + 1}`}
-                                          sx={{
-                                            width: "100%",
-                                            height: "100%",
-                                            objectFit: "cover",
-                                            display: "block",
-                                          }}
-                                          onError={(e) => {
-                                            e.target.src = "/foundation-logo.png";
-                                          }}
-                                        />
-                                      </Box>
-                                    );
-                                  })}
-                                  {/* Image indicators */}
-                                  {project.images.length > 1 && (
-                                    <Box
-                                      sx={{
-                                        position: "absolute",
-                                        bottom: 8,
-                                        left: "50%",
-                                        transform: "translateX(-50%)",
-                                        display: "flex",
-                                        gap: 0.5,
-                                        zIndex: 2,
-                                      }}
-                                    >
-                                      {project.images.map((_, dotIndex) => {
-                                        const currentImgIndex = imageIndices[project.id] || 0;
-                                        return (
-                                          <Box
-                                            key={dotIndex}
-                                            sx={{
-                                              width: 6,
-                                              height: 6,
-                                              borderRadius: "50%",
-                                              backgroundColor:
-                                                dotIndex === currentImgIndex
-                                                  ? "rgba(255, 255, 255, 0.9)"
-                                                  : "rgba(255, 255, 255, 0.4)",
-                                              transition: "background-color 0.3s ease",
-                                            }}
-                                          />
-                                        );
-                                      })}
-                                    </Box>
-                                  )}
-                                </>
-                              ) : (
-                                <Box
-                                  component="img"
-                                  src={project.image}
-                                  alt={project.title}
-                                  sx={{
-                                    width: "100%",
-                                    height: "100%",
-                                    objectFit: "cover",
-                                  }}
-                                  onError={(e) => {
-                                    e.target.src = "/foundation-logo.png";
-                                  }}
-                                />
-                              )}
-                            </Box>
-                            <CardContent
-                              sx={{
-                                flexGrow: 1,
-                                p: { xs: 2, sm: 3 },
-                                display: "flex",
-                                flexDirection: "column",
-                                minHeight: { xs: "300px", sm: "340px" },
-                              }}
-                            >
-                              <Box sx={{ mb: { xs: 1, sm: 2 } }}>
-                                <Box sx={{ display: "flex", gap: 0.5, mb: { xs: 1, sm: 2 }, flexWrap: "wrap" }}>
-                                  <Chip
-                                    label={getStatusLabel(project.status)}
-                                    color={getStatusColor(project.status)}
-                                    size="small"
-                                  />
-                                  <Chip
-                                    label={getCategoryLabel(project.category)}
-                                    size="small"
-                                    variant="outlined"
-                                    color="primary"
-                                  />
-                                </Box>
-                                <Typography
-                                  variant="h6"
-                                  component="h3"
-                                  sx={{
-                                    fontWeight: 600,
-                                    mb: { xs: 0.5, sm: 1 },
-                                    color: "text.primary",
-                                    fontSize: { xs: "1rem", sm: "1.25rem" },
-                                  }}
-                                >
-                                  {project.title}
-                                </Typography>
-                              </Box>
-
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                sx={{
-                                  mb: { xs: 1, sm: 2 },
-                                  overflow: "hidden",
-                                  display: "-webkit-box",
-                                  WebkitLineClamp: 2,
-                                  WebkitBoxOrient: "vertical",
-                                  lineHeight: 1.4,
-                                  flexGrow: 1,
-                                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                                }}
-                              >
-                                {project.description}
-                              </Typography>
-
-                              <Box sx={{ mb: { xs: 0.5, sm: 1 } }}>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 0.5,
-                                    mb: { xs: 0.25, sm: 0.5 },
-                                  }}
-                                >
-                                  <Category
-                                    sx={{ fontSize: { xs: 12, sm: 14 }, color: "primary.main" }}
-                                  />
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
-                                  >
-                                    {getCategoryLabel(project.category)}
-                                  </Typography>
-                                </Box>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 0.5,
-                                    mb: { xs: 0.25, sm: 0.5 },
-                                  }}
-                                >
-                                  <LocationOn
-                                    sx={{ fontSize: { xs: 12, sm: 14 }, color: "primary.main" }}
-                                  />
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
-                                  >
-                                    {project.location}
-                                  </Typography>
-                                </Box>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 0.5,
-                                    mb: { xs: 0.25, sm: 0.5 },
-                                  }}
-                                >
-                                  <People
-                                    sx={{ fontSize: { xs: 12, sm: 14 }, color: "primary.main" }}
-                                  />
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
-                                  >
-                                    Target: {project.targetIndividual}
-                                  </Typography>
-                                </Box>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 0.5,
-                                    mb: { xs: 0.25, sm: 0.5 },
-                                  }}
-                                >
-                                  <Schedule
-                                    sx={{ fontSize: { xs: 12, sm: 14 }, color: "primary.main" }}
-                                  />
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
-                                  >
-                                    Started: {formatDate(project.startDate)}
-                                  </Typography>
-                                </Box>
-                              </Box>
-
-                              <Box sx={{ mb: { xs: 0.5, sm: 1 } }}>
-                                <Typography
-                                  variant="body2"
-                                  color="text.secondary"
-                                  sx={{ mb: { xs: 0.25, sm: 0.5 }, fontSize: { xs: "0.7rem", sm: "0.8rem" } }}
-                                >
-                                  Progress: {project.progress}%
-                                </Typography>
-                                <Box
-                                  sx={{
-                                    width: "100%",
-                                    height: { xs: 3, sm: 4 },
-                                    backgroundColor: "grey.200",
-                                    borderRadius: 2,
-                                    overflow: "hidden",
-                                  }}
-                                >
-                                  <Box
-                                    sx={{
-                                      width: `${project.progress}%`,
-                                      height: "100%",
-                                      backgroundColor:
-                                        project.status === "completed"
-                                          ? "success.main"
-                                          : "primary.main",
-                                      transition: "width 0.3s ease",
-                                    }}
-                                  />
-                                </Box>
-                              </Box>
-
-                              <Box sx={{ mt: "auto", pt: { xs: 0.5, sm: 1 } }}>
-                                <Button
-                                  variant="outlined"
-                                  size="small"
-                                  fullWidth
-                                  onClick={() => handleViewDetails(project.id)}
-                                  sx={{
-                                    borderColor: "primary.main",
-                                    color: "primary.main",
-                                    fontSize: "0.875rem",
-                                    py: 1,
-                                    "&:hover": {
-                                      borderColor: "primary.dark",
-                                      backgroundColor: "primary.light",
-                                      color: "white",
-                                    },
-                                  }}
-                                >
-                                  View Details
-                                </Button>
-                              </Box>
-                            </CardContent>
-                          </Card>
-                        </MotionBox>
-                      </Grid>
-                    ))}
-                  </Grid>
-
-                  {/* Page Indicators */}
-                  {projects.length > cardsToShow && (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: 1,
-                        mt: 4,
-                      }}
-                    >
-                      {Array.from({
-                        length: Math.ceil(projects.length / cardsToShow),
-                      }).map((_, index) => (
-                        <Box
-                          key={index}
-                          onClick={() => setCurrentIndex(index * cardsToShow)}
-                          sx={{
-                            width: 12,
-                            height: 12,
-                            borderRadius: "50%",
-                            backgroundColor:
-                              Math.floor(currentIndex / cardsToShow) === index
-                                ? "primary.main"
-                                : "grey.300",
-                            cursor: "pointer",
-                            transition: "background-color 0.3s ease",
-                            "&:hover": {
-                              backgroundColor: "primary.light",
-                            },
-                          }}
-                        />
-                      ))}
-                    </Box>
-                  )}
+                <ChevronLeft />
+              </IconButton>
+            )}
+            <Box sx={{ flex: 1, minWidth: 0, py: 1, minHeight: 460 }}>
+              {projects[slideIndex] && (
+                <Box sx={{ height: 460, display: "flex" }}>
+                  <ProjectCard project={projects[slideIndex]} onViewMore={handleViewMore} />
                 </Box>
               )}
             </Box>
-          </Paper>
-        </MotionBox>
+            {showArrows && (
+              <IconButton
+                onClick={() => scrollCarousel(1)}
+                disabled={slideIndex >= projects.length - 1}
+                aria-label="Next project"
+                sx={edgeArrowSx(slideIndex >= projects.length - 1)}
+              >
+                <ChevronRight />
+              </IconButton>
+            )}
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              px: { sm: 2, md: 3 },
+              width: "100%",
+            }}
+          >
+            {showArrows && (
+              <IconButton
+                onClick={() => scrollCarousel(-1)}
+                disabled={!canScrollLeft}
+                aria-label="Scroll projects left"
+                sx={carouselArrowSx(!canScrollLeft)}
+              >
+                <ChevronLeft />
+              </IconButton>
+            )}
+
+            <Box
+              ref={scrollRef}
+              sx={{
+                display: "flex",
+                gap: 3,
+                overflowX: "auto",
+                overflowY: "hidden",
+                flex: 1,
+                minWidth: 0,
+                width: "100%",
+                py: 1,
+                pb: 0,
+                scrollSnapType: "x mandatory",
+                scrollBehavior: "smooth",
+                WebkitOverflowScrolling: "touch",
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                "&::-webkit-scrollbar": { display: "none" },
+              }}
+            >
+              {projects.map((project) => (
+                <Box key={project.id} data-project-card-wrap sx={projectCardWrapSx}>
+                  <ProjectCard project={project} onViewMore={handleViewMore} />
+                </Box>
+              ))}
+            </Box>
+
+            {showArrows && (
+              <IconButton
+                onClick={() => scrollCarousel(1)}
+                disabled={!canScrollRight}
+                aria-label="Scroll projects right"
+                sx={carouselArrowSx(!canScrollRight)}
+              >
+                <ChevronRight />
+              </IconButton>
+            )}
+          </Box>
+        )}
       </Box>
     </Box>
   );
