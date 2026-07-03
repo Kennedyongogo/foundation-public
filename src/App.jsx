@@ -21,6 +21,7 @@ import Chatbot from "./components/Chatbot/Chatbot";
 // Lazy load components
 const Home = lazy(() => import("./pages/Home"));
 const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
+const MissionDetails = lazy(() => import("./pages/MissionDetails"));
 const TeamMemberDetail = lazy(() => import("./pages/TeamMemberDetail"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const CEOMessage = lazy(() => import("./pages/CEOMessage"));
@@ -87,6 +88,16 @@ function App() {
                 <>
                   <PublicHeader />
                   <ProjectDetails />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/mission/:id"
+              element={
+                <>
+                  <PublicHeader />
+                  <MissionDetails />
                   <Footer />
                 </>
               }

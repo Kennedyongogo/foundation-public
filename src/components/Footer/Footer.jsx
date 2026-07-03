@@ -77,7 +77,7 @@ export default function Footer() {
         }}
       />
       
-      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
+      <Container maxWidth={false} sx={{ position: "relative", zIndex: 1, px: { xs: 3, sm: 4, md: 5 } }}>
         <Fade in timeout={1000}>
           <Box>
             <Grid container spacing={{ xs: 2, sm: 3, md: 5 }}>

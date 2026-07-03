@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Box, Container, Tooltip, Button, Fade, Slide } from "@mui/material";
+import { Typography, Box, Tooltip, Button, Fade, Slide } from "@mui/material";
 import Hero1 from "../../assets/images/foundation1.jpg";
 import Hero2 from "../../assets/images/foundation2.jpg";
 import Hero3 from "../../assets/images/foundation3.jpg";
@@ -116,15 +116,14 @@ export default function HeroSection() {
           justifyContent: "center",
           color: "white",
           zIndex: 3,
-          px: { xs: 2, sm: 4, md: 6 },
-          maxWidth: "1400px",
-          margin: "0 auto",
+          width: "100%",
+          px: { xs: 3, sm: 4, md: 5 },
         }}
       >
         <Fade in={isVisible} timeout={1000}>
         <Box
           sx={{
-              maxWidth: "700px",
+              width: "100%",
               animation: "slideInUp 1.2s ease-out",
           }}
         >
@@ -234,7 +233,7 @@ export default function HeroSection() {
             {/* Stats Counter */}
             <Box
               sx={{
-                display: "flex",
+                display: "inline-flex",
                 gap: { xs: 2, sm: 3, md: 4 },
                 flexWrap: "wrap",
                 mb: 6,
@@ -281,10 +280,12 @@ export default function HeroSection() {
           bottom: 0,
           left: 0,
           right: 0,
+          width: "100%",
           display: "flex",
-          justifyContent: "center",
+          justifyContent: { xs: "center", md: "space-around", lg: "space-evenly" },
           gap: 4,
             p: 2.5,
+            px: { xs: 3, sm: 4, md: 5 },
             backgroundColor: "rgba(0,0,0,0.6)",
             backdropFilter: "blur(10px)",
             borderTop: "1px solid rgba(255, 255, 255, 0.1)",

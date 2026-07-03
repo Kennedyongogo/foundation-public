@@ -144,36 +144,19 @@ export default function PublicHeader() {
               }}
               onClick={() => navigate("/")}
               >
-              <img
-                src="/foundation-logo.png"
-                alt="Mwalimu Hope Foundation Logo"
-                style={{
-                  height: scrolled ? "56px" : "64px",
+              <Box
+                component="img"
+                src="/foundation-logo-removebg-preview.png"
+                alt="Mwalimu Hope Foundation - Empowering Minds, Restoring Hope"
+                sx={{
+                  height: { xs: 48, sm: scrolled ? 56 : 64 },
                   width: "auto",
+                  maxWidth: { xs: 160, sm: 200 },
+                  objectFit: "contain",
                   transition: "height 0.4s ease",
-                      filter: scrolled ? "none" : "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
+                  filter: scrolled ? "none" : "drop-shadow(0 4px 8px rgba(0,0,0,0.35))",
                 }}
               />
-              <Box sx={{ ml: 2, display: { xs: "none", sm: "block" } }}>
-                <Typography
-                  sx={{
-                    fontWeight: "700",
-                    fontSize: { sm: "1.1rem", md: "1.25rem" },
-                    color: scrolled ? "primary.main" : "white",
-                    lineHeight: 1.2,
-                      transition: "all 0.3s ease",
-                      textShadow: scrolled ? "none" : "2px 2px 4px rgba(0,0,0,0.3)",
-                      background: scrolled 
-                        ? "linear-gradient(45deg, #2196f3, #1976d2)" 
-                        : "linear-gradient(45deg, #ffffff, #e3f2fd)",
-                      backgroundClip: "text",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  Mwalimu Hope Foundation
-                </Typography>
-              </Box>
             </Box>
             </Fade>
 

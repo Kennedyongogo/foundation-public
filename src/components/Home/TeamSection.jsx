@@ -137,14 +137,14 @@ export default function TeamSection() {
       sx={{
         pt: 0,
         pb: 3,
-        px: { xs: 1, sm: 1.5, md: 2 },
+        px: 0,
+        width: "100%",
         backgroundColor: "#f8f9fa",
       }}
     >
       <Box
         sx={{
-          maxWidth: "1300px",
-          margin: "0 auto",
+          width: "100%",
         }}
       >
         <MotionBox
@@ -154,12 +154,14 @@ export default function TeamSection() {
           viewport={{ once: true }}
         >
           <Paper
-            elevation={3}
+            elevation={0}
             sx={{
-              borderRadius: { xs: 3, md: 4 },
+              borderRadius: 0,
               overflow: "hidden",
               backgroundColor: "white",
-              border: "1px solid #e0e0e0",
+              border: "none",
+              borderTop: "1px solid #e0e0e0",
+              borderBottom: "1px solid #e0e0e0",
               py: { xs: 1.5, sm: 2, md: 2.5 },
               px: { xs: 3, sm: 4, md: 5 },
             }}
