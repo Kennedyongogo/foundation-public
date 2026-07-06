@@ -5,6 +5,7 @@ import { alpha } from "@mui/material/styles";
 import { ArrowForward, RecordVoiceOver } from "@mui/icons-material";
 import {
   brand,
+  orgTagline,
   whoWeAreParagraphs,
   focusAreas,
   values,
@@ -79,7 +80,7 @@ export default function AboutUsSection() {
                 color: alpha(brand.navy, 0.75),
               }}
             >
-              Transforming lives and empowering communities across Kenya.
+              {orgTagline}
             </Typography>
             <Typography
               variant="body1"

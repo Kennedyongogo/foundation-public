@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { contactInfo } from '../../constants/aboutConfig';
 import {
   Box,
   Paper,
@@ -102,7 +103,7 @@ const Chatbot = () => {
       setError('Sorry, I\'m having trouble connecting right now. Please try again later.');
       
       const errorMessage = {
-        text: "I'm sorry, I'm having trouble connecting right now. Please contact us directly at mwalimuhopefoundation@gmail.com or call 0721660901.",
+        text: `I'm sorry, I'm having trouble connecting right now. Please contact us directly at ${contactInfo.email} or call ${contactInfo.phones.join(" or ")}.`,
         isBot: true,
         timestamp: new Date(),
         intent: 'error'

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { AppBar, Toolbar, Box, Typography, Link, Button, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Fade, Slide } from "@mui/material";
 import { Construction, ContactSupport, Home, Menu as MenuIcon, Close, VolunteerActivism, Psychology, Favorite, School, LocalHospital, Groups, RateReview } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
+import { orgTagline } from "../../constants/aboutConfig";
 
 export default function PublicHeader() {
   const navigate = useNavigate();
@@ -147,7 +148,7 @@ export default function PublicHeader() {
               <Box
                 component="img"
                 src="/foundation-logo-removebg-preview.png"
-                alt="Mwalimu Hope Foundation - Empowering Minds, Restoring Hope"
+                alt={`Mwalimu Hope Foundation - ${orgTagline}`}
                 sx={{
                   height: { xs: 48, sm: scrolled ? 56 : 64 },
                   width: "auto",

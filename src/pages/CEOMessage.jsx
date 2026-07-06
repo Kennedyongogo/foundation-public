@@ -61,8 +61,10 @@ export default function CEOMessage() {
             position: { xs: "relative", md: "absolute" },
             inset: { md: 0 },
             width: { xs: "100%", md: "42%" },
-            minHeight: { xs: 380, sm: 420, md: "100%" },
+            height: { xs: 300, sm: 340, md: 480 },
             flexShrink: 0,
+            overflow: "hidden",
+            bgcolor: { xs: brand.navy, md: "transparent" },
           }}
         >
           <Box
@@ -96,12 +98,13 @@ export default function CEOMessage() {
           <Box
             component="img"
             src={CEO_IMAGE}
-            alt="Simiyu Leviticus - CEO & Founder"
+            alt="Leviticus Simiyu - CEO & Founder"
             sx={{
+              position: "absolute",
+              left: 0,
               width: "100%",
-              height: "100%",
-              mt: { xs: "80px", sm: "80px", md: 0 },
-              minHeight: { xs: 300, sm: 340, md: 480 },
+              top: { xs: 80, sm: 80, md: 0 },
+              height: { xs: 300, sm: 340, md: 480 },
               objectFit: "cover",
               objectPosition: "center top",
               display: "block",
@@ -202,10 +205,10 @@ export default function CEOMessage() {
               Message From the CEO
             </Typography>
             <Typography variant="h6" sx={{ color: alpha("#fff", 0.9), fontWeight: 700, mt: 1.5 }}>
-              Simiyu Leviticus
+              Leviticus Simiyu
             </Typography>
             <Typography variant="body2" sx={{ color: alpha("#fff", 0.7), fontWeight: 500 }}>
-              CEO & Founder, Mwalimu Hope Foundation
+              Chief Executive Officer & Founder, Mwalimu Hope Foundation
             </Typography>
           </Box>
         </Box>
@@ -264,7 +267,7 @@ export default function CEOMessage() {
             variant="subtitle1"
             sx={{ mt: 3, fontWeight: 700, color: brand.navy, fontStyle: "italic" }}
           >
-            — Simiyu Leviticus
+            — Leviticus Simiyu
           </Typography>
         </Box>
 

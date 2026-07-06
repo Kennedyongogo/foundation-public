@@ -22,6 +22,7 @@ import {
   LocalHospital
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
+import { orgTagline, missionText, contactInfo } from "../../constants/aboutConfig";
 
 export default function Footer() {
   const navigate = useNavigate();
@@ -148,18 +149,7 @@ export default function Footer() {
                           fontSize: { xs: "1rem", sm: "1.25rem" },
                         }}
                       >
-                        Empowering Minds, Restoring Hope.
-                      </Typography>
-                      <Typography 
-                        variant="body1" 
-                        sx={{ 
-                          mb: 0.5,
-                          lineHeight: 1.6,
-                          color: "rgba(255,255,255,0.9)",
-                          fontSize: { xs: "0.8rem", sm: "1rem" },
-                        }}
-                      >
-                        Building a brighter future for Kenya through education,
+                        {orgTagline}
                       </Typography>
                       <Typography 
                         variant="body1" 
@@ -170,7 +160,7 @@ export default function Footer() {
                           fontSize: { xs: "0.8rem", sm: "1rem" },
                         }}
                       >
-                        mental health awareness, poverty alleviation, and community empowerment.
+                        {missionText}
                       </Typography>
                     </Box>
 
@@ -456,8 +446,7 @@ export default function Footer() {
                                 textAlign: { md: "right" },
                               }}
                             >
-                              Meghon Plaza, Bungoma Town,<br />
-                              along Moi Avenue
+                              {contactInfo.address}
                             </Typography>
                           </Box>
 
@@ -513,7 +502,7 @@ export default function Footer() {
                                 textAlign: { md: "right" },
                               }}
                             >
-                              P.O. Box 2072-50200
+                              {contactInfo.poBox}
                             </Typography>
                           </Box>
 
@@ -527,25 +516,27 @@ export default function Footer() {
                               alignItems: { xs: "flex-start", md: "flex-end" },
                             }}
                           >
-                            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 } }}>
-                              <Box
-                                sx={{
-                                  color: "#2196f3",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  width: { xs: 20, sm: 24 },
-                                  height: { xs: 20, sm: 24 },
-                                  borderRadius: "50%",
-                                  background: "rgba(33, 150, 243, 0.1)",
-                                }}
-                              >
-                                <Phone sx={{ fontSize: { xs: "12px", sm: "14px" } }} />
+                            {contactInfo.phones.map((phone) => (
+                              <Box key={phone} sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 } }}>
+                                <Box
+                                  sx={{
+                                    color: "#2196f3",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    width: { xs: 20, sm: 24 },
+                                    height: { xs: 20, sm: 24 },
+                                    borderRadius: "50%",
+                                    background: "rgba(33, 150, 243, 0.1)",
+                                  }}
+                                >
+                                  <Phone sx={{ fontSize: { xs: "12px", sm: "14px" } }} />
+                                </Box>
+                                <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", fontSize: { xs: "0.7rem", sm: "0.75rem" } }}>
+                                  {phone}
+                                </Typography>
                               </Box>
-                              <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", fontSize: { xs: "0.7rem", sm: "0.75rem" } }}>
-                                0721660901
-            </Typography>
-                            </Box>
+                            ))}
                             
                             <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 } }}>
                               <Box
@@ -563,7 +554,7 @@ export default function Footer() {
                                 <Email sx={{ fontSize: { xs: "12px", sm: "14px" } }} />
                               </Box>
                               <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", fontSize: { xs: "0.7rem", sm: "0.75rem" } }}>
-                                mwalimuhopefoundation@gmail.com
+                                {contactInfo.email}
             </Typography>
                             </Box>
                           </Box>

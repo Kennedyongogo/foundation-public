@@ -24,6 +24,7 @@ import {
   buildImageUrl,
   getCategoryImages,
 } from "../../constants/missionCategoryConfig";
+import { whoWeAreParagraphs } from "../../constants/aboutConfig";
 
 const carouselArrowSx = (disabled) => ({
   flexShrink: 0,
@@ -448,9 +449,7 @@ export default function ServicesSection() {
                 overflowWrap: "break-word",
               }}
             >
-              Mwalimu Hope Foundation is a charitable foundation established to champion education,
-              mental health awareness, poverty alleviation, and community empowerment initiatives in
-              Kenya.
+              {whoWeAreParagraphs[0]}
             </Typography>
             <Box
               sx={{
@@ -462,9 +461,9 @@ export default function ServicesSection() {
               }}
             >
               {[
-                { label: "Empowering Minds", color: brand.blue },
+                { label: "Empowering Communities", color: brand.blue },
                 { label: "Restoring Hope", color: "#e91e63" },
-                { label: "Building Kenya's Future", color: brand.green },
+                { label: "Transforming Lives", color: brand.green },
               ].map((tag) => (
                 <Chip
                   key={tag.label}

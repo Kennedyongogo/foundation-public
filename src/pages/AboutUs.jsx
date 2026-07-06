@@ -9,9 +9,11 @@ import {
   LocationOn,
   Email,
   Groups,
+  Phone,
 } from "@mui/icons-material";
 import {
   brand,
+  orgTagline,
   whoWeAreParagraphs,
   visionText,
   missionText,
@@ -19,6 +21,10 @@ import {
   values,
   leadership,
   contactInfo,
+  institutionalProfile,
+  achievements,
+  partners,
+  governanceNote,
   sectionIcons,
 } from "../constants/aboutConfig";
 
@@ -140,7 +146,7 @@ export default function AboutUs() {
               mx: "auto",
             }}
           >
-            Transforming lives and empowering communities across Kenya.
+            {orgTagline}
           </Typography>
         </Box>
       </Box>
@@ -162,6 +168,42 @@ export default function AboutUs() {
               {paragraph}
             </Typography>
           ))}
+        </Box>
+
+        <Box sx={{ ...sectionSx, bgcolor: alpha(brand.navy, 0.02) }}>
+          <SectionHeader icon={sectionIcons.institutional} title="Institutional Profile" color={brand.navy} />
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+              gap: 2,
+            }}
+          >
+            {[
+              { label: "Official Name", value: institutionalProfile.fullName },
+              { label: "Acronym", value: institutionalProfile.acronym },
+              { label: "Legal Status", value: institutionalProfile.legalStatus },
+              { label: "Registration", value: `${institutionalProfile.registrationDate}, ${institutionalProfile.registrationPlace}` },
+              { label: "Tax Status", value: institutionalProfile.taxStatus },
+            ].map(({ label, value }) => (
+              <Box
+                key={label}
+                sx={{
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: "#fff",
+                  border: `1px solid ${alpha(brand.navy, 0.08)}`,
+                }}
+              >
+                <Typography variant="caption" fontWeight={700} color={brand.green} sx={{ textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  {label}
+                </Typography>
+                <Typography variant="body2" sx={{ color: alpha(brand.navy, 0.8), mt: 0.5, lineHeight: 1.7 }}>
+                  {value}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
         </Box>
 
         <Box
@@ -244,8 +286,8 @@ export default function AboutUs() {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(3, 1fr)", md: "repeat(5, 1fr)" },
-              gap: 1.5,
+              gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+              gap: 2,
             }}
           >
             {values.map((value) => {
@@ -254,33 +296,34 @@ export default function AboutUs() {
                 <Box
                   key={value.name}
                   sx={{
-                    p: 2,
+                    p: 2.5,
                     borderRadius: 2,
-                    textAlign: "center",
                     border: `1px solid ${alpha(value.color, 0.2)}`,
                     bgcolor: "#fff",
-                    transition: "transform 0.25s ease",
-                    "&:hover": { transform: "translateY(-4px)" },
                   }}
                 >
-                  <Box
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      mx: "auto",
-                      mb: 1,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      bgcolor: alpha(value.color, 0.12),
-                      color: value.color,
-                    }}
-                  >
-                    <Icon fontSize="small" />
-                  </Box>
-                  <Typography variant="caption" fontWeight={700} color={brand.navy} sx={{ lineHeight: 1.4 }}>
-                    {value.name}
+                  <Stack direction="row" spacing={1.5} alignItems="flex-start" mb={1}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 1.5,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        bgcolor: alpha(value.color, 0.12),
+                        color: value.color,
+                        flexShrink: 0,
+                      }}
+                    >
+                      <Icon fontSize="small" />
+                    </Box>
+                    <Typography variant="subtitle1" fontWeight={800} color={brand.navy}>
+                      {value.name}
+                    </Typography>
+                  </Stack>
+                  <Typography variant="body2" sx={{ color: alpha(brand.navy, 0.72), lineHeight: 1.75 }}>
+                    {value.description}
                   </Typography>
                 </Box>
               );
@@ -289,11 +332,72 @@ export default function AboutUs() {
         </Box>
 
         <Box sx={sectionSx}>
-          <SectionHeader icon={sectionIcons.contact} title="Contact & Leadership" color={brand.green} />
+          <SectionHeader icon={sectionIcons.achievements} title="Key Achievements" color={brand.green} />
           <Box
             sx={{
               display: "grid",
               gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+              gap: 2,
+            }}
+          >
+            {achievements.map((item) => (
+              <Box
+                key={item.label}
+                sx={{
+                  p: 2.5,
+                  borderRadius: 2,
+                  textAlign: "center",
+                  border: `1px solid ${alpha(brand.green, 0.2)}`,
+                  bgcolor: alpha(brand.green, 0.04),
+                }}
+              >
+                <Typography variant="h3" fontWeight={900} color={brand.green} sx={{ fontSize: { xs: "2rem", md: "2.25rem" } }}>
+                  {item.value}
+                </Typography>
+                <Typography variant="subtitle2" fontWeight={700} color={brand.navy} sx={{ mt: 0.5, mb: 1 }}>
+                  {item.label}
+                </Typography>
+                <Typography variant="body2" sx={{ color: alpha(brand.navy, 0.7), lineHeight: 1.7, textAlign: "left" }}>
+                  {item.detail}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        <Box sx={{ ...sectionSx, bgcolor: alpha(brand.blue, 0.03) }}>
+          <SectionHeader icon={sectionIcons.partners} title="Strategic Partners" color={brand.blue} />
+          <Stack spacing={2}>
+            {partners.map((partner) => (
+              <Box
+                key={partner.name}
+                sx={{
+                  p: 2.5,
+                  borderRadius: 2,
+                  bgcolor: "#fff",
+                  border: `1px solid ${alpha(brand.blue, 0.15)}`,
+                }}
+              >
+                <Typography variant="subtitle1" fontWeight={700} color={brand.navy} mb={0.5}>
+                  {partner.name}
+                </Typography>
+                <Typography variant="body2" sx={{ color: alpha(brand.navy, 0.72), lineHeight: 1.75 }}>
+                  {partner.description}
+                </Typography>
+              </Box>
+            ))}
+          </Stack>
+        </Box>
+
+        <Box sx={sectionSx}>
+          <SectionHeader icon={sectionIcons.contact} title="Contact & Leadership" color={brand.green} />
+          <Typography variant="body2" sx={{ color: alpha(brand.navy, 0.7), mb: 2.5, lineHeight: 1.75 }}>
+            {governanceNote}
+          </Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" },
               gap: 2,
             }}
           >
@@ -320,6 +424,22 @@ export default function AboutUs() {
               </Stack>
               <Typography variant="body2" sx={{ color: alpha(brand.navy, 0.75), lineHeight: 1.7 }}>
                 {contactInfo.email}
+              </Typography>
+            </Box>
+            <Box sx={{ p: 2.5, borderRadius: 2, bgcolor: alpha(brand.navy, 0.03), border: `1px solid ${alpha(brand.navy, 0.08)}` }}>
+              <Stack direction="row" spacing={1.5} mb={1.5}>
+                <Phone sx={{ color: brand.green }} />
+                <Typography variant="subtitle2" fontWeight={700} color={brand.navy}>
+                  Phone
+                </Typography>
+              </Stack>
+              {contactInfo.phones.map((phone) => (
+                <Typography key={phone} variant="body2" sx={{ color: alpha(brand.navy, 0.75), lineHeight: 1.7 }}>
+                  {phone}
+                </Typography>
+              ))}
+              <Typography variant="caption" sx={{ color: alpha(brand.navy, 0.55), mt: 1, display: "block" }}>
+                {contactInfo.liaison}
               </Typography>
             </Box>
             <Box sx={{ p: 2.5, borderRadius: 2, bgcolor: alpha(brand.navy, 0.03), border: `1px solid ${alpha(brand.navy, 0.08)}` }}>

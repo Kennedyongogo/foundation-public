@@ -5,6 +5,7 @@ import Hero1 from "../../assets/images/foundation1.jpg";
 import Hero2 from "../../assets/images/foundation2.jpg";
 import Hero3 from "../../assets/images/foundation3.jpg";
 import { School, VolunteerActivism, Psychology, ArrowForward, RecordVoiceOver } from "@mui/icons-material";
+import { impactStats, orgTagline } from "../../constants/aboutConfig";
 
 export default function HeroSection() {
   const navigate = useNavigate();
@@ -154,7 +155,7 @@ export default function HeroSection() {
                 color: "#e3f2fd",
             }}
           >
-            Empowering Minds, Restoring Hope
+            {orgTagline}
           </Typography>
             
             {/* Enhanced Call-to-Action Button */}
@@ -255,18 +256,12 @@ export default function HeroSection() {
                 },
               }}
             >
-              <Box>
-                <Typography className="number">500+</Typography>
-                <Typography className="label">Lives Changed</Typography>
+              {impactStats.map((stat) => (
+              <Box key={stat.label}>
+                <Typography className="number">{stat.value}</Typography>
+                <Typography className="label">{stat.label}</Typography>
               </Box>
-              <Box>
-                <Typography className="number">50+</Typography>
-                <Typography className="label">Communities</Typography>
-              </Box>
-              <Box>
-                <Typography className="number">1000+</Typography>
-                <Typography className="label">Volunteers</Typography>
-          </Box>
+              ))}
         </Box>
           </Box>
         </Fade>
