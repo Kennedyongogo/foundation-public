@@ -14,7 +14,7 @@ import { HOME } from "../components/Home/homeShared";
 
 const MotionBox = motion(Box);
 
-const CEO_IMAGE = "/FB_IMG_1765129599101.jpg";
+const CEO_IMAGE = "/ceo-leviticus-simiyu.jpg";
 const CEO_NAME = "Leviticus Simiyu";
 const CEO_TITLE = "Chief Executive Officer & Founder";
 
