@@ -6,46 +6,56 @@ import {
   Group,
   EmojiPeople,
 } from "@mui/icons-material";
+import { BRAND } from "../brand";
 
+/** Legacy keys mapped to old paper / deep umber / morpho blue */
 export const brand = {
-  navy: "#0E3B5E",
-  navyLight: "#14527a",
-  green: "#438B3E",
-  greenLight: "#5da358",
-  gold: "#F9A825",
-  blue: "#0078D4",
+  navy: BRAND.deepUmber,
+  navyLight: BRAND.deepUmberMid,
+  green: BRAND.morphoBlue,
+  greenLight: BRAND.morphoBlueMuted,
+  gold: BRAND.morphoBlue,
+  blue: BRAND.morphoBlueDark,
+  oldPaper: BRAND.oldPaper,
+  oldPaperSoft: BRAND.oldPaperSoft,
+  deepUmber: BRAND.deepUmber,
+  deepUmberDark: BRAND.deepUmberDark,
+  deepUmberMid: BRAND.deepUmberMid,
+  morphoBlue: BRAND.morphoBlue,
+  morphoBlueDark: BRAND.morphoBlueDark,
+  morphoBlueMuted: BRAND.morphoBlueMuted,
 };
 
 export const categoryConfig = {
   educational_support: {
     icon: School,
-    color: brand.blue,
-    gradient: `linear-gradient(135deg, ${brand.blue}, #42a5f5)`,
+    color: BRAND.morphoBlue,
+    gradient: `linear-gradient(135deg, ${BRAND.morphoBlue}, ${BRAND.morphoBlueMuted})`,
   },
   mental_health_awareness: {
     icon: Psychology,
-    color: "#e91e63",
-    gradient: "linear-gradient(135deg, #e91e63, #f06292)",
+    color: BRAND.deepUmberMid,
+    gradient: `linear-gradient(135deg, ${BRAND.deepUmber}, ${BRAND.deepUmberMid})`,
   },
   poverty_alleviation: {
     icon: VolunteerActivism,
-    color: brand.green,
-    gradient: `linear-gradient(135deg, ${brand.green}, ${brand.greenLight})`,
+    color: BRAND.morphoBlueDark,
+    gradient: `linear-gradient(135deg, ${BRAND.morphoBlueDark}, ${BRAND.morphoBlue})`,
   },
   community_empowerment: {
     icon: Group,
-    color: brand.gold,
-    gradient: `linear-gradient(135deg, ${brand.gold}, #fbc02d)`,
+    color: BRAND.deepUmber,
+    gradient: `linear-gradient(135deg, ${BRAND.deepUmberDark}, ${BRAND.deepUmber})`,
   },
   healthcare_access: {
     icon: LocalHospital,
-    color: "#9c27b0",
-    gradient: "linear-gradient(135deg, #9c27b0, #ba68c8)",
+    color: BRAND.morphoBlue,
+    gradient: `linear-gradient(135deg, ${BRAND.morphoBlueDark}, ${BRAND.morphoBlueMuted})`,
   },
   youth_development: {
     icon: EmojiPeople,
-    color: "#00bcd4",
-    gradient: "linear-gradient(135deg, #00bcd4, #4dd0e1)",
+    color: BRAND.morphoBlueMuted,
+    gradient: `linear-gradient(135deg, ${BRAND.morphoBlue}, ${BRAND.morphoBlueMuted})`,
   },
 };
 

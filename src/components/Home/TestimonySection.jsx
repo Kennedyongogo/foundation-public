@@ -28,30 +28,16 @@ import {
 } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import { brand } from "../../constants/missionCategoryConfig";
+import { homeCarouselArrowSx, homeSectionShellSx, HOME } from "./homeShared";
+import SectionHeader from "./SectionHeader";
 
 const testimonyTheme = {
-  color: brand.gold,
-  gradient: `linear-gradient(135deg, ${brand.gold}, #fbc02d)`,
-  heroGradient: `linear-gradient(145deg, ${brand.navy} 0%, ${brand.navyLight} 55%, ${alpha(brand.gold, 0.35)} 100%)`,
+  color: HOME.morphoBlue,
+  gradient: `linear-gradient(135deg, ${HOME.morphoBlueDark}, ${HOME.morphoBlue})`,
+  heroGradient: `linear-gradient(145deg, ${HOME.deepUmberDark} 0%, ${HOME.deepUmber} 55%, ${alpha(HOME.morphoBlue, 0.4)} 100%)`,
 };
 
-const carouselArrowSx = (disabled) => ({
-  flexShrink: 0,
-  width: { xs: 44, sm: 52 },
-  height: { xs: 44, sm: 52 },
-  bgcolor: disabled ? alpha(brand.navy, 0.08) : brand.navy,
-  color: disabled ? alpha(brand.navy, 0.35) : "#fff",
-  border: `2px solid ${disabled ? alpha(brand.navy, 0.15) : brand.gold}`,
-  boxShadow: disabled ? "none" : `0 8px 24px ${alpha(brand.navy, 0.25)}`,
-  transition: "all 0.25s ease",
-  "&:hover": disabled
-    ? {}
-    : {
-        bgcolor: brand.navyLight,
-        transform: "scale(1.06)",
-        boxShadow: `0 12px 28px ${alpha(brand.navy, 0.35)}`,
-      },
-});
+const carouselArrowSx = homeCarouselArrowSx;
 
 const edgeArrowSx = (disabled) => ({
   ...carouselArrowSx(disabled),
@@ -152,7 +138,7 @@ const TestimonyCard = ({ testimony }) => (
           left: 0,
           right: 0,
           height: 3,
-          background: `linear-gradient(90deg, ${brand.green}, ${brand.gold})`,
+          background: `linear-gradient(90deg, ${HOME.morphoBlue}, ${HOME.oldPaper})`,
         }}
       />
       <Box
@@ -177,7 +163,7 @@ const TestimonyCard = ({ testimony }) => (
             alignItems: "center",
             justifyContent: "center",
             bgcolor: alpha("#fff", 0.18),
-            border: `2px solid ${alpha(brand.gold, 0.55)}`,
+            border: `2px solid ${alpha(HOME.morphoBlue, 0.65)}`,
             color: "#fff",
             fontWeight: 800,
             fontSize: "1.1rem",
@@ -189,11 +175,12 @@ const TestimonyCard = ({ testimony }) => (
         <Typography
           variant="subtitle1"
           sx={{
-            color: "#fff",
+            color: HOME.oldPaperSoft,
             fontWeight: 800,
             textAlign: "center",
             lineHeight: 1.3,
             fontSize: { xs: "0.95rem", sm: "1.05rem" },
+            fontFamily: HOME.fontBody,
           }}
         >
           {testimony.name}
@@ -202,7 +189,7 @@ const TestimonyCard = ({ testimony }) => (
           value={testimony.rating}
           readOnly
           size="small"
-          icon={<StarIcon fontSize="inherit" sx={{ color: brand.gold }} />}
+          icon={<StarIcon fontSize="inherit" sx={{ color: HOME.morphoBlueMuted }} />}
           emptyIcon={<StarIcon fontSize="inherit" sx={{ color: alpha("#fff", 0.35) }} />}
         />
       </Box>
@@ -488,84 +475,15 @@ export default function TestimonySection() {
   };
 
   return (
-    <Box
-      id="testimonials-section"
-      sx={{
-        pt: { xs: 4, md: 6 },
-        pb: { xs: 2, md: 3 },
-        width: "100%",
-        position: "relative",
-        overflow: "hidden",
-        background: `linear-gradient(180deg, ${alpha(brand.navy, 0.03)} 0%, #fff 45%, ${alpha(brand.gold, 0.05)} 100%)`,
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: "-20%",
-          right: "-10%",
-          width: "45%",
-          height: "60%",
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${alpha(brand.gold, 0.1)} 0%, transparent 70%)`,
-          pointerEvents: "none",
-        },
-        "&::after": {
-          content: '""',
-          position: "absolute",
-          bottom: "-15%",
-          left: "-8%",
-          width: "40%",
-          height: "50%",
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${alpha(brand.green, 0.1)} 0%, transparent 70%)`,
-          pointerEvents: "none",
-        },
-      }}
-    >
+    <Box id="testimonials-section" sx={homeSectionShellSx("paper")}>
       <Box sx={{ width: "100%", position: "relative", zIndex: 1 }}>
         <Fade in={isVisible} timeout={900}>
-          <Box sx={{ textAlign: "center", mb: { xs: 2, md: 2.5 }, px: { xs: 2, sm: 4 } }}>
-            <Typography
-              variant="overline"
-              sx={{ letterSpacing: "0.2em", fontWeight: 700, color: brand.green, fontSize: "0.75rem" }}
-            >
-              Voices of Impact
-            </Typography>
-            <Typography
-              variant="h2"
-              sx={{
-                mt: 1,
-                mb: 2,
-                fontWeight: 900,
-                fontSize: { xs: "1.75rem", sm: "2.25rem", md: "2.75rem" },
-                color: brand.navy,
-                letterSpacing: "-0.02em",
-              }}
-            >
-              Testimonials
-            </Typography>
-            <Box
-              sx={{
-                width: 72,
-                height: 4,
-                mx: "auto",
-                mb: 2.5,
-                borderRadius: 2,
-                background: `linear-gradient(90deg, ${brand.green}, ${brand.gold})`,
-              }}
+          <Box>
+            <SectionHeader
+              overline="Voices of Impact"
+              title="Testimonials"
+              description="Hear from the people whose lives we've touched through our community programs."
             />
-            <Typography
-              variant="body1"
-              sx={{
-                maxWidth: 820,
-                mx: "auto",
-                px: { xs: 2, sm: 0 },
-                fontSize: { xs: "0.95rem", md: "1.05rem" },
-                lineHeight: 1.75,
-                color: alpha(brand.navy, 0.75),
-              }}
-            >
-              Hear from the people whose lives we&apos;ve touched through our community programs.
-            </Typography>
           </Box>
         </Fade>
 
@@ -577,15 +495,16 @@ export default function TestimonySection() {
             sx={{
               fontWeight: 700,
               textTransform: "none",
-              borderRadius: 2,
+              fontFamily: HOME.fontBody,
+              borderRadius: "12px",
               px: 3,
               py: 1.25,
               background: testimonyTheme.gradient,
-              boxShadow: `0 8px 24px ${alpha(brand.gold, 0.4)}`,
+              boxShadow: `0 8px 24px ${alpha(HOME.morphoBlue, 0.35)}`,
               "&:hover": {
                 background: testimonyTheme.gradient,
                 filter: "brightness(1.06)",
-                boxShadow: `0 12px 28px ${alpha(brand.gold, 0.5)}`,
+                boxShadow: `0 12px 28px ${alpha(HOME.morphoBlue, 0.45)}`,
               },
             }}
           >
@@ -607,14 +526,14 @@ export default function TestimonySection() {
       >
         <DialogTitle
           sx={{
-            background: `linear-gradient(135deg, ${brand.navy} 0%, ${brand.navyLight} 100%)`,
-            color: "#fff",
+            background: `linear-gradient(135deg, ${HOME.deepUmberDark} 0%, ${HOME.deepUmber} 100%)`,
+            color: HOME.oldPaperSoft,
             textAlign: "center",
             py: 2.5,
           }}
         >
-          <RecordVoiceOver sx={{ fontSize: 36, color: brand.gold, mb: 0.5 }} />
-          <Typography variant="h6" fontWeight={800}>
+          <RecordVoiceOver sx={{ fontSize: 36, color: HOME.morphoBlueMuted, mb: 0.5 }} />
+          <Typography variant="h6" fontWeight={800} sx={{ fontFamily: HOME.fontDisplay }}>
             Share Your Experience
           </Typography>
         </DialogTitle>
@@ -630,7 +549,7 @@ export default function TestimonySection() {
               sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
             />
             <Box>
-              <Typography variant="body2" fontWeight={600} color={brand.navy} mb={1}>
+              <Typography variant="body2" fontWeight={600} color={HOME.deepUmber} mb={1}>
                 Rating *
               </Typography>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -638,8 +557,8 @@ export default function TestimonySection() {
                   value={formData.rating}
                   onChange={(_, newValue) => handleInputChange("rating", newValue)}
                   size="large"
-                  icon={<StarIcon sx={{ color: brand.gold }} />}
-                  emptyIcon={<StarIcon sx={{ color: alpha(brand.navy, 0.2) }} />}
+                  icon={<StarIcon sx={{ color: HOME.morphoBlue }} />}
+                  emptyIcon={<StarIcon sx={{ color: alpha(HOME.deepUmber, 0.2) }} />}
                 />
                 <Typography variant="body2" color="text.secondary">
                   ({formData.rating} star{formData.rating !== 1 ? "s" : ""})
@@ -663,7 +582,7 @@ export default function TestimonySection() {
         <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
           <Button
             onClick={handleDialogClose}
-            sx={{ textTransform: "none", fontWeight: 600, color: alpha(brand.navy, 0.65) }}
+            sx={{ textTransform: "none", fontWeight: 600, color: alpha(HOME.deepUmber, 0.65) }}
           >
             Cancel
           </Button>
@@ -674,10 +593,10 @@ export default function TestimonySection() {
             sx={{
               textTransform: "none",
               fontWeight: 700,
-              borderRadius: 2,
+              borderRadius: "12px",
               px: 3,
-              bgcolor: brand.green,
-              "&:hover": { bgcolor: brand.greenLight },
+              bgcolor: HOME.morphoBlue,
+              "&:hover": { bgcolor: HOME.morphoBlueDark },
             }}
           >
             {submitting ? "Submitting..." : "Submit Testimony"}

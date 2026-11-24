@@ -13,38 +13,38 @@ export { brand };
 export const projectCategoryConfig = {
   education: {
     icon: School,
-    color: brand.blue,
-    gradient: `linear-gradient(135deg, ${brand.blue}, #42a5f5)`,
+    color: brand.morphoBlue,
+    gradient: `linear-gradient(135deg, ${brand.morphoBlue}, ${brand.morphoBlueMuted})`,
     label: "Education",
   },
   mental_health: {
     icon: Psychology,
-    color: "#e91e63",
-    gradient: "linear-gradient(135deg, #e91e63, #f06292)",
+    color: brand.deepUmber,
+    gradient: `linear-gradient(135deg, ${brand.deepUmberDark}, ${brand.deepUmber})`,
     label: "Mental Health",
   },
   volunteer: {
     icon: VolunteerActivism,
-    color: brand.green,
-    gradient: `linear-gradient(135deg, ${brand.green}, ${brand.greenLight})`,
+    color: brand.morphoBlueDark,
+    gradient: `linear-gradient(135deg, ${brand.morphoBlueDark}, ${brand.morphoBlue})`,
     label: "Volunteer Program",
   },
   health: {
     icon: LocalHospital,
-    color: "#00acc1",
-    gradient: "linear-gradient(135deg, #00acc1, #26c6da)",
+    color: brand.morphoBlue,
+    gradient: `linear-gradient(135deg, ${brand.morphoBlueDark}, ${brand.morphoBlueMuted})`,
     label: "Healthcare",
   },
   empowerment: {
     icon: Group,
-    color: brand.gold,
-    gradient: `linear-gradient(135deg, ${brand.gold}, #fbc02d)`,
+    color: brand.deepUmberMid || brand.navyLight,
+    gradient: `linear-gradient(135deg, ${brand.deepUmber}, ${brand.navyLight})`,
     label: "Empowerment",
   },
   poverty: {
     icon: EmojiPeople,
-    color: "#8e24aa",
-    gradient: "linear-gradient(135deg, #8e24aa, #ab47bc)",
+    color: brand.morphoBlueMuted,
+    gradient: `linear-gradient(135deg, ${brand.morphoBlue}, ${brand.morphoBlueMuted})`,
     label: "Poverty Alleviation",
   },
 };
@@ -65,11 +65,11 @@ export const getStatusLabel = (status) => {
 
 export const getStatusColor = (status) => {
   const colors = {
-    in_progress: brand.blue,
-    completed: brand.green,
-    planning: brand.gold,
-    on_hold: "#e91e63",
-    pending: brand.gold,
+    in_progress: brand.morphoBlue,
+    completed: brand.morphoBlueDark,
+    planning: brand.deepUmberMid || brand.navyLight,
+    on_hold: brand.deepUmber,
+    pending: brand.morphoBlueMuted,
   };
   return colors[status] || brand.navy;
 };

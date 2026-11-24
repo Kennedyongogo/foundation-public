@@ -48,10 +48,10 @@ export const getStatusColor = (status, type) => {
     return colors[status] || brand.blue;
   }
   const colors = {
-    upcoming: brand.blue,
-    ongoing: brand.gold,
-    completed: brand.green,
-    cancelled: "#e91e63",
+    upcoming: brand.morphoBlue,
+    ongoing: brand.morphoBlueMuted,
+    completed: brand.morphoBlueDark,
+    cancelled: brand.deepUmber,
   };
   return colors[status] || brand.navy;
 };
@@ -73,15 +73,15 @@ export const getStatusLabel = (status, type) => {
 export const getPostTheme = (type) => {
   if (type === "news") {
     return {
-      color: brand.blue,
-      gradient: `linear-gradient(135deg, ${brand.blue}, #42a5f5)`,
+      color: brand.morphoBlue,
+      gradient: `linear-gradient(135deg, ${brand.morphoBlueDark}, ${brand.morphoBlue})`,
       Icon: NewsIcon,
       label: "News",
     };
   }
   return {
-    color: brand.gold,
-    gradient: `linear-gradient(135deg, ${brand.gold}, #fbc02d)`,
+    color: brand.deepUmber,
+    gradient: `linear-gradient(135deg, ${brand.deepUmberDark}, ${brand.deepUmber})`,
     Icon: EventIcon,
     label: "Event",
   };

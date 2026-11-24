@@ -13,12 +13,12 @@ export default function PublicHeader() {
   const [isNavigating, setIsNavigating] = useState(false);
 
   const navItems = useMemo(() => [
-    { label: "Home", icon: <Home />, sectionId: "hero-section", color: "#2196f3" },
-    { label: "Our Mission", icon: <Favorite />, sectionId: "mission-section", color: "#e91e63" },
-    { label: "Projects", icon: <School />, sectionId: "projects-section", color: "#4caf50" },
-    { label: "Contact", icon: <LocalHospital />, sectionId: "contact-section", color: "#607d8b" },
-    { label: "Testimonials", icon: <RateReview />, sectionId: "testimonials-section", color: "#ff9800" },
-    { label: "Our Team", icon: <Groups />, sectionId: "team-section", color: "#9c27b0" },
+    { label: "Home", icon: <Home />, sectionId: "hero-section", color: "#0077C8" },
+    { label: "Our Mission", icon: <Favorite />, sectionId: "mission-section", color: "#3A2415" },
+    { label: "Projects", icon: <School />, sectionId: "projects-section", color: "#005A9C" },
+    { label: "Contact", icon: <LocalHospital />, sectionId: "contact-section", color: "#4A3224" },
+    { label: "Testimonials", icon: <RateReview />, sectionId: "testimonials-section", color: "#5BA3D4" },
+    { label: "Our Team", icon: <Groups />, sectionId: "team-section", color: "#0077C8" },
   ], []);
 
   useEffect(() => {
@@ -76,8 +76,11 @@ export default function PublicHeader() {
     if (location.pathname === "/") {
       const section = document.getElementById(sectionId);
       if (section) {
-        section.scrollIntoView({ behavior: "smooth", block: "start" });
-        // Ensure active section is set after scroll and re-enable scroll detection
+        const header = document.querySelector('header, [role="banner"], .MuiAppBar-root');
+        const headerHeight = header ? header.getBoundingClientRect().height : 80;
+        const top =
+          section.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12;
+        window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
         setTimeout(() => {
           setActiveSection(sectionId);
           setIsNavigating(false);
@@ -87,19 +90,14 @@ export default function PublicHeader() {
         setIsNavigating(false);
       }
     } else {
-      navigate("/");
+      navigate(
+        { pathname: "/", hash: sectionId },
+        { state: { scrollTo: sectionId } }
+      );
       setTimeout(() => {
-        const section = document.getElementById(sectionId);
-        if (section) {
-          section.scrollIntoView({ behavior: "smooth", block: "start" });
-          setTimeout(() => {
-            setActiveSection(sectionId);
-            setIsNavigating(false);
-          }, 1000);
-        } else {
-          setIsNavigating(false);
-        }
-      }, 100);
+        setActiveSection(sectionId);
+        setIsNavigating(false);
+      }, 1000);
     }
   };
 
@@ -110,16 +108,16 @@ export default function PublicHeader() {
         elevation={0}
         sx={{
           backgroundColor: scrolled
-            ? "rgba(255, 255, 255, 0.95)"
-            : "rgba(0, 0, 0, 0.2)",
+            ? "rgba(248, 244, 238, 0.94)"
+            : "rgba(42, 26, 15, 0.22)",
           backdropFilter: scrolled ? "blur(20px)" : "blur(10px)",
           boxShadow: scrolled 
-            ? "0 8px 32px rgba(0, 0, 0, 0.12)" 
-            : "0 4px 20px rgba(0, 0, 0, 0.1)",
+            ? "0 8px 32px rgba(42, 26, 15, 0.12)" 
+            : "0 4px 20px rgba(0, 0, 0, 0.12)",
           transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
           borderBottom: scrolled 
-            ? "1px solid rgba(33, 150, 243, 0.1)" 
-            : "1px solid rgba(255, 255, 255, 0.1)",
+            ? "1px solid rgba(0, 119, 200, 0.14)" 
+            : "1px solid rgba(243, 237, 227, 0.12)",
         }}
       >
         <Toolbar sx={{ px: { xs: 2, sm: 3, md: 4 }, py: 1 }}>

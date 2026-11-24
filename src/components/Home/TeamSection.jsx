@@ -21,24 +21,10 @@ import {
   Person as PersonIcon,
 } from "@mui/icons-material";
 import { brand, buildTeamImageUrl, getRoleConfig } from "../../constants/teamConfig";
+import { homeCarouselArrowSx, homeSectionShellSx } from "./homeShared";
+import SectionHeader from "./SectionHeader";
 
-const carouselArrowSx = (disabled) => ({
-  flexShrink: 0,
-  width: { xs: 44, sm: 52 },
-  height: { xs: 44, sm: 52 },
-  bgcolor: disabled ? alpha(brand.navy, 0.08) : brand.navy,
-  color: disabled ? alpha(brand.navy, 0.35) : "#fff",
-  border: `2px solid ${disabled ? alpha(brand.navy, 0.15) : brand.gold}`,
-  boxShadow: disabled ? "none" : `0 8px 24px ${alpha(brand.navy, 0.25)}`,
-  transition: "all 0.25s ease",
-  "&:hover": disabled
-    ? {}
-    : {
-        bgcolor: brand.navyLight,
-        transform: "scale(1.06)",
-        boxShadow: `0 12px 28px ${alpha(brand.navy, 0.35)}`,
-      },
-});
+const carouselArrowSx = homeCarouselArrowSx;
 
 const edgeArrowSx = (disabled) => ({
   ...carouselArrowSx(disabled),
@@ -465,84 +451,15 @@ export default function TeamSection() {
   };
 
   return (
-    <Box
-      id="team-section"
-      sx={{
-        pt: { xs: 4, md: 6 },
-        pb: { xs: 2, md: 3 },
-        width: "100%",
-        position: "relative",
-        overflow: "hidden",
-        background: `linear-gradient(180deg, ${alpha(brand.navy, 0.03)} 0%, #fff 45%, ${alpha(brand.blue, 0.04)} 100%)`,
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: "-20%",
-          right: "-10%",
-          width: "45%",
-          height: "60%",
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${alpha(brand.blue, 0.1)} 0%, transparent 70%)`,
-          pointerEvents: "none",
-        },
-        "&::after": {
-          content: '""',
-          position: "absolute",
-          bottom: "-15%",
-          left: "-8%",
-          width: "40%",
-          height: "50%",
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${alpha(brand.gold, 0.1)} 0%, transparent 70%)`,
-          pointerEvents: "none",
-        },
-      }}
-    >
+    <Box id="team-section" sx={homeSectionShellSx("soft")}>
       <Box sx={{ width: "100%", position: "relative", zIndex: 1 }}>
         <Fade in={isVisible} timeout={900}>
-          <Box sx={{ textAlign: "center", mb: { xs: 2, md: 2.5 }, px: { xs: 2, sm: 4 } }}>
-            <Typography
-              variant="overline"
-              sx={{ letterSpacing: "0.2em", fontWeight: 700, color: brand.green, fontSize: "0.75rem" }}
-            >
-              The People Behind Our Mission
-            </Typography>
-            <Typography
-              variant="h2"
-              sx={{
-                mt: 1,
-                mb: 2,
-                fontWeight: 900,
-                fontSize: { xs: "1.75rem", sm: "2.25rem", md: "2.75rem" },
-                color: brand.navy,
-                letterSpacing: "-0.02em",
-              }}
-            >
-              Meet Our Team
-            </Typography>
-            <Box
-              sx={{
-                width: 72,
-                height: 4,
-                mx: "auto",
-                mb: 2.5,
-                borderRadius: 2,
-                background: `linear-gradient(90deg, ${brand.green}, ${brand.gold})`,
-              }}
+          <Box>
+            <SectionHeader
+              overline="The People Behind Our Mission"
+              title="Meet Our Team"
+              description="Dedicated individuals working together to make a lasting difference in our communities."
             />
-            <Typography
-              variant="body1"
-              sx={{
-                maxWidth: 820,
-                mx: "auto",
-                px: { xs: 2, sm: 0 },
-                fontSize: { xs: "0.95rem", md: "1.05rem" },
-                lineHeight: 1.75,
-                color: alpha(brand.navy, 0.75),
-              }}
-            >
-              Dedicated individuals working together to make a lasting difference in our communities.
-            </Typography>
           </Box>
         </Fade>
 

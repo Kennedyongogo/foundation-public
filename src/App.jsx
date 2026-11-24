@@ -29,14 +29,16 @@ const CEOMessage = lazy(() => import("./pages/CEOMessage"));
 const MemberRegistration = lazy(() => import("./pages/MemberRegistration"));
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash, state } = useLocation();
 
   useEffect(() => {
-    // Use requestAnimationFrame to ensure DOM is ready
+    // Keep scroll position free when Home will jump to a section CTA target
+    if (hash || state?.scrollTo) return;
+
     requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     });
-  }, [pathname]);
+  }, [pathname, hash, state]);
 
   return null;
 }

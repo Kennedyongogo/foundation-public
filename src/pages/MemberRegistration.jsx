@@ -152,16 +152,10 @@ export default function MemberRegistration() {
   };
 
   const handleBack = () => {
-    navigate("/", { state: { scrollTo: "contact-section" } });
-    const scrollToContact = () => {
-      const contactSection = document.getElementById("contact-section");
-      if (contactSection) {
-        contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else {
-        setTimeout(scrollToContact, 100);
-      }
-    };
-    setTimeout(scrollToContact, 300);
+    navigate(
+      { pathname: "/", hash: "contact-section" },
+      { state: { scrollTo: "contact-section" } }
+    );
   };
 
   return (

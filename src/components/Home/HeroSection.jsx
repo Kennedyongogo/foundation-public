@@ -1,388 +1,671 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Typography, Box, Button, Stack } from "@mui/material";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
+import PsychologyRoundedIcon from "@mui/icons-material/PsychologyRounded";
+import LocalHospitalRoundedIcon from "@mui/icons-material/LocalHospitalRounded";
+import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
+import VolunteerActivismRoundedIcon from "@mui/icons-material/VolunteerActivismRounded";
+import HandshakeRoundedIcon from "@mui/icons-material/HandshakeRounded";
 import { useNavigate } from "react-router-dom";
-import { Typography, Box, Tooltip, Button, Fade, Slide } from "@mui/material";
-import Hero1 from "../../assets/images/foundation1.jpg";
-import Hero2 from "../../assets/images/foundation2.jpg";
-import Hero3 from "../../assets/images/foundation3.jpg";
-import { School, VolunteerActivism, Psychology, ArrowForward, RecordVoiceOver } from "@mui/icons-material";
+import { BRAND } from "../../brand";
+import { HOME } from "./homeShared";
 import { impactStats, orgTagline } from "../../constants/aboutConfig";
+
+const SLIDE_INTERVAL_MS = 6500;
+const SLIDE_CROSSFADE_MS = 1800;
+
+const HERO_FEATURES = [
+  {
+    icon: SchoolRoundedIcon,
+    title: "Education Support",
+    subtitle: "Keeping learners in school",
+  },
+  {
+    icon: LocalHospitalRoundedIcon,
+    title: "Healthcare Access",
+    subtitle: "Camps and surgical referrals",
+  },
+  {
+    icon: PsychologyRoundedIcon,
+    title: "Mental Health",
+    subtitle: "Psychosocial care & literacy",
+  },
+];
+
+const HERO_STATS = [
+  {
+    value: impactStats[0]?.value ?? "100+",
+    label: impactStats[0]?.label ?? "Beneficiaries Supported",
+    description: "Learners and community members empowered",
+    icon: GroupsRoundedIcon,
+  },
+  {
+    value: impactStats[1]?.value ?? "5",
+    label: impactStats[1]?.label ?? "Medical Outreach Camps",
+    description: "Free camps connecting patients to care",
+    icon: VolunteerActivismRoundedIcon,
+  },
+  {
+    value: impactStats[2]?.value ?? "4",
+    label: impactStats[2]?.label ?? "Core Program Pillars",
+    description: "Education, health, mind, and livelihoods",
+    icon: HandshakeRoundedIcon,
+  },
+];
+
+const HERO_IMAGES = [
+  {
+    file: "mwalimu-hero-education.jpg",
+    alt: "Children learning in a classroom supported by Mwalimu Hope Foundation",
+  },
+  {
+    file: "mwalimu-hero-mental-health.jpg",
+    alt: "Community mental health support circle facilitated by Mwalimu Hope Foundation",
+  },
+  {
+    file: "mwalimu-hero-healthcare.jpg",
+    alt: "Free medical outreach camp serving rural communities",
+  },
+  {
+    file: "mwalimu-hero-livelihoods.jpg",
+    alt: "Women in a livelihood and entrepreneurship training workshop",
+  },
+];
+
+const primaryCtaSx = {
+  textTransform: "uppercase",
+  fontFamily: HOME.fontBody,
+  fontWeight: 700,
+  fontSize: { xs: "0.72rem", md: "0.76rem" },
+  letterSpacing: "0.05em",
+  color: "#fff",
+  bgcolor: HOME.morphoBlue,
+  borderRadius: "12px",
+  px: { xs: 2, md: 2.75 },
+  py: { xs: 1, md: 1.15 },
+  boxShadow: "0 10px 24px rgba(0, 119, 200, 0.35)",
+  transition: "transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease",
+  "&:hover": {
+    bgcolor: HOME.morphoBlueDark,
+    transform: "translateY(-3px)",
+    boxShadow: "0 16px 32px rgba(0, 119, 200, 0.45)",
+  },
+};
+
+const secondaryCtaSx = {
+  textTransform: "none",
+  fontFamily: HOME.fontBody,
+  fontWeight: 700,
+  fontSize: { xs: "0.8rem", md: "0.85rem" },
+  color: HOME.deepUmber,
+  bgcolor: HOME.oldPaperSoft,
+  border: `2px solid ${HOME.morphoBlue}`,
+  borderRadius: "12px",
+  px: { xs: 2, md: 2.5 },
+  py: { xs: 0.95, md: 1.05 },
+  transition: "transform 0.25s ease, color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease",
+  "&:hover": {
+    bgcolor: "#fff",
+    color: HOME.morphoBlueDark,
+    borderColor: HOME.morphoBlueDark,
+    transform: "translateY(-3px)",
+  },
+};
+
+function heroImageSrc(filename) {
+  return `/images/${encodeURIComponent(filename)}`;
+}
+
+const HERO_SLIDES = HERO_IMAGES.map((img) => ({
+  ...img,
+  src: heroImageSrc(img.file),
+}));
+
+/**
+ * Desktop-only layered curved split (md+).
+ * Morpho blue rim → deep umber curved panel → photo with matching left curve.
+ */
+function HeroDesktopCurvedSplit({ children }) {
+  return (
+    <Box
+      sx={{
+        display: { xs: "none", md: "block" },
+        position: "absolute",
+        inset: 0,
+        zIndex: 1,
+        pointerEvents: "none",
+        overflow: "hidden",
+      }}
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "-10%",
+          right: 0,
+          bottom: "-10%",
+          width: "56%",
+          bgcolor: HOME.morphoBlue,
+          borderRadius: "100% 0 0 100%",
+          boxShadow: `-8px 0 28px rgba(0, 119, 200, 0.35)`,
+        }}
+      />
+
+      <Box
+        sx={{
+          position: "absolute",
+          top: "-10%",
+          right: 0,
+          bottom: "-10%",
+          width: "55.2%",
+          bgcolor: HOME.deepUmberDark,
+          borderRadius: "100% 0 0 100%",
+        }}
+      />
+
+      <Box
+        sx={{
+          position: "absolute",
+          top: "-6%",
+          right: 0,
+          bottom: "-6%",
+          width: "53.5%",
+          bgcolor: HOME.deepUmber,
+          borderRadius: "100% 0 0 100%",
+          opacity: 0.55,
+        }}
+      />
+
+      <Box
+        sx={{
+          position: "absolute",
+          top: 32,
+          right: 0,
+          bottom: 32,
+          left: "47%",
+          borderRadius: "100% 0 0 100%",
+          overflow: "hidden",
+          boxShadow: "0 32px 64px rgba(0,0,0,0.35)",
+          pointerEvents: "auto",
+        }}
+      >
+        {children}
+      </Box>
+    </Box>
+  );
+}
+
+function HeroFeatureItem({ icon: Icon, title, subtitle }) {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: { xs: 1, md: 1.25 },
+        flex: 1,
+        minWidth: 0,
+      }}
+    >
+      <Box
+        sx={{
+          width: { xs: 34, md: 44 },
+          height: { xs: 34, md: 44 },
+          borderRadius: "50%",
+          flexShrink: 0,
+          display: "grid",
+          placeItems: "center",
+          bgcolor: "rgba(0, 119, 200, 0.1)",
+          color: HOME.morphoBlue,
+        }}
+      >
+        <Icon sx={{ fontSize: { xs: 18, md: 22 } }} />
+      </Box>
+      <Box sx={{ minWidth: 0, flex: 1, pr: { xs: 0.35, md: 0 } }}>
+        <Typography
+          sx={{
+            fontFamily: HOME.fontBody,
+            fontWeight: 800,
+            fontSize: { xs: "0.58rem", md: "0.7rem" },
+            color: HOME.ink,
+            lineHeight: 1.2,
+            mb: 0.15,
+            letterSpacing: { xs: "0.01em", md: "0.03em" },
+            textTransform: "uppercase",
+            overflowWrap: "break-word",
+          }}
+        >
+          {title}
+        </Typography>
+        <Typography
+          sx={{
+            fontFamily: HOME.fontBody,
+            fontSize: { xs: "0.58rem", md: "0.68rem" },
+            fontWeight: 700,
+            color: HOME.inkSoft,
+            lineHeight: 1.3,
+            display: { xs: "-webkit-box", md: "block" },
+            WebkitLineClamp: { xs: 2, md: "unset" },
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            overflowWrap: "break-word",
+          }}
+        >
+          {subtitle}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+
+function HeroStatItem({ stat, showBorder }) {
+  const Icon = stat.icon;
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: { xs: 0.75, sm: 1, md: 1.5 },
+        px: { xs: 1, sm: 1.5, md: 2.5, lg: 3 },
+        py: { xs: 1.1, md: 0 },
+        borderLeft: showBorder ? "1px solid rgba(255,255,255,0.14)" : "none",
+        height: "100%",
+        minWidth: 0,
+        overflow: "hidden",
+      }}
+    >
+      <Box
+        sx={{
+          width: { xs: 28, sm: 32, md: 40 },
+          height: { xs: 28, sm: 32, md: 40 },
+          borderRadius: "50%",
+          flexShrink: 0,
+          display: { xs: "none", sm: "grid" },
+          placeItems: "center",
+          bgcolor: "rgba(255,255,255,0.07)",
+          border: "1px solid rgba(255,255,255,0.12)",
+          color: HOME.morphoBlueMuted,
+        }}
+      >
+        <Icon sx={{ fontSize: { sm: 16, md: 20 } }} />
+      </Box>
+      <Box sx={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
+        <Typography
+          sx={{
+            fontFamily: HOME.fontDisplay,
+            fontSize: { xs: "1rem", sm: "1.25rem", md: "1.65rem" },
+            fontWeight: 700,
+            color: HOME.morphoBlueMuted,
+            lineHeight: 1,
+            mb: 0.1,
+          }}
+        >
+          {stat.value}
+        </Typography>
+        <Typography
+          sx={{
+            fontFamily: HOME.fontBody,
+            fontSize: { xs: "0.48rem", sm: "0.52rem", md: "0.58rem" },
+            fontWeight: 700,
+            color: "#fff",
+            letterSpacing: { xs: "0.02em", md: "0.05em" },
+            textTransform: "uppercase",
+            mb: 0.1,
+            lineHeight: 1.15,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {stat.label}
+        </Typography>
+        <Typography
+          sx={{
+            display: { xs: "none", md: "block" },
+            fontFamily: HOME.fontBody,
+            fontSize: { md: "0.68rem" },
+            color: "rgba(255,255,255,0.75)",
+            lineHeight: 1.25,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {stat.description}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
 
 export default function HeroSection() {
   const navigate = useNavigate();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const images = [Hero1, Hero2, Hero3];
+  const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
-    setIsVisible(true);
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
+    // Warm all slides in cache so crossfades stay instant.
+    HERO_SLIDES.forEach((slide, index) => {
+      const image = new Image();
+      image.decoding = "async";
+      if (index === 0) image.fetchPriority = "high";
+      image.src = slide.src;
+    });
   }, []);
 
-  const handleExploreAboutUs = () => {
-    navigate('/about-us');
-  };
+  useEffect(() => {
+    if (HERO_SLIDES.length <= 1) return undefined;
+    const id = window.setInterval(() => {
+      setActiveSlide((i) => (i + 1) % HERO_SLIDES.length);
+    }, SLIDE_INTERVAL_MS);
+    return () => window.clearInterval(id);
+  }, []);
 
-  const handleOpenCeoMessage = () => {
-    navigate('/ceo-message');
-  };
+  useEffect(() => {
+    const heroSection = document.getElementById("hero-section");
+    if (!heroSection) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const visible = entry.isIntersecting && entry.intersectionRatio > 0.2;
+          const scrollY = window.scrollY;
+          const isAtTop = scrollY <= 20;
+          window.dispatchEvent(
+            new CustomEvent("heroVisibilityChange", {
+              detail: { isVisible: visible && isAtTop, intersectionRatio: entry.intersectionRatio, scrollY },
+            })
+          );
+        });
+      },
+      { threshold: [0, 0.1, 0.2, 0.3, 0.5, 0.7, 1.0], rootMargin: "0px" }
+    );
+
+    observer.observe(heroSection);
+
+    const t = window.setTimeout(() => {
+      const rect = heroSection.getBoundingClientRect();
+      const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+      const isAtTop = window.scrollY <= 20;
+      window.dispatchEvent(
+        new CustomEvent("heroVisibilityChange", {
+          detail: { isVisible: isInView && isAtTop, intersectionRatio: isInView ? 1 : 0, scrollY: window.scrollY },
+        })
+      );
+    }, 200);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(t);
+    };
+  }, []);
 
   return (
     <Box
       id="hero-section"
       sx={{
         position: "relative",
-        height: { xs: "100vh", md: "100vh" },
         width: "100%",
-        overflow: "hidden",
-        marginTop: "-64px",
+        marginTop: "-80px",
+        bgcolor: HOME.oldPaperSoft,
+        height: { xs: "auto", md: "100vh" },
+        minHeight: { xs: "100svh", md: "100vh" },
+        maxHeight: { xs: "none", md: "100vh" },
+        display: "flex",
+        flexDirection: "column",
+        overflow: { xs: "visible", md: "hidden" },
+        "@supports (height: 100svh)": {
+          height: { xs: "auto", md: "100svh" },
+          minHeight: { xs: "100svh", md: "100svh" },
+          maxHeight: { xs: "none", md: "100svh" },
+        },
       }}
     >
-      {/* Background Images with Enhanced Overlay */}
-      {images.map((image, index) => (
-        <Box
-          key={index}
-          component="img"
-          src={image}
-          alt={`${index + 1}`}
-          sx={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            filter: "brightness(0.4) saturate(1.2)",
-            opacity: currentImageIndex === index ? 1 : 0,
-            transition: "opacity 1.5s ease-in-out",
-          }}
-        />
-      ))}
-
-      {/* Enhanced Gradient Overlay */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "linear-gradient(135deg, rgba(33, 150, 243, 0.3) 0%, rgba(76, 175, 80, 0.2) 50%, rgba(255, 152, 0, 0.2) 100%)",
-          zIndex: 1,
-        }}
-      />
-
-      {/* Floating Particles Animation */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 2,
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: "20%",
-            left: "10%",
-            width: "4px",
-            height: "4px",
-            background: "rgba(255, 255, 255, 0.6)",
-            borderRadius: "50%",
-            animation: "float 6s ease-in-out infinite",
-          },
-          "&::after": {
-            content: '""',
-            position: "absolute",
-            top: "60%",
-            right: "15%",
-            width: "6px",
-            height: "6px",
-            background: "rgba(33, 150, 243, 0.8)",
-            borderRadius: "50%",
-            animation: "float 8s ease-in-out infinite reverse",
-          },
-        }}
-      />
-
-      {/* Content Overlay */}
       <Box
         sx={{
           position: "relative",
-          height: "100%",
+          flex: { xs: "1 1 auto", md: 1 },
+          minHeight: { xs: 0, md: 0 },
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          color: "white",
-          zIndex: 3,
-          width: "100%",
-          px: { xs: 3, sm: 4, md: 5 },
+          bgcolor: { xs: "transparent", md: HOME.oldPaperSoft },
         }}
       >
-        <Fade in={isVisible} timeout={1000}>
+        <HeroDesktopCurvedSplit>
+          {HERO_SLIDES.map((slide, index) => (
+            <Box
+              key={`desk-${slide.src}`}
+              component="img"
+              src={slide.src}
+              alt={slide.alt}
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
+              fetchPriority={index === 0 ? "high" : "low"}
+              sx={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center top",
+                opacity: index === activeSlide ? 1 : 0,
+                transition: `opacity ${SLIDE_CROSSFADE_MS}ms ease-in-out`,
+                bgcolor: HOME.deepUmberDark,
+              }}
+            />
+          ))}
+        </HeroDesktopCurvedSplit>
+
         <Box
           sx={{
-              width: "100%",
-              animation: "slideInUp 1.2s ease-out",
+            position: "relative",
+            zIndex: 3,
+            flex: { xs: "1 1 auto", md: 1 },
+            minHeight: 0,
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
           }}
         >
-          <Typography
-            variant="h1"
+          <Box
             sx={{
-                fontSize: { xs: "2rem", sm: "2.5rem", md: "3.5rem", lg: "4rem" },
-                fontWeight: 700,
-              mb: 2,
-                textShadow: "3px 3px 6px rgba(0,0,0,0.4)",
-                background: "linear-gradient(45deg, #ffffff 30%, #e3f2fd 90%)",
-                backgroundClip: "text",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                lineHeight: 1.1,
+              position: "relative",
+              flex: { xs: "0 0 auto", md: "0 0 46%" },
+              height: { md: "100%" },
+              pt: { xs: "88px", sm: "92px", md: "108px" },
+              pb: { xs: 1.5, md: 1.5 },
+              pl: { xs: 2, sm: 2.5, md: "clamp(40px, 5vw, 80px)" },
+              pr: { xs: 2, sm: 2.5, md: 2 },
+              zIndex: 2,
+              display: "flex",
+              alignItems: { xs: "flex-start", md: "center" },
+              background: {
+                xs: `
+                  linear-gradient(180deg, ${HOME.oldPaperSoft} 0%, ${HOME.oldPaper} 100%),
+                  radial-gradient(circle at top left, rgba(0, 119, 200, 0.06), transparent 55%)
+                `,
+                md: "transparent",
+              },
             }}
           >
-            Welcome to Mwalimu Hope Foundation
-          </Typography>
-          <Typography
-              variant="h4"
-            sx={{
-              mb: 4,
-                textShadow: "2px 2px 4px rgba(0,0,0,0.4)",
-                opacity: 0.95,
-                fontWeight: 400,
-                fontSize: { xs: "1.2rem", sm: "1.4rem", md: "1.6rem" },
-                color: "#e3f2fd",
-            }}
-          >
-            {orgTagline}
-          </Typography>
-            
-            {/* Enhanced Call-to-Action Button */}
-            <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap", mb: { xs: 6, sm: 5, md: 4 } }}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                endIcon={<ArrowForward />}
-                onClick={handleExploreAboutUs}
+            <Box sx={{ maxWidth: { xs: "100%", md: 500 }, width: "100%" }}>
+              <Typography
                 sx={{
-                  px: 2,
-                  py: 0.75,
-                  fontSize: "1.1rem",
-                  fontWeight: 600,
-                  borderRadius: "50px",
-                  background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
-                  boxShadow: "0 8px 32px rgba(33, 150, 243, 0.3)",
-                  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                  "& .MuiButton-endIcon": {
-                    marginLeft: 0.5,
-                  },
-                  "&:hover": {
-                    transform: "translateY(-3px) scale(1.05)",
-                    boxShadow: "0 12px 40px rgba(33, 150, 243, 0.4)",
-                    background: "linear-gradient(45deg, #1976d2 30%, #1cb5e0 90%)",
-                  },
-                  "&:focus": {
-                    outline: "none",
-                  },
-                  "&:focus-visible": {
-                    outline: "none",
-                  },
+                  fontFamily: HOME.fontBody,
+                  fontSize: { xs: "0.55rem", sm: "0.58rem", md: "0.65rem" },
+                  fontWeight: 700,
+                  color: HOME.morphoBlue,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  mb: { xs: 0.75, md: 1.25 },
                 }}
               >
-                Explore About Us
-              </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                startIcon={<RecordVoiceOver />}
-                onClick={handleOpenCeoMessage}
-                sx={{
-                  px: 2,
-                  py: 0.75,
-                  fontSize: "1.1rem",
-                  fontWeight: 600,
-                  borderRadius: "50px",
-                  borderColor: "rgba(255, 255, 255, 0.8)",
-                  color: "white",
-                  borderWidth: 2,
-                  backdropFilter: "blur(10px)",
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                  "& .MuiButton-startIcon": {
-                    marginRight: 0.5,
-                  },
-                  "&:hover": {
-                    transform: "translateY(-3px) scale(1.05)",
-                    borderColor: "white",
-                    backgroundColor: "rgba(255, 255, 255, 0.2)",
-                    boxShadow: "0 12px 40px rgba(255, 255, 255, 0.2)",
-                  },
-                  "&:focus": {
-                    outline: "none",
-                  },
-                  "&:focus-visible": {
-                    outline: "none",
-                  },
-                }}
-              >
-                CEO's Message
-              </Button>
-            </Box>
+                — {BRAND.name}
+              </Typography>
 
-            {/* Stats Counter */}
+              <Typography
+                component="h1"
+                sx={{
+                  fontFamily: HOME.fontDisplay,
+                  fontSize: { xs: "1.55rem", sm: "1.85rem", md: "clamp(2rem, 3.2vw, 52px)" },
+                  fontWeight: 900,
+                  lineHeight: 1.08,
+                  letterSpacing: { md: "-1.5px" },
+                  color: HOME.deepUmber,
+                  mb: { xs: 1, md: 1.5 },
+                }}
+              >
+                Restoring Hope,{" "}
+                <Box component="span" sx={{ color: HOME.morphoBlue }}>
+                  Transforming Lives
+                </Box>
+              </Typography>
+
+              <Box
+                sx={{
+                  width: { xs: 44, md: 56 },
+                  height: 3,
+                  bgcolor: HOME.morphoBlue,
+                  borderRadius: 4,
+                  mb: { xs: 1, md: 1.5 },
+                }}
+              />
+
+              <Typography
+                sx={{
+                  fontFamily: HOME.fontBody,
+                  fontSize: { xs: "0.78rem", sm: "0.85rem", md: "0.9rem" },
+                  fontWeight: 500,
+                  color: HOME.inkMuted,
+                  lineHeight: 1.5,
+                  maxWidth: 420,
+                  display: "-webkit-box",
+                  WebkitLineClamp: { xs: 3, md: 3 },
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+              >
+                {orgTagline}. Education, mental health, healthcare, and livelihoods for marginalized communities across Bungoma and East Africa.
+              </Typography>
+
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                flexWrap="wrap"
+                useFlexGap
+                sx={{ mt: { xs: 1.5, md: 2.5 } }}
+              >
+                <Button
+                  variant="contained"
+                  endIcon={<ArrowForwardIcon sx={{ fontSize: "1.1rem !important" }} />}
+                  onClick={() => navigate("/about-us")}
+                  sx={primaryCtaSx}
+                >
+                  Explore About Us
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<RecordVoiceOverIcon sx={{ fontSize: "1rem !important" }} />}
+                  onClick={() => navigate("/ceo-message")}
+                  sx={secondaryCtaSx}
+                >
+                  CEO&apos;s Message
+                </Button>
+              </Stack>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              display: { xs: "block", md: "none" },
+              position: "relative",
+              flex: "1 1 38%",
+              minHeight: { xs: 180, sm: 220 },
+              bgcolor: HOME.deepUmberDark,
+              overflow: "hidden",
+            }}
+          >
             <Box
               sx={{
-                display: "inline-flex",
-                gap: { xs: 2, sm: 3, md: 4 },
-                flexWrap: "wrap",
-                mb: 6,
-                mt: { xs: 2, sm: 1, md: 0 },
-                "& > *": {
-                  textAlign: "center",
-                  "& .number": {
-                    fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.8rem" },
-                    fontWeight: 700,
-                    color: "#2196f3",
-                    textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
-                  },
-                  "& .label": {
-                    fontSize: { xs: "0.65rem", sm: "0.75rem", md: "0.8rem" },
-                    opacity: 0.9,
-                    textTransform: "uppercase",
-                    letterSpacing: { xs: "0.5px", md: "1px" },
-                  },
-                },
+                position: "absolute",
+                top: 12,
+                right: 12,
+                bottom: 12,
+                left: 12,
+                borderRadius: "14px",
+                overflow: "hidden",
+                boxShadow: "0 16px 36px rgba(0,0,0,0.28)",
+                bgcolor: HOME.deepUmberDark,
               }}
             >
-              {impactStats.map((stat) => (
-              <Box key={stat.label}>
-                <Typography className="number">{stat.value}</Typography>
-                <Typography className="label">{stat.label}</Typography>
-              </Box>
+              {HERO_SLIDES.map((slide, index) => (
+                <Box
+                  key={`mob-${slide.src}`}
+                  component="img"
+                  src={slide.src}
+                  alt={slide.alt}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  fetchPriority={index === 0 ? "high" : "low"}
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    objectPosition: "center top",
+                    opacity: index === activeSlide ? 1 : 0,
+                    transition: `opacity ${SLIDE_CROSSFADE_MS}ms ease-in-out`,
+                    bgcolor: HOME.deepUmberDark,
+                  }}
+                />
               ))}
-        </Box>
+            </Box>
           </Box>
-        </Fade>
-      </Box>
+        </Box>
 
-      {/* Enhanced Feature Icons */}
-      <Slide direction="up" in={isVisible} timeout={1500}>
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          width: "100%",
-          display: "flex",
-          justifyContent: { xs: "center", md: "space-around", lg: "space-evenly" },
-          gap: 4,
-            p: 2.5,
-            px: { xs: 3, sm: 4, md: 5 },
-            backgroundColor: "rgba(0,0,0,0.6)",
-            backdropFilter: "blur(10px)",
-            borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 6,
+            flexShrink: 0,
+            mx: { xs: 1.5, md: "clamp(32px, 5vw, 80px)" },
+            mt: { xs: -1.5, md: 0 },
+            mb: { xs: 1.25, md: 1 },
+            bgcolor: "#fff",
+            borderRadius: { xs: "18px", md: "28px" },
+            pl: { xs: 1.5, md: 3 },
+            pr: { xs: 2, md: 3 },
+            py: { xs: 1.25, md: 1.75 },
+            boxShadow: "0 16px 40px rgba(42, 26, 15, 0.12)",
+            display: "flex",
+            flexDirection: "row",
+            gap: { xs: 1.25, md: 3 },
+            overflow: "hidden",
           }}
         >
-          <Tooltip title="Educational Support" arrow>
-          <Box
-            sx={{
-              display: "flex",
-                flexDirection: "column",
-              alignItems: "center",
-              gap: 1,
-              color: "white",
-                transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                cursor: "pointer",
-              "&:hover": {
-                  transform: "translateY(-8px) scale(1.1)",
-                  "& .icon": {
-                    color: "#2196f3",
-                    transform: "rotate(360deg)",
-                  },
-              },
-            }}
-          >
-              <School className="icon" sx={{ fontSize: 28, transition: "all 0.4s ease" }} />
-              <Typography sx={{ fontWeight: 500, fontSize: "0.8rem" }}>Educational Support</Typography>
-          </Box>
-        </Tooltip>
-          <Tooltip title="Community Outreach" arrow>
-          <Box
-            sx={{
-              display: "flex",
-                flexDirection: "column",
-              alignItems: "center",
-              gap: 1,
-              color: "white",
-                transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                cursor: "pointer",
-              "&:hover": {
-                  transform: "translateY(-8px) scale(1.1)",
-                  "& .icon": {
-                    color: "#4caf50",
-                    transform: "rotate(360deg)",
-                  },
-              },
-            }}
-          >
-              <VolunteerActivism className="icon" sx={{ fontSize: 28, transition: "all 0.4s ease" }} />
-              <Typography sx={{ fontWeight: 500, fontSize: "0.8rem" }}>Community Outreach</Typography>
-          </Box>
-        </Tooltip>
-          <Tooltip title="Mental Health Support" arrow>
-          <Box
-            sx={{
-              display: "flex",
-                flexDirection: "column",
-              alignItems: "center",
-              gap: 1,
-              color: "white",
-                transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                cursor: "pointer",
-              "&:hover": {
-                  transform: "translateY(-8px) scale(1.1)",
-                  "& .icon": {
-                    color: "#ff9800",
-                    transform: "rotate(360deg)",
-                  },
-              },
-            }}
-          >
-              <Psychology className="icon" sx={{ fontSize: 28, transition: "all 0.4s ease" }} />
-              <Typography sx={{ fontWeight: 500, fontSize: "0.8rem" }}>Mental Health Support</Typography>
-          </Box>
-        </Tooltip>
+          {HERO_FEATURES.map((feature) => (
+            <HeroFeatureItem key={feature.title} {...feature} />
+          ))}
+        </Box>
       </Box>
-      </Slide>
 
-      <style>
-        {`
-          @keyframes slideInUp {
-            from { 
-              opacity: 0;
-              transform: translateY(60px);
-            }
-            to { 
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          
-          @keyframes float {
-            0%, 100% { 
-              transform: translateY(0px) rotate(0deg);
-              opacity: 0.6;
-            }
-            50% { 
-              transform: translateY(-20px) rotate(180deg);
-              opacity: 1;
-            }
-          }
-        `}
-      </style>
+      <Box
+        sx={{
+          position: "relative",
+          zIndex: 3,
+          flexShrink: 0,
+          bgcolor: HOME.deepUmberDark,
+          height: { xs: 76, sm: 80, md: 88 },
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          alignItems: "center",
+          overflow: "hidden",
+        }}
+      >
+        {HERO_STATS.map((stat, index) => (
+          <HeroStatItem key={stat.label} stat={stat} showBorder={index > 0} />
+        ))}
+      </Box>
     </Box>
   );
 }

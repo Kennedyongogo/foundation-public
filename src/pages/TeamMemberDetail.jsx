@@ -8,6 +8,7 @@ import {
   CircularProgress,
   Alert,
   Stack,
+  IconButton,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { motion } from "framer-motion";
@@ -23,65 +24,132 @@ import {
   Twitter,
   Google,
 } from "@mui/icons-material";
-import { brand, buildTeamImageUrl, getRoleConfig } from "../constants/teamConfig";
+import { buildTeamImageUrl, getRoleConfig } from "../constants/teamConfig";
+import { HOME } from "../components/Home/homeShared";
 
 const MotionBox = motion(Box);
 
-const sectionSx = {
-  width: "100%",
-  p: { xs: 3, sm: 4, md: 5 },
-  bgcolor: "#fff",
-  borderTop: `1px solid ${alpha(brand.navy, 0.08)}`,
-  borderRadius: 0,
-  boxShadow: "none",
-};
+const sidePad = { px: { xs: 1.5, sm: 2, md: 2.5 } };
 
-const contentPad = { px: { xs: 2, sm: 4, md: 5 } };
-
-const DetailRow = ({ icon: Icon, label, value, color = brand.green }) => (
-  <Box
-    sx={{
-      display: "flex",
-      gap: 1.5,
-      p: 2,
-      borderRadius: 2,
-      bgcolor: alpha(brand.navy, 0.03),
-      border: `1px solid ${alpha(brand.navy, 0.08)}`,
-    }}
-  >
+function SectionCard({ children, sx = {} }) {
+  return (
     <Box
       sx={{
-        width: 40,
-        height: 40,
-        borderRadius: 1.5,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        bgcolor: alpha(color, 0.12),
-        color,
-        flexShrink: 0,
+        width: "100%",
+        ...sidePad,
+        py: { xs: 1.25, md: 1.75 },
+        bgcolor: HOME.oldPaperSoft,
+        ...sx,
       }}
     >
-      <Icon fontSize="small" />
-    </Box>
-    <Box>
-      <Typography
-        variant="caption"
+      <Box
         sx={{
-          color: alpha(brand.navy, 0.55),
-          fontWeight: 600,
-          textTransform: "uppercase",
-          letterSpacing: "0.04em",
+          bgcolor: "#fff",
+          borderRadius: { xs: "16px", md: "20px" },
+          border: `1px solid ${HOME.border}`,
+          boxShadow: HOME.shadowSm,
+          p: { xs: 2.25, sm: 3, md: 3.5 },
         }}
       >
-        {label}
-      </Typography>
-      <Typography variant="body1" sx={{ color: brand.navy, fontWeight: 600, lineHeight: 1.5 }}>
-        {value}
-      </Typography>
+        {children}
+      </Box>
     </Box>
-  </Box>
-);
+  );
+}
+
+function SectionTitle({ icon: Icon, title, accent = HOME.morphoBlue }) {
+  return (
+    <Stack direction="row" alignItems="center" spacing={1.5} mb={2.5}>
+      <Box
+        sx={{
+          width: 42,
+          height: 42,
+          borderRadius: "12px",
+          display: "grid",
+          placeItems: "center",
+          bgcolor: alpha(accent, 0.12),
+          color: accent,
+          border: `1px solid ${alpha(accent, 0.22)}`,
+          flexShrink: 0,
+        }}
+      >
+        <Icon fontSize="small" />
+      </Box>
+      <Typography
+        sx={{
+          fontFamily: HOME.fontDisplay,
+          fontWeight: 800,
+          fontSize: { xs: "1.25rem", md: "1.45rem" },
+          color: HOME.deepUmber,
+          lineHeight: 1.2,
+        }}
+      >
+        {title}
+      </Typography>
+    </Stack>
+  );
+}
+
+function DetailRow({ icon: Icon, label, value, color = HOME.morphoBlue }) {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        gap: 1.5,
+        p: 1.75,
+        borderRadius: "14px",
+        bgcolor: alpha(HOME.oldPaper, 0.7),
+        border: `1px solid ${HOME.border}`,
+        transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+        "&:hover": {
+          borderColor: alpha(HOME.morphoBlue, 0.35),
+          boxShadow: HOME.shadowSm,
+        },
+      }}
+    >
+      <Box
+        sx={{
+          width: 40,
+          height: 40,
+          borderRadius: "12px",
+          display: "grid",
+          placeItems: "center",
+          bgcolor: alpha(color, 0.12),
+          color,
+          flexShrink: 0,
+        }}
+      >
+        <Icon fontSize="small" />
+      </Box>
+      <Box sx={{ minWidth: 0 }}>
+        <Typography
+          sx={{
+            fontFamily: HOME.fontBody,
+            fontSize: "0.68rem",
+            color: alpha(HOME.deepUmber, 0.55),
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            mb: 0.25,
+          }}
+        >
+          {label}
+        </Typography>
+        <Typography
+          sx={{
+            fontFamily: HOME.fontBody,
+            color: HOME.deepUmber,
+            fontWeight: 600,
+            lineHeight: 1.45,
+            fontSize: "0.95rem",
+          }}
+        >
+          {value}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
 
 const socialLinks = [
   { key: "facebook", label: "Facebook", Icon: Facebook, color: "#1877f2", hover: "#166fe5" },
@@ -120,12 +188,16 @@ export default function TeamMemberDetail() {
     }
   };
 
+  const goHomeSection = (sectionId) => {
+    navigate({ pathname: "/", hash: sectionId }, { state: { scrollTo: sectionId } });
+  };
+
   const handleBack = () => {
-    navigate("/", { state: { scrollTo: "team-section" } });
+    goHomeSection("team-section");
   };
 
   const handleGetInvolved = () => {
-    navigate("/", { state: { scrollTo: "contact-section" } });
+    goHomeSection("contact-section");
   };
 
   const handleSocialClick = (platform) => {
@@ -135,23 +207,36 @@ export default function TeamMemberDetail() {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh" bgcolor="#f8fafc">
-        <CircularProgress sx={{ color: brand.green }} size={48} />
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="60vh"
+        bgcolor={HOME.oldPaperSoft}
+      >
+        <CircularProgress sx={{ color: HOME.morphoBlue }} size={48} />
       </Box>
     );
   }
 
   if (error || !teamMember) {
     return (
-      <Box sx={{ width: "100%", py: 6, px: { xs: 2, sm: 4 } }}>
-        <Alert severity="error" sx={{ mb: 3 }}>
+      <Box sx={{ width: "100%", py: 6, ...sidePad, bgcolor: HOME.oldPaperSoft, minHeight: "60vh" }}>
+        <Alert severity="error" sx={{ mb: 3, borderRadius: "12px" }}>
           {error || "Team member not found"}
         </Alert>
         <Button
           variant="contained"
           startIcon={<ArrowBack />}
           onClick={handleBack}
-          sx={{ bgcolor: brand.navy, textTransform: "none", fontWeight: 600 }}
+          sx={{
+            bgcolor: HOME.deepUmber,
+            textTransform: "none",
+            fontWeight: 700,
+            borderRadius: "12px",
+            fontFamily: HOME.fontBody,
+            "&:hover": { bgcolor: HOME.deepUmberDark },
+          }}
         >
           Back to Team
         </Button>
@@ -169,14 +254,15 @@ export default function TeamMemberDetail() {
       sx={{
         minHeight: "100vh",
         width: "100%",
-        bgcolor: "#fff",
+        bgcolor: HOME.oldPaperSoft,
         mt: { xs: "-80px", sm: "-80px", md: 0 },
       }}
     >
+      {/* Hero */}
       <Box
         sx={{
           position: "relative",
-          minHeight: { xs: 280, sm: 360, md: 420 },
+          minHeight: { xs: 300, sm: 380, md: 440 },
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
@@ -201,7 +287,13 @@ export default function TeamMemberDetail() {
             }}
           />
         ) : (
-          <Box sx={{ position: "absolute", inset: 0, background: config.gradient }} />
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              background: `linear-gradient(145deg, ${HOME.deepUmberDark} 0%, ${HOME.deepUmber} 55%, ${HOME.morphoBlueDark} 100%)`,
+            }}
+          />
         )}
 
         {!heroImage && (
@@ -212,10 +304,10 @@ export default function TeamMemberDetail() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              opacity: 0.2,
+              opacity: 0.18,
             }}
           >
-            <Person sx={{ fontSize: 160, color: "#fff" }} />
+            <Person sx={{ fontSize: 160, color: HOME.oldPaperSoft }} />
           </Box>
         )}
 
@@ -223,7 +315,10 @@ export default function TeamMemberDetail() {
           sx={{
             position: "absolute",
             inset: 0,
-            background: `linear-gradient(180deg, ${alpha(brand.navy, 0.72)} 0%, ${alpha(brand.navy, 0.2)} 28%, ${alpha(brand.navy, 0.55)} 62%, ${alpha(brand.navy, 0.92)} 100%)`,
+            background: `
+              linear-gradient(180deg, ${alpha(HOME.deepUmberDark, 0.78)} 0%, ${alpha(HOME.deepUmber, 0.28)} 34%, ${alpha(HOME.deepUmberDark, 0.55)} 62%, ${alpha(HOME.deepUmberDark, 0.94)} 100%),
+              linear-gradient(90deg, ${alpha(HOME.morphoBlueDark, 0.22)} 0%, transparent 48%)
+            `,
           }}
         />
         <Box
@@ -233,7 +328,7 @@ export default function TeamMemberDetail() {
             left: 0,
             right: 0,
             height: 4,
-            background: `linear-gradient(90deg, ${brand.green}, ${brand.gold})`,
+            background: `linear-gradient(90deg, ${HOME.morphoBlue} 0%, ${HOME.oldPaper} 55%, ${HOME.deepUmberMid} 100%)`,
           }}
         />
 
@@ -251,56 +346,59 @@ export default function TeamMemberDetail() {
             gap: 1.5,
             pt: { xs: 1.5, sm: 2, md: 2.5 },
             pb: 1.5,
-            ...contentPad,
+            ...sidePad,
           }}
         >
-          <Button
-            startIcon={<ArrowBack />}
+          <IconButton
+            aria-label="Back to team"
             onClick={handleBack}
             sx={{
               alignSelf: { xs: "flex-start", sm: "center" },
-              color: "#fff",
-              bgcolor: alpha("#fff", 0.14),
-              border: `1px solid ${alpha("#fff", 0.28)}`,
-              textTransform: "none",
-              fontWeight: 600,
-              borderRadius: 2,
+              width: 42,
+              height: 42,
+              color: HOME.oldPaperSoft,
+              bgcolor: alpha(HOME.deepUmberDark, 0.45),
+              border: `1px solid ${alpha(HOME.oldPaperSoft, 0.28)}`,
               backdropFilter: "blur(10px)",
-              boxShadow: `0 4px 20px ${alpha("#000", 0.2)}`,
-              "&:hover": { bgcolor: alpha(brand.gold, 0.28) },
+              "&:hover": {
+                bgcolor: alpha(HOME.morphoBlue, 0.35),
+                borderColor: HOME.morphoBlueMuted,
+              },
             }}
           >
-            Back to Team
-          </Button>
+            <ArrowBack />
+          </IconButton>
 
           <Stack
             direction="row"
             alignItems="center"
             spacing={1}
-            sx={{ alignSelf: { xs: "flex-start", sm: "center" }, flexWrap: "wrap" }}
+            useFlexGap
+            flexWrap="wrap"
+            sx={{ alignSelf: { xs: "flex-start", sm: "center" } }}
           >
             <Box
               sx={{
                 width: 40,
                 height: 40,
-                borderRadius: 2,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                bgcolor: alpha("#fff", 0.14),
-                border: `1px solid ${alpha(brand.gold, 0.5)}`,
+                borderRadius: "12px",
+                display: "grid",
+                placeItems: "center",
+                bgcolor: alpha(HOME.oldPaperSoft, 0.14),
+                border: `1px solid ${alpha(HOME.morphoBlueMuted, 0.55)}`,
                 backdropFilter: "blur(10px)",
               }}
             >
-              <IconComponent sx={{ color: brand.gold, fontSize: 24 }} />
+              <IconComponent sx={{ color: HOME.morphoBlueMuted, fontSize: 22 }} />
             </Box>
             <Chip
               label={config.label}
               sx={{
-                bgcolor: alpha("#fff", 0.14),
-                color: "#fff",
+                bgcolor: alpha(HOME.oldPaperSoft, 0.14),
+                color: HOME.oldPaperSoft,
                 fontWeight: 700,
-                border: `1px solid ${alpha(config.color, 0.5)}`,
+                fontFamily: HOME.fontBody,
+                border: `1px solid ${alpha(config.color, 0.55)}`,
                 backdropFilter: "blur(10px)",
               }}
             />
@@ -312,33 +410,36 @@ export default function TeamMemberDetail() {
             position: "relative",
             zIndex: 1,
             width: "100%",
-            pb: { xs: 3, md: 5 },
+            pb: { xs: 3, md: 4.5 },
             pt: { xs: 10, sm: 12 },
-            ...contentPad,
+            ...sidePad,
           }}
         >
           <Typography
-            variant="overline"
             sx={{
-              color: brand.gold,
+              fontFamily: HOME.fontBody,
+              color: HOME.morphoBlueMuted,
               fontWeight: 700,
-              letterSpacing: "0.15em",
-              fontSize: "0.75rem",
+              letterSpacing: "0.14em",
+              fontSize: "0.72rem",
+              textTransform: "uppercase",
               display: "block",
-              mb: 0.5,
+              mb: 0.75,
             }}
           >
             {teamMember.position || "Team Member"}
           </Typography>
           <Typography
-            variant="h1"
+            component="h1"
             sx={{
-              color: "#fff",
-              fontWeight: 900,
-              fontSize: { xs: "1.75rem", sm: "2.5rem", md: "3rem" },
-              lineHeight: 1.15,
+              fontFamily: HOME.fontDisplay,
+              color: HOME.oldPaperSoft,
+              fontWeight: 800,
+              fontSize: { xs: "1.75rem", sm: "2.4rem", md: "3rem" },
+              lineHeight: 1.12,
               letterSpacing: "-0.02em",
-              textShadow: `0 2px 16px ${alpha("#000", 0.35)}`,
+              textShadow: `0 2px 18px ${alpha("#000", 0.35)}`,
+              maxWidth: 900,
             }}
           >
             {teamMember.full_name}
@@ -346,33 +447,16 @@ export default function TeamMemberDetail() {
         </Box>
       </Box>
 
-      <Box sx={{ width: "100%" }}>
-        <MotionBox initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <Box sx={sectionSx}>
-            <Stack direction="row" alignItems="center" spacing={1.5} mb={2.5}>
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 1.5,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  bgcolor: alpha(config.color, 0.12),
-                  color: config.color,
-                }}
-              >
-                <DescriptionIcon fontSize="small" />
-              </Box>
-              <Typography variant="h5" fontWeight={800} color={brand.navy}>
-                About This Team Member
-              </Typography>
-            </Stack>
+      {/* Body */}
+      <Box sx={{ width: "100%", pb: { xs: 2, md: 3 } }}>
+        <MotionBox initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+          <SectionCard>
+            <SectionTitle icon={DescriptionIcon} title="About This Team Member" accent={HOME.morphoBlue} />
             <Typography
-              variant="body1"
               sx={{
-                color: alpha(brand.navy, 0.8),
-                lineHeight: 1.85,
+                fontFamily: HOME.fontBody,
+                color: alpha(HOME.deepUmber, 0.82),
+                lineHeight: 1.8,
                 fontSize: { xs: "0.95rem", md: "1.05rem" },
                 whiteSpace: "pre-wrap",
                 mb: 3,
@@ -382,34 +466,36 @@ export default function TeamMemberDetail() {
                 "More information about this team member will be available soon."}
             </Typography>
 
-            <Stack spacing={1.5}>
-              <DetailRow icon={Work} label="Position" value={teamMember.position || "Team Member"} color={config.color} />
-              <DetailRow icon={IconComponent} label="Role" value={config.label} color={config.color} />
-            </Stack>
-          </Box>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                gap: 1.5,
+              }}
+            >
+              <DetailRow
+                icon={Work}
+                label="Position"
+                value={teamMember.position || "Team Member"}
+                color={config.color}
+              />
+              <DetailRow
+                icon={IconComponent}
+                label="Role"
+                value={config.label}
+                color={HOME.morphoBlueDark}
+              />
+            </Box>
+          </SectionCard>
 
           {availableSocials.length > 0 && (
-            <Box sx={{ ...sectionSx, bgcolor: alpha(brand.navy, 0.02) }}>
-              <Stack direction="row" alignItems="center" spacing={1.5} mb={2.5}>
-                <Box
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 1.5,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    bgcolor: alpha(brand.blue, 0.12),
-                    color: brand.blue,
-                  }}
-                >
-                  <Share fontSize="small" />
-                </Box>
-                <Typography variant="h5" fontWeight={800} color={brand.navy}>
-                  Connect with {teamMember.full_name.split(" ")[0]}
-                </Typography>
-              </Stack>
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} flexWrap="wrap" useFlexGap>
+            <SectionCard>
+              <SectionTitle
+                icon={Share}
+                title={`Connect with ${teamMember.full_name.split(" ")[0]}`}
+                accent={HOME.morphoBlueDark}
+              />
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                 {availableSocials.map(({ key, label, Icon, color, hover }) => (
                   <Button
                     key={key}
@@ -419,8 +505,9 @@ export default function TeamMemberDetail() {
                     sx={{
                       bgcolor: color,
                       textTransform: "none",
-                      fontWeight: 600,
-                      borderRadius: 2,
+                      fontWeight: 700,
+                      fontFamily: HOME.fontBody,
+                      borderRadius: "12px",
                       px: 2.5,
                       "&:hover": { bgcolor: hover },
                     }}
@@ -429,58 +516,114 @@ export default function TeamMemberDetail() {
                   </Button>
                 ))}
               </Stack>
-            </Box>
+            </SectionCard>
           )}
 
-          <Box
-            sx={{
-              ...sectionSx,
-              background: `linear-gradient(135deg, ${brand.navy} 0%, ${brand.navyLight} 100%)`,
-              borderTop: "none",
-              textAlign: "center",
-            }}
-          >
-            <Favorite sx={{ fontSize: 40, color: brand.gold, mb: 1 }} />
-            <Typography variant="h5" fontWeight={800} color="#fff" mb={1}>
-              Work With Our Team
-            </Typography>
-            <Typography variant="body1" sx={{ color: alpha("#fff", 0.85), mb: 3, maxWidth: 520, mx: "auto" }}>
-              Join Mwalimu Hope Foundation and be part of the change we create across Kenya.
-            </Typography>
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
-              <Button
-                variant="contained"
-                size="large"
-                onClick={handleGetInvolved}
+          <Box sx={{ width: "100%", ...sidePad, py: { xs: 1.25, md: 1.75 } }}>
+            <Box
+              sx={{
+                borderRadius: { xs: "16px", md: "20px" },
+                p: { xs: 3, md: 4 },
+                textAlign: "center",
+                background: `linear-gradient(145deg, ${HOME.deepUmberDark} 0%, ${HOME.deepUmber} 48%, ${HOME.deepUmberMid} 100%)`,
+                boxShadow: HOME.shadowMd,
+                position: "relative",
+                overflow: "hidden",
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: -50,
+                  right: -40,
+                  width: 180,
+                  height: 180,
+                  borderRadius: "50%",
+                  background: alpha(HOME.morphoBlue, 0.18),
+                  pointerEvents: "none",
+                },
+              }}
+            >
+              <Favorite
                 sx={{
-                  bgcolor: brand.green,
-                  fontWeight: 700,
-                  textTransform: "none",
-                  borderRadius: 2,
-                  px: 4,
-                  boxShadow: `0 8px 24px ${alpha(brand.green, 0.45)}`,
-                  "&:hover": { bgcolor: brand.greenLight },
+                  fontSize: 40,
+                  color: HOME.morphoBlueMuted,
+                  mb: 1,
+                  position: "relative",
+                  zIndex: 1,
+                }}
+              />
+              <Typography
+                sx={{
+                  fontFamily: HOME.fontDisplay,
+                  fontWeight: 800,
+                  fontSize: { xs: "1.35rem", md: "1.6rem" },
+                  color: HOME.oldPaperSoft,
+                  mb: 1,
+                  position: "relative",
+                  zIndex: 1,
                 }}
               >
-                Get Involved
-              </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                onClick={handleBack}
+                Work With Our Team
+              </Typography>
+              <Typography
                 sx={{
-                  color: "#fff",
-                  borderColor: alpha("#fff", 0.4),
-                  fontWeight: 600,
-                  textTransform: "none",
-                  borderRadius: 2,
-                  px: 4,
-                  "&:hover": { borderColor: "#fff", bgcolor: alpha("#fff", 0.08) },
+                  fontFamily: HOME.fontBody,
+                  color: alpha(HOME.oldPaperSoft, 0.85),
+                  mb: 3,
+                  maxWidth: 520,
+                  mx: "auto",
+                  fontSize: "0.95rem",
+                  lineHeight: 1.6,
+                  position: "relative",
+                  zIndex: 1,
                 }}
               >
-                View All Team
-              </Button>
-            </Stack>
+                Join Mwalimu Hope Foundation and be part of the change we create across Kenya.
+              </Typography>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={1.5}
+                justifyContent="center"
+                sx={{ position: "relative", zIndex: 1 }}
+              >
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleGetInvolved}
+                  sx={{
+                    bgcolor: HOME.morphoBlue,
+                    fontWeight: 700,
+                    textTransform: "none",
+                    fontFamily: HOME.fontBody,
+                    borderRadius: "12px",
+                    px: 4,
+                    boxShadow: `0 8px 24px ${alpha(HOME.morphoBlue, 0.4)}`,
+                    "&:hover": { bgcolor: HOME.morphoBlueDark },
+                  }}
+                >
+                  Get Involved
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={handleBack}
+                  sx={{
+                    color: HOME.oldPaperSoft,
+                    borderColor: alpha(HOME.oldPaperSoft, 0.4),
+                    fontWeight: 700,
+                    textTransform: "none",
+                    fontFamily: HOME.fontBody,
+                    borderRadius: "12px",
+                    px: 4,
+                    "&:hover": {
+                      borderColor: HOME.oldPaperSoft,
+                      bgcolor: alpha(HOME.oldPaperSoft, 0.08),
+                    },
+                  }}
+                >
+                  View All Team
+                </Button>
+              </Stack>
+            </Box>
           </Box>
         </MotionBox>
       </Box>

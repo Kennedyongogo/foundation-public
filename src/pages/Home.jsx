@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Box, Container, Card, CardContent, Typography, Fade, Paper } from "@mui/material";
+import { Box, Fade } from "@mui/material";
 import HeroSection from "../components/Home/HeroSection";
 import ServicesSection from "../components/Home/ServicesSection";
 import ProjectsSection from "../components/Home/ProjectsSection";
@@ -10,47 +10,46 @@ import ContactSection from "../components/Home/ContactSection";
 import TeamSection from "../components/Home/TeamSection";
 import TestimonySection from "../components/Home/TestimonySection";
 import Footer from "../components/Footer/Footer";
-import MapIcon from "@mui/icons-material/Map";
+import SectionHeader from "../components/Home/SectionHeader";
+import { homeSectionShellSx } from "../components/Home/homeShared";
 
 export default function Home() {
   const location = useLocation();
 
   useEffect(() => {
-    // Handle scroll to section from location state or hash (after ScrollToTop has run)
-    const scrollToSection = (retryCount = 0) => {
-      // Check for hash in URL first (more direct)
-      const hash = window.location.hash.replace("#", "");
-      const sectionId = hash || location.state?.scrollTo;
-      
-      if (sectionId) {
-        const section = document.getElementById(sectionId);
-        if (section) {
-          // Calculate the exact position accounting for fixed header
-          const header = document.querySelector('header, [role="banner"], .MuiAppBar-root');
-          const headerHeight = header ? header.getBoundingClientRect().height : 80;
-          
-          // Get the section's position relative to the document
-          const sectionRect = section.getBoundingClientRect();
-          const sectionTop = sectionRect.top + window.pageYOffset;
-          
-          // Add extra padding (20px) to ensure section is fully visible
-          const offset = headerHeight + 20;
-          
-          // Scroll to exact position
-          window.scrollTo({
-            top: sectionTop - offset,
-            behavior: "smooth"
-          });
-        } else if (retryCount < 15) {
-          // Retry up to 15 times if section not found yet (1.5 seconds total)
-          setTimeout(() => scrollToSection(retryCount + 1), 100);
-        }
+    const sectionId =
+      (location.hash || "").replace("#", "") || location.state?.scrollTo;
+    if (!sectionId) return undefined;
+
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 40;
+
+    const scrollToSection = () => {
+      if (cancelled) return;
+      const section = document.getElementById(sectionId);
+      if (section) {
+        const header = document.querySelector('header, [role="banner"], .MuiAppBar-root');
+        const headerHeight = header ? header.getBoundingClientRect().height : 80;
+        const top =
+          section.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12;
+        window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        return;
+      }
+
+      attempts += 1;
+      if (attempts < maxAttempts) {
+        window.setTimeout(scrollToSection, 100);
       }
     };
-    
-    // Wait for ScrollToTop to finish and page to render (it runs on pathname change)
-    setTimeout(() => scrollToSection(), 400);
-  }, [location.state, location.hash]);
+
+    // Small delay so lazy route content can mount before measuring
+    const startId = window.setTimeout(scrollToSection, 80);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(startId);
+    };
+  }, [location.pathname, location.hash, location.state]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -58,88 +57,35 @@ export default function Home() {
       <ServicesSection />
       <ProjectsSection />
       <PostsSection />
-      
-      {/* Charity Map Section */}
-      <Box
-        sx={{
-          pt: 0,
-          pb: 3,
-          px: 0,
-          width: "100%",
-          backgroundColor: "#f8f9fa",
-        }}
-      >
-        <Box
-          sx={{
-            width: "100%",
-          }}
-        >
-          <Fade in={true} timeout={1000}>
-            <Paper
-              elevation={0}
-              sx={{
-                borderRadius: 0,
-                overflow: "hidden",
-                backgroundColor: "white",
-                border: "none",
-                borderTop: "1px solid #e0e0e0",
-                borderBottom: "1px solid #e0e0e0",
-                py: { xs: 1.5, sm: 2, md: 2.5 },
-                px: { xs: 3, sm: 4, md: 5 },
-              }}
-            >
-              {/* Explore Our Impact Header */}
-              <Box sx={{ textAlign: "center", mb: 4 }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 2,
-                    mb: 2,
-                  }}
-                >
-                  <MapIcon
-                    sx={{
-                      fontSize: { xs: "1.5rem", md: "2rem" },
-                      color: "primary.main",
-                    }}
-                  />
-                  <Typography
-                    variant="h2"
-                    sx={{
-                      fontWeight: 600,
-                      color: "primary.main",
-                      fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.8rem" },
-                    }}
-                  >
-                    Explore Our Impact
-                  </Typography>
-                </Box>
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  sx={{ maxWidth: 600, mx: "auto", fontSize: "0.875rem" }}
-                >
-                  Discover our projects across Kenya and see where we're making a difference in communities
-                </Typography>
-              </Box>
 
-              {/* Map Component */}
-              <CharityMap />
-            </Paper>
+      <Box id="impact-map-section" sx={homeSectionShellSx("paper")}>
+        <Box sx={{ width: "100%", position: "relative", zIndex: 1, px: { xs: 2, sm: 3, md: 5 } }}>
+          <Fade in timeout={900}>
+            <Box>
+              <SectionHeader
+                overline="Where We Serve"
+                title="Explore Our Impact"
+                description="Discover our projects across Kenya and see where we're making a difference in communities."
+              />
+              <Box
+                sx={{
+                  borderRadius: { xs: "16px", md: "22px" },
+                  overflow: "hidden",
+                  border: "1px solid rgba(58, 36, 21, 0.12)",
+                  boxShadow: "0 16px 40px rgba(42, 26, 15, 0.1)",
+                  bgcolor: "#fff",
+                }}
+              >
+                <CharityMap />
+              </Box>
+            </Box>
           </Fade>
         </Box>
       </Box>
 
       <ContactSection />
-      
-      {/* Testimonials Section */}
       <TestimonySection />
-      
-      {/* Meet Our Team Section */}
       <TeamSection />
-
       <Footer />
     </Box>
   );

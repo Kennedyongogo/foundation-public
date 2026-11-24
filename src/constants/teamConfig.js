@@ -14,20 +14,20 @@ export const buildTeamImageUrl = (imageUrl) => {
 export const roleConfig = {
   "super-admin": {
     label: "Leadership",
-    color: brand.gold,
-    gradient: `linear-gradient(135deg, ${brand.gold}, #fbc02d)`,
+    color: brand.deepUmber,
+    gradient: `linear-gradient(135deg, ${brand.deepUmberDark}, ${brand.deepUmber})`,
     Icon: AdminPanelSettings,
   },
   admin: {
     label: "Team Lead",
-    color: brand.blue,
-    gradient: `linear-gradient(135deg, ${brand.blue}, #42a5f5)`,
+    color: brand.morphoBlue,
+    gradient: `linear-gradient(135deg, ${brand.morphoBlueDark}, ${brand.morphoBlue})`,
     Icon: Groups,
   },
   "regular user": {
     label: "Team Member",
-    color: brand.green,
-    gradient: `linear-gradient(135deg, ${brand.green}, #66bb6a)`,
+    color: brand.morphoBlueMuted,
+    gradient: `linear-gradient(135deg, ${brand.morphoBlue}, ${brand.morphoBlueMuted})`,
     Icon: Person,
   },
 };
