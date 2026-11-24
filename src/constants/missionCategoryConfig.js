@@ -8,54 +8,56 @@ import {
 } from "@mui/icons-material";
 import { BRAND } from "../brand";
 
-/** Legacy keys mapped to old paper / deep umber / morpho blue */
+/** Legacy keys mapped to logo navy / sky blue / green / gold */
 export const brand = {
-  navy: BRAND.deepUmber,
-  navyLight: BRAND.deepUmberMid,
-  green: BRAND.morphoBlue,
-  greenLight: BRAND.morphoBlueMuted,
-  gold: BRAND.morphoBlue,
-  blue: BRAND.morphoBlueDark,
+  navy: BRAND.navy,
+  navyLight: BRAND.navyMid,
+  green: BRAND.green,
+  greenLight: BRAND.greenMuted,
+  gold: BRAND.gold,
+  blue: BRAND.skyBlue,
   oldPaper: BRAND.oldPaper,
   oldPaperSoft: BRAND.oldPaperSoft,
-  deepUmber: BRAND.deepUmber,
-  deepUmberDark: BRAND.deepUmberDark,
-  deepUmberMid: BRAND.deepUmberMid,
-  morphoBlue: BRAND.morphoBlue,
-  morphoBlueDark: BRAND.morphoBlueDark,
-  morphoBlueMuted: BRAND.morphoBlueMuted,
+  deepUmber: BRAND.navy,
+  deepUmberDark: BRAND.navyDark,
+  deepUmberMid: BRAND.navyMid,
+  morphoBlue: BRAND.green,
+  morphoBlueDark: BRAND.greenDark,
+  morphoBlueMuted: BRAND.greenMuted,
+  skyBlue: BRAND.skyBlue,
+  skyBlueLight: BRAND.skyBlueLight,
 };
 
 export const categoryConfig = {
   educational_support: {
     icon: School,
-    color: BRAND.morphoBlue,
-    gradient: `linear-gradient(135deg, ${BRAND.morphoBlue}, ${BRAND.morphoBlueMuted})`,
+    color: BRAND.skyBlue,
+    gradient: `linear-gradient(135deg, ${BRAND.skyBlue}, ${BRAND.skyBlueLight})`,
   },
   mental_health_awareness: {
     icon: Psychology,
-    color: BRAND.deepUmberMid,
-    gradient: `linear-gradient(135deg, ${BRAND.deepUmber}, ${BRAND.deepUmberMid})`,
+    color: BRAND.navyMid,
+    gradient: `linear-gradient(135deg, ${BRAND.navy}, ${BRAND.navyMid})`,
   },
   poverty_alleviation: {
     icon: VolunteerActivism,
-    color: BRAND.morphoBlueDark,
-    gradient: `linear-gradient(135deg, ${BRAND.morphoBlueDark}, ${BRAND.morphoBlue})`,
+    color: BRAND.gold,
+    gradient: `linear-gradient(135deg, ${BRAND.gold}, ${BRAND.goldMuted})`,
   },
   community_empowerment: {
     icon: Group,
-    color: BRAND.deepUmber,
-    gradient: `linear-gradient(135deg, ${BRAND.deepUmberDark}, ${BRAND.deepUmber})`,
+    color: BRAND.green,
+    gradient: `linear-gradient(135deg, ${BRAND.greenDark}, ${BRAND.green})`,
   },
   healthcare_access: {
     icon: LocalHospital,
-    color: BRAND.morphoBlue,
-    gradient: `linear-gradient(135deg, ${BRAND.morphoBlueDark}, ${BRAND.morphoBlueMuted})`,
+    color: BRAND.greenMuted,
+    gradient: `linear-gradient(135deg, ${BRAND.green}, ${BRAND.greenMuted})`,
   },
   youth_development: {
     icon: EmojiPeople,
-    color: BRAND.morphoBlueMuted,
-    gradient: `linear-gradient(135deg, ${BRAND.morphoBlue}, ${BRAND.morphoBlueMuted})`,
+    color: BRAND.skyBlueLight,
+    gradient: `linear-gradient(135deg, ${BRAND.skyBlue}, ${BRAND.navyMid})`,
   },
 };
 
